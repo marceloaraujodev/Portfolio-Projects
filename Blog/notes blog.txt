@@ -1,0 +1,63 @@
+TITLE FRONTEND
+
+    FORMS:
+        ⚠️ without the name field we get errors in the form submition!!!
+
+        Accessing the values of a field with 
+            event.target.elements.username
+
+    LOG IN 
+
+        ⚠️ when logging in you should encrypt the password on the frontend as swell as in the backend
+
+    LOG OUT 
+
+        If using cookies the logout is simple:
+
+         Just set the cookie to a empty string in a logout link click and connect with the db
+
+            app.post('/logout', (req, res) => {
+                res.cookie('token', '').json('ok');
+            })
+
+
+    REACT QUILL wysiwyg  editor for blogs, posts, emails...
+        import ReactQuill from 'react-quill';
+        import 'react-quill/dist/quill.snow.css';
+
+
+
+SENDING FILES: MULTER LIBRARY 
+
+    Multer is a node.js middleware for handling multipart/form-data, which is primarily used for uploading files. It is written on top of busboy for maximum efficiency.
+
+    To grab files from a request in the backend we use multer.
+
+
+TITLE BACKEND
+
+    MORGAN MIDDLEWARE
+
+        adds a log with method url, response, time ... to the console
+
+        🚩 OPTIONS /register is related to the preflight request sent 
+         by the browser when making a cross-origin HTTP request with certain methods or headers.
+
+            When you make a POST request to a server from a frontend application running in a browser, the browser may send an OPTIONS request first to check if the server allows the actual request to be made. This is part of the CORS (Cross-Origin Resource Sharing) mechanism.
+
+LOGIN END POINT 1:22M
+COOKIES COLLECTING DATA FROM THEM 1:25MIN
+
+
+⚠️ Always forget !!!!! const response = await fetch('x');
+        const response = await fetch('x');
+        const data = await response.json();
+
+
+
+⚠️ Response to the client with the structure ?
+    res.json({file: req.file}) or 
+    res.json(req.file) they both work
+
+
+⚠️ Renaming photo file with fs library 
