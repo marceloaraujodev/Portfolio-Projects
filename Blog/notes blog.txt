@@ -61,3 +61,39 @@ COOKIES COLLECTING DATA FROM THEM 1:25MIN
 
 
 ⚠️ Renaming photo file with fs library 
+
+⚠️ Server 4000 frontend 3000, Server Endpoints errors fail to fetchcheck This
+
+    Add Get, post or put requests to the methods to allow them in the corsOptions otherwise you get fail to fetch
+
+    const corsOptions = {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    };
+
+⚠️ Frontend expects json response and gets a html for errors big problem hard to find
+
+useEffect(() => {
+  const fetchData = async () => {
+    const response = await fetch('http://localhost:4000/profile', {
+      credentials: 'include',
+    });
+
+        ⚠️ Backend part that was commented out.
+            if (!token) {
+                res.json('Please log in'); ⚠️ response given here!
+            }
+
+        And in the line above I had commented out the response so in postman
+        you can see when the response is wrong it throws html. When I turn on the this part of the backend code which is where I give a json response
+
+    🚩 Response here -----------------
+    const userData = await response.json(); ⚠️ frontend expects json, instead got html
+    -------------Ends Response
+
+
+  }
+  fetchData();
+}, []);

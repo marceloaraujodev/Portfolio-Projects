@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Navigate } from "react-router-dom";
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+// import 'react-quill/dist/quill.snow.css'; // se nao mudar nada na pagina pode tirar coloquei no editor.js
+import Editor from '../components/Editor';
 
 export default function CreatePost() {
   const [title, setTitle] = useState('');
@@ -10,34 +10,6 @@ export default function CreatePost() {
   const [files, setFiles] = useState('');
   const [redirect, setRedirect] = useState(false);
 
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, false] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [
-        { list: 'ordered' },
-        { list: 'bullet' },
-        { indent: '-1' },
-        { indent: '+1' },
-      ],
-      ['link', 'image'],
-      ['clean'],
-    ],
-  };
-
-  const formats = [
-    'header',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'indent',
-    'link',
-    'image',
-  ];
 
   async function createNewPost(e){
     e.preventDefault();
@@ -84,15 +56,8 @@ export default function CreatePost() {
 
       <input type="file" onChange={e => { setFiles(e.target.files)}} />
 
-      <ReactQuill
-        value={content}
-        modules={modules}
-        formats={formats}
-        onChange={(newValue) => {
-          setContent(newValue);
-        }}
-      />
-      <button>Publish Post</button>
+      <Editor value={content} onChange={setContent} />
+      <button>Create Post</button>
     </form>
   );
 }

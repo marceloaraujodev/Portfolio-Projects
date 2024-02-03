@@ -1,25 +1,23 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useContext, useEffect} from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
 
 export default function Header() {
   const {userInfo, setUserInfo} = useContext(UserContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => { // called immidiattely
-      try {
-        const response = await fetch('http://localhost:4000/profile', {
-          credentials: 'include',
-        });
-        const data = await response.json();
-        setUserInfo(data)
-      } catch (error) {
-        console.log('Error fetching data:', error)
-      }
-    };
+    const fetchData = async () => {
+      const response = await fetch('http://localhost:4000/profile', {
+        credentials: 'include',
+      });
+      const userData = await response.json();
+      setUserInfo(userData)
+    }
     fetchData();
-  }, [setUserInfo]); 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); 
 
   function logout(){
     fetch('http://localhost:4000/logout', {
@@ -28,6 +26,7 @@ export default function Header() {
     });
 
     setUserInfo(null)
+    navigate('/');
   }
   const username = userInfo?.username;
 

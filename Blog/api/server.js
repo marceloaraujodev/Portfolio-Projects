@@ -11,7 +11,6 @@ const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const fs = require('fs');
 
-
 dotenv.config({ path: './config.env' });
 
 // multer
@@ -23,7 +22,7 @@ app.use(morgan('dev')); // logger
 
 const corsOptions = {
   origin: 'http://localhost:3000',
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'PUT'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
@@ -31,7 +30,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
-app.use('/uploads', express.static(__dirname + '/uploads'))// serving all files from one folder
+app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one folder
 
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
@@ -89,6 +88,7 @@ app.post('/login', async (req, res) => {
           username,
         });
       });
+      console.log('Logged IN');
     } else {
       res.status(400).json('access denied');
     }
@@ -100,9 +100,9 @@ app.post('/login', async (req, res) => {
 
 app.get('/profile', (req, res) => {
   const { token } = req.cookies;
-  // if(!token){
-  //     res.json('Please log in')
-  // }
+  if (!token) {
+    res.json('Please log in');
+  }
   jwt.verify(token, process.env.SECRET, (err, info) => {
     if (err) throw err;
     res.json(info);
@@ -111,6 +111,7 @@ app.get('/profile', (req, res) => {
 
 app.post('/logout', (req, res) => {
   res.cookie('token', '').json('ok');
+  console.log('logged out');
 });
 
 app.post('/createPost', uploadMiddleware.single('file'), async (req, res) => {
@@ -136,19 +137,52 @@ app.post('/createPost', uploadMiddleware.single('file'), async (req, res) => {
 });
 
 app.get('/post', async (req, res) => {
-    res.json(await PostModel.find()
-    .populate('author', ['username'])
-    .sort({createdAt: -1})
-    .limit(20)
-    ); //.populate('author')
+  res.json(
+    await PostModel.find()
+      .populate('author', ['username'])
+      .sort({ createdAt: -1 })
+      .limit(20)
+  );
 });
 
 app.get('/post/:id', async (req, res) => {
-    const {id} = req.params
-    const post = await PostModel.findById(id).populate('author', ['username']);
-    console.log(post)
-    res.json(post)
-})
+  const { id } = req.params;
+  const post = await PostModel.findById(id).populate('author', ['username']);
+  res.json(post);
+});
+
+app.put('/post/', uploadMiddleware.single('file'), async (req, res) => {
+  let newPath = null;
+  if (req.file) {
+    const { originalname, path } = req.file;
+    const nameParts = originalname.split('.');
+    const ext = nameParts[nameParts.length - 1];
+    newPath = path + '.' + ext;
+    fs.renameSync(path, newPath);
+  }
+
+  const { token } = req.cookies;
+  jwt.verify(token, process.env.SECRET, async (err, info) => {
+    if (err) throw err;
+    const { title, summary, content, id } = req.body;
+    const dbPost = await PostModel.findById(id);
+    const author = JSON.stringify(dbPost.author) === JSON.stringify(info.id);
+    if (!author) {
+      return res.status(400).json('You are not the author');
+    }
+    const updatedPost = await PostModel.findByIdAndUpdate(id, {
+      title, 
+      summary, 
+      content, 
+      cover: newPath ? newPath : dbPost.cover
+    }, 
+    {
+      new: true
+    });
+    res.json(updatedPost);
+  });
+});
+
 
 
 server.on('close', () => {
