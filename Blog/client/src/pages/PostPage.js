@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { useContext, useEffect, useState } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams} from 'react-router-dom';
 import { UserContext } from '../components/UserContext';
 import { Link } from 'react-router-dom';
 
@@ -8,7 +8,7 @@ export default function PostPage() {
   const { userInfo } = useContext(UserContext);
   const [postInfo, setPostInfo] = useState(null);
   const { id } = useParams();
-  const [redirect, setRedirect] = useState(false);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,7 +19,6 @@ export default function PostPage() {
     fetchData();
   }, [id]);
 
- console.log(postInfo, userInfo)
   if(!postInfo || !userInfo) {
     return '';
   };
@@ -53,7 +52,7 @@ export default function PostPage() {
       <div className="image">
         <img src={`http://localhost:4000/${postInfo.cover}`} alt="post" />
       </div>
-      <div dangerouslySetInnerHTML={{ __html: postInfo.content }} />
+      <div className='post-body' dangerouslySetInnerHTML={{ __html: postInfo.content }} />
     </div>
   );
 }

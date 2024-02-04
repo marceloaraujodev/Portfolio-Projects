@@ -13,8 +13,15 @@ const fs = require('fs');
 
 dotenv.config({ path: './config.env' });
 
-// multer
-const uploadMiddleware = multer({ dest: 'uploads/' });
+// If I want to add multiple photos at once look at multer docs for .array instead of .single('file') and change the PostPage.js to support an array of photos instead of one object
+
+// multer, config limits for the post size!
+const uploadMiddleware = multer({ 
+  dest: 'uploads/',
+  limits: {
+    fieldSize: 1024 * 1024 * 10 // 10MB limit for field size
+  }
+ });
 
 const app = express();
 
@@ -46,12 +53,15 @@ const server = app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
 
+// Gets all posts
 app.get('/', (req, res) => {
   res.status('200').json({
     status: 'success',
     message: 'ok',
   });
 });
+
+// Register user
 app.post('/register', async (req, res) => {
   const { username, password } = req.body;
 
@@ -71,6 +81,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
+// user log in
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   try {

@@ -31,9 +31,10 @@ export default function Header() {
   const username = userInfo?.username;
 
   return (
+    <>
     <header>
       <Link to="/" className="logo">
-        Myblog
+        IT FASHION BLOG
       </Link>
       <nav>
         {username && (
@@ -50,5 +51,7 @@ export default function Header() {
         )}
       </nav>
     </header>
+    <hr className='divider'/>
+    </>
   );
 }
