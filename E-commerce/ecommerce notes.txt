@@ -1,0 +1,9 @@
+pages folder = app folder
+page.js = index.js
+_app.jsx: The equivalent is now app/page.js
+
+eslint config
+
+    {
+    "extends": ["next/core-web-vitals", "next/babel"]
+    }
