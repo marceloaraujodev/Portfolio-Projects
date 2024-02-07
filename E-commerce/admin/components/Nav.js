@@ -54,8 +54,8 @@ export default function nav() {
         </Link>
 
         <Link
-          href={'/Products'}
-          className={pathname.includes('/Products') ? activeLink : inactiveLink}
+          href={'/products'}
+          className={pathname.includes('/products') ? activeLink : inactiveLink}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -75,8 +75,8 @@ export default function nav() {
         </Link>
 
         <Link
-          href={'/Orders'}
-          className={pathname.includes('/Orders') ? activeLink : inactiveLink}
+          href={'/orders'}
+          className={pathname.includes('/orders') ? activeLink : inactiveLink}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -96,8 +96,8 @@ export default function nav() {
         </Link>
 
         <Link
-          href={'/Settings'}
-          className={pathname.includes('/Settings') ? activeLink : inactiveLink}
+          href={'/settings'}
+          className={pathname.includes('/settings') ? activeLink : inactiveLink}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
