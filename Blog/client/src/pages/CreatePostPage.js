@@ -10,7 +10,6 @@ export default function CreatePost() {
   const [files, setFiles] = useState('');
   const [redirect, setRedirect] = useState(false);
 
-
   async function createNewPost(e){
     e.preventDefault();
 
