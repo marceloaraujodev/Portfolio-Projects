@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { useContext, useEffect, useState } from 'react';
-import { useParams} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { UserContext } from '../components/UserContext';
 import { Link } from 'react-router-dom';
 
@@ -9,19 +9,20 @@ export default function PostPage() {
   const [postInfo, setPostInfo] = useState(null);
   const { id } = useParams();
 
-
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`http://localhost:4000/post/${id}`);
+      const response = await fetch(
+        `https://soft-star-9690.on.fleek.co/post/${id}`
+      );
       const data = await response.json();
       setPostInfo(data);
     };
     fetchData();
   }, [id]);
 
-  if(!postInfo || !userInfo) {
+  if (!postInfo || !userInfo) {
     return '';
-  };
+  }
 
   return (
     <div className="post-page">
@@ -50,10 +51,15 @@ export default function PostPage() {
         </div>
       )}
       <div className="image">
-        <img src={`http://localhost:4000/${postInfo.cover}`} alt="post" />
+        <img
+          src={`https://soft-star-9690.on.fleek.co/${postInfo.cover}`}
+          alt="post"
+        />
       </div>
-      <div className='post-body' dangerouslySetInnerHTML={{ __html: postInfo.content }} />
+      <div
+        className="post-body"
+        dangerouslySetInnerHTML={{ __html: postInfo.content }}
+      />
     </div>
   );
 }
-

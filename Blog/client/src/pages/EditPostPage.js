@@ -1,26 +1,27 @@
 import { useEffect, useState } from 'react';
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from 'react-router-dom';
 import Editor from '../components/Editor';
 
 export default function EditPostPage() {
-  const {id} = useParams();
+  const { id } = useParams();
   const [title, setTitle] = useState('');
   const [summary, setSummary] = useState('');
   const [content, setContent] = useState('');
   const [files, setFiles] = useState('');
   const [redirect, setRedirect] = useState(false);
 
-  
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('http://localhost:4000/post/'+id);
+      const response = await fetch(
+        'https://soft-star-9690.on.fleek.co/post/' + id
+      );
       const postData = await response.json();
       setTitle(postData.title);
       setContent(postData.content);
       setSummary(postData.summary);
-    }
+    };
     fetchData();
-  }, [id])
+  }, [id]);
 
   async function updatePost(e) {
     e.preventDefault();
@@ -30,24 +31,23 @@ export default function EditPostPage() {
     postEditedData.set('summary', summary);
     postEditedData.set('content', content);
     postEditedData.set('id', id);
-    if(files?.[0]){
+    if (files?.[0]) {
       postEditedData.set('file', files?.[0]); // ? optional chaining if no image set to undefined
     }
- 
-    const response = await fetch('http://localhost:4000/post', {
+
+    const response = await fetch('https://soft-star-9690.on.fleek.co/post', {
       method: 'PUT',
       body: postEditedData,
-      credentials: 'include'
+      credentials: 'include',
     });
 
-    if(response.ok){
-
+    if (response.ok) {
       setRedirect(true);
     }
   }
 
-  if(redirect){
-    return <Navigate to={'/post/'+id} />
+  if (redirect) {
+    return <Navigate to={'/post/' + id} />;
   }
 
   return (
@@ -70,7 +70,12 @@ export default function EditPostPage() {
         }}
       />
 
-      <input type="file" onChange={e => { setFiles(e.target.files)}} />
+      <input
+        type="file"
+        onChange={(e) => {
+          setFiles(e.target.files);
+        }}
+      />
 
       <Editor onChange={setContent} value={content} />
       <button>Publish Update</button>

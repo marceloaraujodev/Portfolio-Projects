@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate } from "react-router-dom";
+import { Navigate } from 'react-router-dom';
 // import 'react-quill/dist/quill.snow.css'; // se nao mudar nada na pagina pode tirar coloquei no editor.js
 import Editor from '../components/Editor';
 
@@ -10,27 +10,30 @@ export default function CreatePost() {
   const [files, setFiles] = useState('');
   const [redirect, setRedirect] = useState(false);
 
-  async function createNewPost(e){
+  async function createNewPost(e) {
     e.preventDefault();
 
     const data = new FormData();
     data.set('title', title);
     data.set('summary', summary);
     data.set('content', content);
-    data.set('file', files[0])
+    data.set('file', files[0]);
 
-    const response = await fetch('http://localhost:4000/createPost', { 
-      method: 'POST',
-      body: data,
-      credentials: 'include'
-    });
-    if(response.ok){
+    const response = await fetch(
+      'https://soft-star-9690.on.fleek.co/createPost',
+      {
+        method: 'POST',
+        body: data,
+        credentials: 'include',
+      }
+    );
+    if (response.ok) {
       setRedirect(true);
     }
   }
 
-  if(redirect){
-    return <Navigate to={'/'} />
+  if (redirect) {
+    return <Navigate to={'/'} />;
   }
 
   return (
@@ -53,7 +56,12 @@ export default function CreatePost() {
         }}
       />
 
-      <input type="file" onChange={e => { setFiles(e.target.files)}} />
+      <input
+        type="file"
+        onChange={(e) => {
+          setFiles(e.target.files);
+        }}
+      />
 
       <Editor value={content} onChange={setContent} />
       <button>Create Post</button>

@@ -16,19 +16,19 @@ dotenv.config({ path: './config.env' });
 // If I want to add multiple photos at once look at multer docs for .array instead of .single('file') and change the PostPage.js to support an array of photos instead of one object
 
 // multer, config limits for the post size!
-const uploadMiddleware = multer({ 
+const uploadMiddleware = multer({
   dest: 'uploads/',
   limits: {
-    fieldSize: 1024 * 1024 * 10 // 10MB limit for field size
-  }
- });
+    fieldSize: 1024 * 1024 * 10, // 10MB limit for field size
+  },
+});
 
 const app = express();
 
 app.use(morgan('dev')); // logger
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: 'https://soft-star-9690.on.fleek.co/',
   methods: ['GET', 'POST', 'PUT'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -181,20 +181,21 @@ app.put('/post/', uploadMiddleware.single('file'), async (req, res) => {
     if (!author) {
       return res.status(400).json('You are not the author');
     }
-    const updatedPost = await PostModel.findByIdAndUpdate(id, {
-      title, 
-      summary, 
-      content, 
-      cover: newPath ? newPath : dbPost.cover
-    }, 
-    {
-      new: true
-    });
+    const updatedPost = await PostModel.findByIdAndUpdate(
+      id,
+      {
+        title,
+        summary,
+        content,
+        cover: newPath ? newPath : dbPost.cover,
+      },
+      {
+        new: true,
+      }
+    );
     res.json(updatedPost);
   });
 });
-
-
 
 server.on('close', () => {
   console.log('Server shutting down');
