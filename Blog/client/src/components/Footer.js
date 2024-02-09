@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <>
     <footer>
-    <hr />
+    <hr className='separation' />
       <div>
         <a href="https://github.com/marceloaraujodev">
           <i className="bi bi-envelope social-media"></i>
