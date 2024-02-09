@@ -155,6 +155,8 @@ div.post-body p{
 }
 
 footer{
+  position: fixed;
+  bottom: 0;
   display: flex;
   justify-content: space-between;
   margin-bottom: 50px;
