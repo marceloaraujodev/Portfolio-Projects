@@ -12,7 +12,7 @@ export default function LoginPage() {
     event.preventDefault();
 
     // try {
-    const response = await fetch('https://soft-star-9690.on.fleek.co/login', {
+    const response = await fetch('https://blog-rzyw.onrender.com/login', {
       method: 'POST',
       body: JSON.stringify({ username, password }),
       headers: { 'Content-Type': 'application/json' },

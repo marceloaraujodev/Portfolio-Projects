@@ -13,7 +13,7 @@ export default function EditPostPage() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        'https://soft-star-9690.on.fleek.co/post/' + id
+        'https://blog-rzyw.onrender.com/post/' + id
       );
       const postData = await response.json();
       setTitle(postData.title);
@@ -35,7 +35,7 @@ export default function EditPostPage() {
       postEditedData.set('file', files?.[0]); // ? optional chaining if no image set to undefined
     }
 
-    const response = await fetch('https://soft-star-9690.on.fleek.co/post', {
+    const response = await fetch('https://blog-rzyw.onrender.com/post', {
       method: 'PUT',
       body: postEditedData,
       credentials: 'include',
@@ -83,10 +83,3 @@ export default function EditPostPage() {
   );
 }
 
-// import React from 'react'
-
-// export default function EditPostPage() {
-//   return (
-//     <div>EditPostPage</div>
-//   )
-// }

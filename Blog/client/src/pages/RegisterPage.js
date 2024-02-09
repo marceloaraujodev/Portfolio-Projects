@@ -25,7 +25,7 @@ export default function RegisterPage() {
 
     try {
       const response = await fetch(
-        'https://soft-star-9690.on.fleek.co/register',
+        'https://blog-rzyw.onrender.com/register',
         {
           method: 'POST',
           body: JSON.stringify(registerUser),

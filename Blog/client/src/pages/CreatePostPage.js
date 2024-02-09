@@ -20,7 +20,7 @@ export default function CreatePost() {
     data.set('file', files[0]);
 
     const response = await fetch(
-      'https://soft-star-9690.on.fleek.co/createPost',
+      'https://blog-rzyw.onrender.com/createPost',
       {
         method: 'POST',
         body: data,

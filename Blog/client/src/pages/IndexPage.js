@@ -6,7 +6,7 @@ export default function IndexPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('https://soft-star-9690.on.fleek.co/post');
+      const response = await fetch('https://blog-rzyw.onrender.com/post');
       const data = await response.json();
       setPost(data);
     };
