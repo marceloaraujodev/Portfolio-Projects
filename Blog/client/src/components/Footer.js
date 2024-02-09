@@ -3,8 +3,8 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 export default function Footer() {
   return (
     <>
-    <hr />
     <footer>
+    <hr />
       <div>
         <a href="https://github.com/marceloaraujodev">
           <i className="bi bi-envelope social-media"></i>
