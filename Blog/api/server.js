@@ -188,35 +188,13 @@ app.post('/createPost', uploadMiddleware.single('file'), async (req, res) => {
 });
 
 app.get('/post', async (req, res) => {
-
-    try {
-    const [files] = await bucket.getFiles();
-
-    const fileData = files.map(file => {
-      return {
-        name: file.name,
-        url: `https://storage.googleapis.com/${bucket.name}/${file.name}`
-      }
-    })
+  
   res.json(
     await PostModel.find()
       .populate('author', ['username'])
       .sort({ createdAt: -1 })
       .limit(20)
   );
-  } catch (error) {
-    console.error('Error retrieving photos:', error);
-    res.status(500).json({
-        status: 'error',
-        message: 'Internal server error'
-    });
-  }
-  // res.json(
-  //   await PostModel.find()
-  //     .populate('author', ['username'])
-  //     .sort({ createdAt: -1 })
-  //     .limit(20)
-  // );
 });
 
 app.get('/post/:id', async (req, res) => {
