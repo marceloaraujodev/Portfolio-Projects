@@ -155,16 +155,9 @@ div.post-body p{
 }
 
 footer{
-  flex-shrink: 0;
-  bottom: 0;
   display: flex;
   justify-content: space-between;
-  margin: 30px 0;
-  align-items: center;
-  margin-top: 30px;
-}
-hr.separation {
-  margin: 5px 0;
+  margin-bottom: 50px;
 }
 footer a{
   text-decoration: none;
