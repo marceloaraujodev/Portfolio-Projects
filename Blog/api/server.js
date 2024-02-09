@@ -28,7 +28,7 @@ const app = express();
 app.use(morgan('dev')); // logger
 
 const corsOptions = {
-  origin: 'https://soft-star-9690.on.fleek.co/',
+  origin: 'https://summer-lab-1399.on.fleek.co/',
   methods: ['GET', 'POST', 'PUT'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
