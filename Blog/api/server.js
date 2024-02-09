@@ -10,9 +10,17 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const fs = require('fs');
-
+const admin = require('firebase-admin');
 dotenv.config({ path: './config.env' });
 
+const serviceAccount = require(`./${process.env.SERVICEACCOUNTPATH}`)
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    storageBucket: 'firebase-adminsdk-pli4d@blog-storage-fb319.iam.gserviceaccount.com',
+});
+  
+const bucket = admin.storage().bucket()
 // If I want to add multiple photos at once look at multer docs for .array instead of .single('file') and change the PostPage.js to support an array of photos instead of one object
 
 // multer, config limits for the post size!
@@ -54,11 +62,28 @@ const server = app.listen(PORT, () => {
 });
 
 // Gets all posts
-app.get('/', (req, res) => {
-  res.status('200').json({
-    status: 'success',
-    message: 'ok',
-  });
+app.get('/', async (req, res) => {
+  try {
+    const [files] = await bucket.getFiles();
+
+    const fileData = files.map(file => {
+      return {
+        name: file.name,
+        url: `https://storage.googleapis.com/${bucket.name}/${file.name}`
+      }
+    })
+    res.status('200').json({
+      status: 'success',
+      message: 'ok',
+      files: fileData
+    });
+  } catch (error) {
+    console.error('Error retrieving photos:', error);
+    res.status(500).json({
+        status: 'error',
+        message: 'Internal server error'
+    });
+  }
 });
 
 // Register user
@@ -126,24 +151,38 @@ app.post('/logout', (req, res) => {
 });
 
 app.post('/createPost', uploadMiddleware.single('file'), async (req, res) => {
-  const { originalname, path } = req.file;
-  const nameParts = originalname.split('.');
-  const ext = nameParts[nameParts.length - 1];
-  const newPath = path + '.' + ext;
-  fs.renameSync(path, newPath);
+  const { originalname, buffer } = req.file;
+  const { title, summary, content } = req.body;
+
+  // const nameParts = originalname.split('.');
+  // const ext = nameParts[nameParts.length - 1];
+  // const newPath = path + '.' + ext;
+  // fs.renameSync(path, newPath);
 
   const { token } = req.cookies;
   jwt.verify(token, process.env.SECRET, async (err, info) => {
     if (err) throw err;
-    const { title, summary, content } = req.body;
-    const newPost = await PostModel.create({
-      title,
-      summary,
-      content,
-      cover: newPath,
-      author: info.id,
-    });
-    res.json(newPost);
+    try {
+      const fileUploadOptions = {
+        destination: `covers/${originalname}`,
+        metadata: {
+          contentType: 'image/jpeg',
+        }
+      }
+      await bucket.upload(buffer, fileUploadOptions);
+      const newPost = await PostModel.create({
+        title,
+        summary,
+        content,
+        cover: newPath,
+        author: info.id,
+      });
+      res.json(newPost);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      res.status(500).json('Internal server error');
+    }
+    
   });
 });
 

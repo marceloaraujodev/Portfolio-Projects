@@ -1,3 +1,5 @@
+# Ignore service account key file
+serviceAccountKey.json
 
 # Logs
 logs
