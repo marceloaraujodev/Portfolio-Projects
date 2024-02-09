@@ -8,11 +8,13 @@ export default function LoginPage() {
   const [redirect, setRedirect] = useState(false);
   const { setUserInfo } = useContext(UserContext);
 
+  const url = "https://soft-star-9690.on.fleek.co";
+
   async function login(event){
     event.preventDefault();
 
     // try {
-      const response = await fetch("http://localhost:4000/login", {
+      const response = await fetch(`${url}/login`, {
         method: 'POST',
         body: JSON.stringify({username, password}),
         headers: {'Content-Type': 'application/json'},

@@ -4,6 +4,8 @@ import { useParams} from 'react-router-dom';
 import { UserContext } from '../components/UserContext';
 import { Link } from 'react-router-dom';
 
+const url = "https://soft-star-9690.on.fleek.co";
+
 export default function PostPage() {
   const { userInfo } = useContext(UserContext);
   const [postInfo, setPostInfo] = useState(null);
@@ -12,7 +14,7 @@ export default function PostPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`http://localhost:4000/post/${id}`);
+      const response = await fetch(`${url}/post/${id}`);
       const data = await response.json();
       setPostInfo(data);
     };
@@ -50,7 +52,7 @@ export default function PostPage() {
         </div>
       )}
       <div className="image">
-        <img src={`http://localhost:4000/${postInfo.cover}`} alt="post" />
+        <img src={`${url}/${postInfo.cover}`} alt="post" />
       </div>
       <div className='post-body' dangerouslySetInnerHTML={{ __html: postInfo.content }} />
     </div>

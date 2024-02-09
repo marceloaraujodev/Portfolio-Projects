@@ -3,6 +3,8 @@ import { Navigate } from "react-router-dom";
 // import 'react-quill/dist/quill.snow.css'; // se nao mudar nada na pagina pode tirar coloquei no editor.js
 import Editor from '../components/Editor';
 
+const url = "https://soft-star-9690.on.fleek.co";
+
 export default function CreatePost() {
   const [title, setTitle] = useState('');
   const [summary, setSummary] = useState('');
@@ -20,7 +22,7 @@ export default function CreatePost() {
     data.set('content', content);
     data.set('file', files[0])
 
-    const response = await fetch('http://localhost:4000/createPost', { //'https://example.com/api/createPost'
+    const response = await fetch(`${url}/createPost`, { //'https://example.com/api/createPost'
       method: 'POST',
       body: data,
       credentials: 'include'

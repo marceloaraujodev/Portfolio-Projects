@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 
+const url = "https://soft-star-9690.on.fleek.co";
+
 export default function RegisterPage() {
   const [redirect, setRedirect] = useState(false);
   const [registerUser, setRegisterUser] = useState({
@@ -24,7 +26,7 @@ export default function RegisterPage() {
     event.preventDefault();
 
       try {
-        const response = await fetch('http://localhost:4000/register', {
+        const response = await fetch(`${url}/register`, {
           method: 'POST',
           body: JSON.stringify(registerUser),
           headers: {'Content-Type': 'application/json'}

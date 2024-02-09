@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Navigate, useParams } from "react-router-dom";
 import Editor from '../components/Editor';
 
+const url = "https://soft-star-9690.on.fleek.co";
+
 export default function EditPostPage() {
   const {id} = useParams();
   const [title, setTitle] = useState('');
@@ -13,7 +15,7 @@ export default function EditPostPage() {
   
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('http://localhost:4000/post/'+id);
+      const response = await fetch(`${url}/post/${id}`);
       const postData = await response.json();
       setTitle(postData.title);
       setContent(postData.content);
@@ -34,7 +36,7 @@ export default function EditPostPage() {
       postEditedData.set('file', files?.[0]); // ? optional chaining if no image set to undefined
     }
  
-    const response = await fetch('http://localhost:4000/post', {
+    const response = await fetch(`${url}/post`, {
       method: 'PUT',
       body: postEditedData,
       credentials: 'include'
@@ -78,10 +80,3 @@ export default function EditPostPage() {
   );
 }
 
-// import React from 'react'
-
-// export default function EditPostPage() {
-//   return (
-//     <div>EditPostPage</div>
-//   )
-// }

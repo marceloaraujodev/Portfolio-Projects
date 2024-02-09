@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import Post from '../components/Post';
 
+const url = "https://soft-star-9690.on.fleek.co";
+
 export default function IndexPage() {
   const [posts, setPost] = useState([])
 
   useEffect(() => {
     const fetchData =  async () => {
-      const response = await fetch('http://localhost:4000/post');
+      const response = await fetch(`${url}/post`);
       const data = await response.json();
       setPost(data)
     }
