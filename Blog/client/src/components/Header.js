@@ -3,6 +3,8 @@ import { useContext, useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
 
+// this is a test
+
 export default function Header() {
   const {userInfo, setUserInfo} = useContext(UserContext);
   const navigate = useNavigate();
