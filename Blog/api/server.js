@@ -11,6 +11,7 @@ const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const fs = require('fs');
 const admin = require('firebase-admin');
+
 dotenv.config({ path: './config.env' });
 
 const serviceAccount = require(`./${process.env.SERVICEACCOUNTPATH}`)
