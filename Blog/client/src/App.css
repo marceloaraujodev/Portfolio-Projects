@@ -9,6 +9,9 @@ body {
   color: #222;
   font-family: 'Neuton', serif;
   font-family: 'GFS Didot', serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 img {
   max-width: 100%;
@@ -105,15 +108,6 @@ form.createPost button {
   height: 40px;
 }
 
-/* have the image wide using entire length and cutting it without distortion */
-/* div.post-page div.image{
-  max-height: 300px;
-  overflow: hidden;
-} */
-/* div.post-page div.image img{
-  object-fit: contain;
-  object-position: center center;
-} */
 div.post-page h1{
   font-weight: 700;
   font-size: 1.6rem;
