@@ -14,6 +14,9 @@ const admin = require('firebase-admin');
 
 dotenv.config({ path: './config.env' });
 
+
+//NEW
+
 const serviceAccount = require(`./${process.env.SERVICEACCOUNTPATH}`)
 
 admin.initializeApp({
