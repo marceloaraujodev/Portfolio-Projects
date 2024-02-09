@@ -20,7 +20,7 @@ export default function CreatePost() {
     data.set('content', content);
     data.set('file', files[0])
 
-    const response = await fetch('http://localhost:4000/createPost', { //'https://example.com/api/createPost'
+    const response = await fetch('http://localhost:4000/createPost', { 
       method: 'POST',
       body: data,
       credentials: 'include'
