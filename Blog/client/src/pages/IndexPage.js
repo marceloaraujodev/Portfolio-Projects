@@ -16,6 +16,8 @@ export default function IndexPage() {
 
   return (
     <>
+      {!posts && <h3>loaking</h3>}
+
       {posts.length > 0 &&
         posts.map((post, index) => <Post {...post} key={index} />)}
     </>
