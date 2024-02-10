@@ -10,3 +10,5 @@ eslint config
 
 ⚠️ Loggin the data from a form to the console just use the 
  e.target.elements. All the elements are inside the e.target    
+
+ ⚠️ req.query?.id optional chaining It allows you to access properties of an object if they exist without causing an error if the object is null or undefined.
