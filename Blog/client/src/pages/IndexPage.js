@@ -12,11 +12,11 @@ export default function IndexPage() {
     };
     fetchData();
   }, []);
-  // console.log(posts)
+ 
 
   return (
     <>
-      {!posts && <h3>loaking</h3>}
+      {posts.length <= 0 && <h3>loading..</h3>}
 
       {posts.length > 0 &&
         posts.map((post, index) => <Post {...post} key={index} />)}
