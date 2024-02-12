@@ -1,9 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
 *{
     margin: 0;
     padding: 0;
 }
 body{
     box-sizing: border-box;
+    background-color: blanchedalmond;
+    font-family: 'Roboto', sans-serif;
 }
 div.main-container{
     max-width: 800px; 
@@ -23,15 +27,53 @@ nav{
     padding-top: 2rem;
 }
 nav ul{
-    display: flex;
+    display: flex; 
 
 }
 nav li{
     text-decoration: none;
     list-style-type: none;
+    margin-left: 25px;
+    text-align: center;
+    position: relative;
+    text-decoration: none;
+    color: rgb(243, 122, 22);
+    font-weight: 500;
+    font-size: 1rem;
+}
+.navmenulink::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(243, 122, 22);
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+}
+.navmenulink:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+.navmenulink:hover {
+    color: rgb(243, 122, 22);
 }
 
-
+a.logo{
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: rgb(243, 122, 22);
+}
+a.contato{
+    background-color: rgb(243, 122, 22);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 30px;
+    font-weight: 500;
+    letter-spacing: 2px;
+}
 .section1Container{
     display: flex;
     padding-top: 10rem;

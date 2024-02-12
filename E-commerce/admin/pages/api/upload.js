@@ -9,7 +9,7 @@ export default async function handle(req, res){
         });
     });
     console.log('length:', files)
-    console.log(fields)
+    
     return res.json('ok')
 };
 

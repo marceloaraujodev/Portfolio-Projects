@@ -8,15 +8,15 @@ function App() {
       <div className="main-container">
         <main>
           <nav>
-            <a className="logo">LinkLogoOnLeft</a>
+            <a className="logo">LOGO</a>
 
             <ul>
-              <li>link 1</li>
-              <li>link 2</li>
-              <li>link 3</li>
+              <li><a className='navmenulink'>link 1</a></li>
+              <li><a className='navmenulink'>link 2</a></li>
+              <li><a className='navmenulink'>link 3</a></li>
             </ul>
 
-            <div>on the right</div>
+            <a className='contato'>CONTATO</a>
           </nav>
 
           {/* section one */}
