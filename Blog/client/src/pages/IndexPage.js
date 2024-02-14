@@ -12,11 +12,14 @@ export default function IndexPage() {
     };
     fetchData();
   }, []);
- 
 
   return (
     <>
-      {posts.length <= 0 && <h3>loading..</h3>}
+      {posts.length <= 0 && (
+        <div class="spinner-container">
+          <div class="spinner"></div>
+        </div>
+      )}
 
       {posts.length > 0 &&
         posts.map((post, index) => <Post {...post} key={index} />)}
