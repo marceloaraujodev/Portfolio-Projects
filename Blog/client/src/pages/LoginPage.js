@@ -36,7 +36,7 @@ export default function LoginPage() {
     <form onSubmit={login} className="login">
       <h1>Login</h1>
       <input
-        type="text"
+        type="password"
         placeholder="Username"
         name="username"
         value={username}
