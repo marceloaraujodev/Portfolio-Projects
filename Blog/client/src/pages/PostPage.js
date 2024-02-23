@@ -12,7 +12,8 @@ export default function PostPage() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        `https://blog-rzyw.onrender.com/post/${id}`
+        `http://localhost:4000/post/${id}`// prod
+        // `https://blog-rzyw.onrender.com/post/${id}`
       );
       const data = await response.json();
       setPostInfo(data);
@@ -52,7 +53,10 @@ export default function PostPage() {
       )}
       <div className="image">
         <img
-          src={`https://blog-rzyw.onrender.com/${postInfo.cover}`}
+          src={
+            `http://localhost:4000/${postInfo.cover}`
+            // `https://blog-rzyw.onrender.com/${postInfo.cover}`
+            }
           alt="post"
         />
       </div>

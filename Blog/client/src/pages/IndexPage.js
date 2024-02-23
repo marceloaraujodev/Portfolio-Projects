@@ -6,7 +6,10 @@ export default function IndexPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('https://blog-rzyw.onrender.com/post');
+      const response = await fetch(
+        'http://localhost:4000/post' // prod
+        // 'https://blog-rzyw.onrender.com/post'
+        );
       const data = await response.json();
       setPost(data);
     };
@@ -16,8 +19,8 @@ export default function IndexPage() {
   return (
     <>
       {posts.length <= 0 && (
-        <div class="spinner-container">
-          <div class="spinner"></div>
+        <div className="spinner-container">
+          <div className="spinner"></div>
         </div>
       )}
 

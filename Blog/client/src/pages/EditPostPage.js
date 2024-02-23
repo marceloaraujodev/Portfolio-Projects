@@ -13,7 +13,8 @@ export default function EditPostPage() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        'https://blog-rzyw.onrender.com/post/' + id
+        'http://localhost:4000/post' // development
+        // 'https://blog-rzyw.onrender.com/post/' + id // production
       );
       const postData = await response.json();
       setTitle(postData.title);
@@ -35,7 +36,11 @@ export default function EditPostPage() {
       postEditedData.set('file', files?.[0]); // ? optional chaining if no image set to undefined
     }
 
-    const response = await fetch('https://blog-rzyw.onrender.com/post', {
+    const response = await fetch(
+      'http://localhost:4000/post' // prod
+      // 'https://blog-rzyw.onrender.com/post'
+    
+    , {
       method: 'PUT',
       body: postEditedData,
       credentials: 'include',

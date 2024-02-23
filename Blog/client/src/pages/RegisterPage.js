@@ -25,7 +25,8 @@ export default function RegisterPage() {
 
     try {
       const response = await fetch(
-        'https://blog-rzyw.onrender.com/register',
+        `http://localhost:4000/register/`, // prod
+        // 'https://blog-rzyw.onrender.com/register',
         {
           method: 'POST',
           body: JSON.stringify(registerUser),

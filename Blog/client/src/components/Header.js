@@ -11,7 +11,10 @@ export default function Header() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('https://blog-rzyw.onrender.com/profile', {
+      const response = await fetch(
+        'http://localhost:4000/profile' // prod
+        // 'https://blog-rzyw.onrender.com/profile'
+        , {
         credentials: 'include',
       });
       const userData = await response.json();
@@ -22,7 +25,10 @@ export default function Header() {
   }, []); 
 
   function logout(){
-    fetch('https://blog-rzyw.onrender.com/logout', {
+    fetch(
+      'http://localhost:4000/logout' , //prod
+      // 'https://blog-rzyw.onrender.com/logout',
+     {
       credentials: 'include',
       method: 'POST'
     });

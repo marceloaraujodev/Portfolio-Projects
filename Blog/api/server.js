@@ -37,7 +37,8 @@ const app = express();
 app.use(morgan('dev')); // logger
 
 const corsOptions = {
-  origin: 'https://summer-lab-1399.on.fleek.co',
+  origin: 'http://localhost:3000',
+  // origin: 'https://summer-lab-1399.on.fleek.co',
   methods: ['GET', 'POST', 'PUT'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -63,29 +64,31 @@ const server = app.listen(PORT, () => {
 });
 
 // Gets all posts
-app.get('/', async (req, res) => {
-  try {
-    const [files] = await bucket.getFiles();
+//goodonline
+// app.get('/', async (req, res) => {
+  //   try {
+  //     const [files] = await bucket.getFiles();
 
-    const fileData = files.map(file => {
-      return {
-        name: file.name,
-        url: `https://storage.googleapis.com/${bucket.name}/${file.name}`
-      }
-    })
-    res.status('200').json({
-      status: 'success',
-      message: 'ok',
-      files: fileData
-    });
-  } catch (error) {
-    console.error('Error retrieving photos:', error);
-    res.status(500).json({
-        status: 'error',
-        message: 'Internal server error'
-    });
-  }
-});
+  //     const fileData = files.map(file => {
+  //       return {
+  //         name: file.name,
+  //         url: `https://storage.googleapis.com/${bucket.name}/${file.name}`
+  //       }
+  //     })
+  //     res.status('200').json({
+  //       status: 'success',
+  //       message: 'ok',
+  //       files: fileData
+  //     });
+  //   } catch (error) {
+  //     console.error('Error retrieving photos:', error);
+  //     res.status(500).json({
+  //         status: 'error',
+  //         message: 'Internal server error'
+  //     });
+  //   }
+// });
+
 
 // Register user
 app.post('/register', async (req, res) => {

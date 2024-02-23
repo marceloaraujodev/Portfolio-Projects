@@ -20,7 +20,8 @@ export default function CreatePost() {
     data.set('file', files[0]);
 
     const response = await fetch(
-      'https://blog-rzyw.onrender.com/createPost',
+      'http://localhost:4000/createPost', // development
+      // 'https://blog-rzyw.onrender.com/createPost', // production
       {
         method: 'POST',
         body: data,
