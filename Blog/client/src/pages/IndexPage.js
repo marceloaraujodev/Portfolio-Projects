@@ -5,15 +5,19 @@ export default function IndexPage() {
   const [posts, setPost] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(
-        'http://localhost:4000/post' // prod
-        // 'https://blog-rzyw.onrender.com/post'
-        );
-      const data = await response.json();
-      setPost(data);
-    };
-    fetchData();
+    try {
+      const fetchData = async () => {
+        const response = await fetch(
+          'http://localhost:4000/post' // prod
+          // 'https://blog-rzyw.onrender.com/post'
+          );
+        const data = await response.json();
+        setPost(data);
+      };
+      fetchData();
+    } catch (error) {
+      
+    }
   }, []);
 
   return (

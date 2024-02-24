@@ -11,8 +11,8 @@ const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const fs = require('fs');
 const admin = require('firebase-admin');
-
 dotenv.config({ path: './config.env' });
+const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 
 const serviceAccount = require(`./${process.env.SERVICEACCOUNTPATH}`)
 
@@ -20,6 +20,8 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     storageBucket: 'firebase-adminsdk-pli4d@blog-storage-fb319.iam.gserviceaccount.com',
 });
+
+
   
 const bucket = admin.storage().bucket()
 // If I want to add multiple photos at once look at multer docs for .array instead of .single('file') and change the PostPage.js to support an array of photos instead of one object
@@ -36,10 +38,11 @@ const app = express();
 
 app.use(morgan('dev')); // logger
 
+// COORS OPTIONS
 const corsOptions = {
   origin: 'http://localhost:3000',
   // origin: 'https://summer-lab-1399.on.fleek.co',
-  methods: ['GET', 'POST', 'PUT'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
@@ -64,7 +67,7 @@ const server = app.listen(PORT, () => {
 });
 
 // Gets all posts
-//goodonline
+//good online turn on in production / its not need it locally 
 // app.get('/', async (req, res) => {
   //   try {
   //     const [files] = await bucket.getFiles();
@@ -89,16 +92,67 @@ const server = app.listen(PORT, () => {
   //   }
 // });
 
+/* What do I get from the post document 
+    "post": {
+        "_id": "65bd7f2a1fcdbb71edb5b9e2",
+        "title": "WHAT TO PACK FOR A BEACH TRIP",
+        "summary": "my first blog",
+        "content":
+        "cover": "uploads\\69b116e0fc0419b87c8ab60bff0da2d4.jpg",
+        "author": "65bd3967db2c90895d5069c5",
+        "createdAt": "2024-02-02T23:47:54.970Z",
+        "updatedAt": "2024-02-04T16:28:48.081Z",
+*/
+
+app.get(`/checkout-session/:postId`, async (req, res,) => {
+  try {
+    const {postId} = req.params;
+    const post = await PostModel.findById(postId);
+
+    // create stripe checkout session | Checkout -> The Session Object
+    const session = await stripe.checkout.sessions.create({
+      line_items: [
+        { // all fields here come from stripe
+          price_data: {
+            currency: 'brl',
+            unit_amount: 500 * 100,
+            product_data: {
+              name: `test`,
+              description: 'test',
+            }
+          },
+          quantity: 1
+        }],
+        mode: 'payment',
+        success_url: `${req.protocol}://${req.get('host')}/?tour=${req.params.postId}&user=test&price=$500`, // not secure temproraly
+        cancel_url: `${req.protocol}://${req.get('host')}/postId`,
+        customer_email: 'ppzmarcelo@gmail.com', //req.user.email,
+        client_reference_id: req.params.postId,
+    })
+  
+    // create session  as response?!
+    res.status(200).json({
+      status: 'success',
+      session
+    })
+    
+  } catch (error) {
+    console.log(error)
+  }
+
+}) 
+
 
 // Register user
 app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, email } = req.body;
 
   const encryptPass = await bcrypt.hash(password, 10);
 
   try {
     const userDoc = await UserModel.create({
       username: username,
+      email: email,
       password: encryptPass,
     });
     res.status(200).json(userDoc);
@@ -124,6 +178,7 @@ app.post('/login', async (req, res) => {
       jwt.sign({ username, id: user.id }, process.env.SECRET, (err, token) => {
         if (err) throw err;
         res.cookie('token', token).json({
+          status: 'success',
           id: user.id,
           username,
         });
@@ -150,44 +205,59 @@ app.get('/profile', (req, res) => {
 });
 
 app.post('/logout', (req, res) => {
-  res.cookie('token', '').json('ok');
-  console.log('logged out');
+  res.cookie('token', '').json('logged out');
 });
 
 app.post('/createPost', uploadMiddleware.single('file'), async (req, res) => {
-  const { originalname, buffer } = req.file;
-  const { title, summary, content } = req.body;
-
-  // const nameParts = originalname.split('.');
-  // const ext = nameParts[nameParts.length - 1];
-  // const newPath = path + '.' + ext;
-  // fs.renameSync(path, newPath);
+  // // development 👇 
+    const { originalname, path } = req.file;
+    const nameParts = originalname.split('.');
+    const ext = nameParts[nameParts.length - 1];
+    const newPath = path + '.' + ext;
+    fs.renameSync(path, newPath);
 
   const { token } = req.cookies;
   jwt.verify(token, process.env.SECRET, async (err, info) => {
     if (err) throw err;
-    try {
-      const fileUploadOptions = {
-        destination: `covers/${originalname}`,
-        metadata: {
-          contentType: 'image/jpeg',
-        }
-      }
-      await bucket.upload(buffer, fileUploadOptions);
-      const newPost = await PostModel.create({
-        title,
-        summary,
-        content,
-        cover: newPath,
-        author: info.id,
-      });
-      res.json(newPost);
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      res.status(500).json('Internal server error');
-    }
-    
+    const { title, summary, content } = req.body;
+    const newPost = await PostModel.create({
+      title,
+      summary,
+      content,
+      cover: newPath,
+      author: info.id,
+    });
+    res.json(newPost);
   });
+
+  // // production 👇
+    // const { originalname, buffer } = req.file;
+    // const { title, summary, content } = req.body;
+
+    // const { token } = req.cookies;
+    // jwt.verify(token, process.env.SECRET, async (err, info) => {
+    //   if (err) throw err;
+    //   try {
+    //     const fileUploadOptions = {
+    //       destination: `covers/${originalname}`,
+    //       metadata: {
+    //         contentType: 'image/jpeg',
+    //       }
+    //     }
+    //     await bucket.upload(buffer, fileUploadOptions);
+    //     const newPost = await PostModel.create({
+    //       title,
+    //       summary,
+    //       content,
+    //       cover: newPath,
+    //       author: info.id,
+    //     });
+    //     res.json(newPost);
+    //   } catch (error) {
+    //     console.error('Error uploading file:', error);
+    //     res.status(500).json('Internal server error');
+    //   }
+  // });
 });
 
 app.get('/post', async (req, res) => {
@@ -240,6 +310,19 @@ app.put('/post/', uploadMiddleware.single('file'), async (req, res) => {
     res.json(updatedPost);
   });
 });
+
+app.delete('/post/:id', async (req, res) => {
+  try {
+    await PostModel.findByIdAndDelete(req.params.id)
+  
+    res.status(200).json({
+      status: 'success',
+      message: 'Post deleted successfully'
+    }) 
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 server.on('close', () => {
   console.log('Server shutting down');

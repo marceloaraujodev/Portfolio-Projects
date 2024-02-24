@@ -21,14 +21,14 @@ export default function LoginPage() {
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include', // includes cookie here
     });
-
+    
     if (response.ok) {
       response.json().then((userInfo) => {
         setUserInfo(userInfo);
         setRedirect(true);
       });
     } else {
-      throw new Error('Login failed');
+      alert('Wrong username or password')
     }
   }
   if (redirect) {

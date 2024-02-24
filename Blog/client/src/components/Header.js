@@ -11,18 +11,21 @@ export default function Header() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(
-        'http://localhost:4000/profile' // prod
-        // 'https://blog-rzyw.onrender.com/profile'
-        , {
-        credentials: 'include',
-      });
-      const userData = await response.json();
-      setUserInfo(userData)
+    // if(!userInfo){
+        const response = await fetch(
+          'http://localhost:4000/profile' // prod
+          // 'https://blog-rzyw.onrender.com/profile'
+          , {
+          credentials: 'include',
+        });
+        const userData = await response.json();
+        setUserInfo(userData)
+      // }
     }
     fetchData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); 
+  // }, [userInfo, setUserInfo]); 
 
   function logout(){
     fetch(

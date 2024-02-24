@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Navigate } from 'react-router-dom';
+import { UserContext } from '../components/UserContext';
 
 export default function RegisterPage() {
+  const { setUserInfo } = useContext(UserContext);
   const [redirect, setRedirect] = useState(false);
   const [registerUser, setRegisterUser] = useState({
     username: '',
-    // email: '',
+    email: '',
     password: '',
     // passwordConfirm: ''
   });
@@ -36,8 +38,10 @@ export default function RegisterPage() {
       // console.log(response);
 
       if (response.status === 200) {
+        const newUser = await response.json();
         alert('registrations successful');
         setRedirect(true);
+        setUserInfo(newUser)
       } else {
         alert('Registration failed');
       }
@@ -68,7 +72,13 @@ export default function RegisterPage() {
         value={registerUser.username}
         onChange={handleChange}
       />
-      {/* <input type='text' placeholder='Email' name="email" value={registerUser.email}  onChange={handleChange}/> */}
+      <input
+        type="text"
+        placeholder="Email"
+        name="email"
+        value={registerUser.email}
+        onChange={handleChange}
+      />
       <input
         type="text"
         placeholder="Password"

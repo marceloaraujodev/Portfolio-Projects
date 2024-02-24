@@ -2,6 +2,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Neuton:wght@200;300;400;700;800&family=Work+Sans:ital,wght@0,100;0,200;0,400;0,500;1,200&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Neuton:wght@200;300;400;700;800&family=Work+Sans:ital,wght@0,100;0,200;0,400;0,500;1,200&display=swap');
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 
 * {
@@ -42,6 +47,9 @@ header nav {
   display: flex;
   gap: 15px;
 }
+nav a{
+  cursor: pointer;
+}
 .divider{
   background-color: #333;
   height: 1px;
@@ -53,11 +61,6 @@ header nav {
   border-top-color: #333;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 div.post {
@@ -129,10 +132,10 @@ div.post-page h1{
   font-size: 1.6rem;
   /* margin-top: 65px; */
 }
-div.post-page a {
+/* div.post-page a {
   color: #333;
   text-decoration: underline;
-}
+} */
 div.post-page time {
   display: block;
   /* text-align: center; */
@@ -146,22 +149,26 @@ div.post-page div.author{
   font-weight: bold;
   margin-bottom: 20px;
 }
+
 div.edit-post{
   font-size: 0.9rem;
   margin-bottom: 25px;
 }
-div.post-page a.edit{
+.btn-main{
   background-color: #333;
-  color: white;
   padding: 10px 15px;
   text-decoration: none;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  margin-right: 10px;
+}
+a.btn-main{
+  color: white;
 }
 a svg{
   height: 20px;
+  margin-right: 5px;
 }
 div.post-body p{
   font-family: 'Neuton', serif;
