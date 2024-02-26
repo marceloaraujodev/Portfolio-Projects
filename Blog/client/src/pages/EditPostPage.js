@@ -8,18 +8,22 @@ export default function EditPostPage() {
   const [summary, setSummary] = useState('');
   const [content, setContent] = useState('');
   const [files, setFiles] = useState('');
+  const [price, setPrice] = useState('');
   const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        'http://localhost:4000/post' // development
+        `http://localhost:4000/post/${id}` // development
         // 'https://blog-rzyw.onrender.com/post/' + id // production
       );
       const postData = await response.json();
       setTitle(postData.title);
       setContent(postData.content);
       setSummary(postData.summary);
+      if(postData.price) {
+        setPrice(postData.price);
+      }
     };
     fetchData();
   }, [id]);
@@ -31,15 +35,15 @@ export default function EditPostPage() {
     postEditedData.set('title', title);
     postEditedData.set('summary', summary);
     postEditedData.set('content', content);
+    postEditedData.set('price', price);
     postEditedData.set('id', id);
     if (files?.[0]) {
       postEditedData.set('file', files?.[0]); // ? optional chaining if no image set to undefined
     }
 
     const response = await fetch(
-      'http://localhost:4000/post' // prod
+      `http://localhost:4000/post/` // prod
       // 'https://blog-rzyw.onrender.com/post'
-    
     , {
       method: 'PUT',
       body: postEditedData,
@@ -79,6 +83,14 @@ export default function EditPostPage() {
         type="file"
         onChange={(e) => {
           setFiles(e.target.files);
+        }}
+      />
+      <input
+        type="number"
+        value={price}
+        placeholder='Price: $'
+        onChange={(e) => {
+          setPrice(e.target.value);
         }}
       />
 

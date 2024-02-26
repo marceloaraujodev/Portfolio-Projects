@@ -4,16 +4,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { UserContext } from '../components/UserContext';
 import Button from '../components/Button';
 import {loadStripe} from '@stripe/stripe-js';
+const stripePromise = loadStripe("pk_test_51OmiFsBfcEidHzvrvgq1dJhIYcZDqKSQjDKqCBsSvQQuf60SsP6DS4yV4yn9SsLfP1SSrlBznzRwJgUXbdkDrn5T00Zk6x1RYT")
+
 
 export default function PostPage() {
   const { userInfo } = useContext(UserContext);
   const [postInfo, setPostInfo] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
-
-  const stripe = loadStripe("pk_test_51OmiFsBfcEidHzvrvgq1dJhIYcZDqKSQjDKqCBsSvQQuf60SsP6DS4yV4yn9SsLfP1SSrlBznzRwJgUXbdkDrn5T00Zk6x1RYT");
-
-
 
 
   useEffect(() => {
@@ -60,22 +58,17 @@ export default function PostPage() {
     }
   }
 
-  // wrong react is different
   async function checkout(){
-    
-    try {
-      const newId = id;
-      const session = await fetch(`http://localhost:4000/checkout-session/${newId}`);
-      console.log(newId, `http://localhost:4000/checkout-session/${newId}`)
+    const response = await fetch(`http://localhost:4000/checkout-session/${id}`)
+    const data = await response.json();
+    const publishableKey = data.session.id
+    const stripe = await stripePromise;
+    await stripe.redirectToCheckout({
+      sessionId: publishableKey
+    })
 
-      await stripe.redirectToCheckout({
-        id: session.session.id
-      })
-    } catch (error) {
-      console.log(error)
-    }
   }
-
+  
   return (
     <div className="post-page">
       <h1>{postInfo.title}</h1>
@@ -119,7 +112,7 @@ export default function PostPage() {
           </Button>
         </div>
       )}
-      {userInfo.id !== postInfo.author._id && (
+      {userInfo.id !== postInfo.author._id && postInfo.price > 0 && (
         <div className="edit-post">
           <Button onClick={checkout}>
             <svg

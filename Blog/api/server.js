@@ -59,7 +59,7 @@ const DB = process.env.DATABASE.replace(
 
 // DB connection
 mongoose.connect(DB).then(() => console.log('Connected to Database'));
-
+ 
 // start server
 const PORT = 4000;
 const server = app.listen(PORT, () => {
@@ -67,7 +67,7 @@ const server = app.listen(PORT, () => {
 });
 
 // Gets all posts
-//good online turn on in production / its not need it locally 
+// Turn on in production / its not need it locally 
 // app.get('/', async (req, res) => {
   //   try {
   //     const [files] = await bucket.getFiles();
@@ -108,24 +108,24 @@ app.get(`/checkout-session/:postId`, async (req, res,) => {
   try {
     const {postId} = req.params;
     const post = await PostModel.findById(postId);
-
+    console.log(post)
     // create stripe checkout session | Checkout -> The Session Object
     const session = await stripe.checkout.sessions.create({
       line_items: [
         { // all fields here come from stripe
           price_data: {
             currency: 'brl',
-            unit_amount: 500 * 100,
+            unit_amount: post.price * 100,
             product_data: {
-              name: `test`,
-              description: 'test',
+              name: post.title,
+              description: post.title,
             }
           },
           quantity: 1
         }],
         mode: 'payment',
         success_url: `${req.protocol}://${req.get('host')}/?tour=${req.params.postId}&user=test&price=$500`, // not secure temproraly
-        cancel_url: `${req.protocol}://${req.get('host')}/postId`,
+        cancel_url: `${req.protocol}://${req.get('host')}/:postId`,
         customer_email: 'ppzmarcelo@gmail.com', //req.user.email,
         client_reference_id: req.params.postId,
     })
@@ -142,12 +142,13 @@ app.get(`/checkout-session/:postId`, async (req, res,) => {
 
 }) 
 
-
 // Register user
 app.post('/register', async (req, res) => {
   const { username, password, email } = req.body;
 
   const encryptPass = await bcrypt.hash(password, 10);
+
+  
 
   try {
     const userDoc = await UserModel.create({
@@ -155,6 +156,9 @@ app.post('/register', async (req, res) => {
       email: email,
       password: encryptPass,
     });
+
+    
+
     res.status(200).json(userDoc);
   } catch (error) {
     console.log(error);
@@ -219,15 +223,19 @@ app.post('/createPost', uploadMiddleware.single('file'), async (req, res) => {
   const { token } = req.cookies;
   jwt.verify(token, process.env.SECRET, async (err, info) => {
     if (err) throw err;
-    const { title, summary, content } = req.body;
+    const { title, summary, content, price } = req.body;
     const newPost = await PostModel.create({
       title,
       summary,
       content,
       cover: newPath,
+      price,
       author: info.id,
     });
-    res.json(newPost);
+    res.status(200).json({
+      status: 'success',
+      newPost
+    });
   });
 
   // // production 👇
@@ -276,6 +284,7 @@ app.get('/post/:id', async (req, res) => {
   res.json(post);
 });
 
+// Edit Post
 app.put('/post/', uploadMiddleware.single('file'), async (req, res) => {
   let newPath = null;
   if (req.file) {
@@ -289,7 +298,8 @@ app.put('/post/', uploadMiddleware.single('file'), async (req, res) => {
   const { token } = req.cookies;
   jwt.verify(token, process.env.SECRET, async (err, info) => {
     if (err) throw err;
-    const { title, summary, content, id } = req.body;
+    const { title, summary, content, id, price } = req.body;
+
     const dbPost = await PostModel.findById(id);
     const author = JSON.stringify(dbPost.author) === JSON.stringify(info.id);
     if (!author) {
@@ -302,6 +312,7 @@ app.put('/post/', uploadMiddleware.single('file'), async (req, res) => {
         summary,
         content,
         cover: newPath ? newPath : dbPost.cover,
+        price
       },
       {
         new: true,
@@ -310,6 +321,7 @@ app.put('/post/', uploadMiddleware.single('file'), async (req, res) => {
     res.json(updatedPost);
   });
 });
+
 
 app.delete('/post/:id', async (req, res) => {
   try {

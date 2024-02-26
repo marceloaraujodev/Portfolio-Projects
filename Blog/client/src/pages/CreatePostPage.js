@@ -8,6 +8,7 @@ export default function CreatePost() {
   const [summary, setSummary] = useState('');
   const [content, setContent] = useState('');
   const [files, setFiles] = useState('');
+  const [price, setPrice] = useState('');
   const [redirect, setRedirect] = useState(false);
 
   async function createNewPost(e) {
@@ -18,6 +19,7 @@ export default function CreatePost() {
     data.set('summary', summary);
     data.set('content', content);
     data.set('file', files[0]);
+    data.set('price', price)
 
 
     const response = await fetch(
@@ -63,6 +65,14 @@ export default function CreatePost() {
         required
         onChange={(e) => {
           setFiles(e.target.files);
+        }}
+      />
+      <input
+        type="number"
+        placeholder='Add Look Price: $ (optional)'
+        value={price}
+        onChange={(e) => {
+          setPrice(e.target.value);
         }}
       />
 

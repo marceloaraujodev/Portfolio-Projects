@@ -67,16 +67,16 @@ export default function RegisterPage() {
       <h1>Register</h1>
       <input
         type="text"
-        placeholder="Username"
-        name="username"
-        value={registerUser.username}
+        placeholder="Email"
+        name="email"
+        value={registerUser.email}
         onChange={handleChange}
       />
       <input
         type="text"
-        placeholder="Email"
-        name="email"
-        value={registerUser.email}
+        placeholder="Username"
+        name="username"
+        value={registerUser.username}
         onChange={handleChange}
       />
       <input
