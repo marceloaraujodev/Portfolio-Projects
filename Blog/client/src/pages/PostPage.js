@@ -68,6 +68,8 @@ export default function PostPage() {
     })
 
   }
+
+  console.log((userInfo.id !== postInfo.author._id), postInfo.price)
   
   return (
     <div className="post-page">
@@ -112,7 +114,7 @@ export default function PostPage() {
           </Button>
         </div>
       )}
-      {userInfo.id !== postInfo.author._id && postInfo.price > 0 && (
+      {userInfo.id !== postInfo.author._id && (postInfo.price > 0 || !postInfo.price) && (
         <div className="edit-post">
           <Button onClick={checkout}>
             <svg
