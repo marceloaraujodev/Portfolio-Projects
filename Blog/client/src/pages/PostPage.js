@@ -68,9 +68,7 @@ export default function PostPage() {
     })
 
   }
-
-  console.log((userInfo.id !== postInfo.author._id), postInfo.price)
-  
+ 
   return (
     <div className="post-page">
       <h1>{postInfo.title}</h1>

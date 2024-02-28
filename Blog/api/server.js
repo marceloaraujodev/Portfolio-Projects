@@ -177,20 +177,24 @@ app.post('/login', async (req, res) => {
     if (!user) {
       return res.status(400).json('User not found');
     }
-    const match = bcrypt.compare(password, user.password);
-    if (match) {
-      jwt.sign({ username, id: user.id }, process.env.SECRET, (err, token) => {
-        if (err) throw err;
-        res.cookie('token', token).json({
-          status: 'success',
-          id: user.id,
-          username,
+
+    bcrypt.compare(password, user.password, function (err, result) {
+      if (result) {
+        jwt.sign({ username, id: user.id }, process.env.SECRET, (err, token) => {
+          if (err) throw err;
+          res.cookie('token', token).json({
+            status: 'success',
+            id: user.id,
+            username,
+          });
         });
-      });
-      console.log('Logged IN');
-    } else {
-      res.status(400).json('access denied');
-    }
+        console.log('Logged IN');
+      } else {
+        res.status(400).json('access denied', err);
+      }
+    });
+
+
   } catch (error) {
     console.log(error);
     res.status(500).json('Internal server error');

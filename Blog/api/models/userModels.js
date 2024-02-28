@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide your username'],
     min: 4,
-    // unique: true,
+    unique: true,
   },
   email: {
       type: String,
@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    // required: true,
+    required: true,
     minlength: [4, 'Please enter a password of at lease 4 characters'],
     // select: false,
   },
