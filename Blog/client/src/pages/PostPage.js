@@ -17,8 +17,8 @@ export default function PostPage() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        `http://localhost:4000/post/${id}` // prod
-        // `https://blog-rzyw.onrender.com/post/${id}`
+        // `http://localhost:4000/post/${id}` // prod
+        `https://blog-rzyw.onrender.com/post/${id}`
       );
       const data = await response.json();
       setPostInfo(data);
@@ -59,7 +59,10 @@ export default function PostPage() {
   }
 
   async function checkout(){
-    const response = await fetch(`http://localhost:4000/checkout-session/${id}`)
+    const response = await fetch(
+      // `http://localhost:4000/checkout-session/${id}` // prod
+      `https://blog-rzyw.onrender.com/checkout-session/${id}` // prod
+      )
     const data = await response.json();
     const publishableKey = data.session.id
     const stripe = await stripePromise;
@@ -136,8 +139,8 @@ export default function PostPage() {
       <div className="image">
         <img
           src={
-            `http://localhost:4000/${postInfo.cover}`
-            // `https://blog-rzyw.onrender.com/${postInfo.cover}`
+            // `http://localhost:4000/${postInfo.cover}`
+            `https://blog-rzyw.onrender.com/${postInfo.cover}`
           }
           alt="post"
         />
