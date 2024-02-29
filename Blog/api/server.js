@@ -265,11 +265,68 @@ app.post('/logout', (req, res) => {
 // });
 
 app.post('/post', async (req, res) => {
-  try {
-    res.status(200).json('ok')
-  } catch (error) {
-    console.log(error)
-  }
+  // app.post('/post',/* uploadMiddleware.single('file'), */ async (req, res) => {
+//   // // // development 👇 
+//   //     const { originalname, path } = req.file;
+//   //     const nameParts = originalname.split('.');
+//   //     const ext = nameParts[nameParts.length - 1];
+//   //     const newPath = path + '.' + ext;
+//   //     fs.renameSync(path, newPath);
+
+//   //   const { token } = req.cookies;
+//   //   jwt.verify(token, process.env.SECRET, async (err, info) => {
+//   //     if (err) throw err;
+//   //     const { title, summary, content, price } = req.body;
+//   //     const newPost = await PostModel.create({
+//   //       title,
+//   //       summary,
+//   //       content,
+//   //       cover: newPath,
+//   //       price,
+//   //       author: info.id,
+//   //     });
+//   //     res.status(200).json({
+//   //       status: 'success',
+//   //       newPost
+//   //     });
+//   // });
+
+
+  // production 👇
+    const { originalname, buffer } = req.file;
+    const { title, summary, content, price } = req.body;
+    console.log('pass 1')
+    const { token } = req.cookies;
+    console.log('pass 2')
+    jwt.verify(token, process.env.SECRET, async (err, info) => {
+      if (err) throw err;
+      console.log('pass 3')
+      try {
+        const fileUploadOptions = {
+          destination: `covers/${originalname}`,
+          metadata: {
+            contentType: 'image/jpeg',
+          }
+        }
+        await bucket.upload(buffer, fileUploadOptions);
+        console.log('pass 4')
+        const newPost = await PostModel.create({
+          title,
+          summary,
+          content,
+          cover: newPath,
+          author: info.id,
+          price
+        });
+        
+        res.json(newPost);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        res.status(500).json('Internal server error');
+      }
+  });
+  res.json('ok')
+
 })
 
 app.get('/post', async (req, res) => {
