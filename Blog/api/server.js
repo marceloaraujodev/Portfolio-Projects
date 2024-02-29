@@ -232,38 +232,38 @@ app.post('/logout', (req, res) => {
 
 
     // production 👇
-    // // console.log('enter')
-    //   const { originalname, buffer } = req.file;
-    //   const { title, summary, content, price } = req.body;
-    //   console.log(originalname, buffer, title, summary, content, price)
+    console.log('enter')
+      const { originalname, buffer } = req.file;
+      const { title, summary, content, price } = req.body;
+      console.log(originalname, buffer, title, summary, content, price)
 
-    //   // const { token } = req.cookies;
-    //   // jwt.verify(token, process.env.SECRET, async (err, info) => {
-    //   //   if (err) throw err;
-    //     try {
-    //       console.log('log 1')
-    //       const fileUploadOptions = {
-    //         destination: `covers/${originalname}`,
-    //         metadata: {
-    //           contentType: 'image/jpeg',
-    //         }
-    //       }
-    //       console.log('log 2')
-    //       await bucket.upload(buffer, fileUploadOptions);
-    //       const newPost = await PostModel.create({
-    //         title,
-    //         summary,
-    //         content,
-    //         cover: newPath,
-    //         author: info.id,
-    //         price
-    //       });
-    //       console.log('log 3')
-    //       res.json(newPost);
-    //     } catch (error) {
-    //       console.error('Error uploading file:', error);
-    //       res.status(500).json('Internal server error');
-    //     }
+      // const { token } = req.cookies;
+      // jwt.verify(token, process.env.SECRET, async (err, info) => {
+      //   if (err) throw err;
+        try {
+          console.log('log 1')
+          const fileUploadOptions = {
+            destination: `covers/${originalname}`,
+            metadata: {
+              contentType: 'image/jpeg',
+            }
+          }
+          console.log('log 2')
+          await bucket.upload(buffer, fileUploadOptions);
+          const newPost = await PostModel.create({
+            title,
+            summary,
+            content,
+            cover: newPath,
+            author: info.id,
+            price
+          });
+          console.log('log 3')
+          res.json(newPost);
+        } catch (error) {
+          console.error('Error uploading file:', error);
+          res.status(500).json('Internal server error');
+        }
 
 
     // });
