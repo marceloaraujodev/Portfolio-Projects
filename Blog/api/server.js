@@ -298,6 +298,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     const { originalname, buffer } = req.file;
     const { title, summary, content, price } = req.body;
     console.log('pass 1')
+    console.log(title, summary, content, price)
     const { token } = req.cookies;
     console.log('Token:', token);
     console.log('pass 2')

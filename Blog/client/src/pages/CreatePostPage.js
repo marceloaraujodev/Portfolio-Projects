@@ -15,6 +15,8 @@ export default function CreatePost() {
   async function createNewPost(e) {
     e.preventDefault();
 
+    console.log('Cookies:', document.cookie);
+
     const data = new FormData();
     data.set('title', title);
     data.set('summary', summary);
@@ -34,6 +36,7 @@ export default function CreatePost() {
           //   'Content-Type': 'multipart/form-data'
           // }
         }
+        
       );
       if (response.ok) {
         setRedirect(true);
