@@ -65,6 +65,7 @@ const server = app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
 
+
 // Gets all posts
 // Turn on in production / its not need it locally 
 app.get('/', async (req, res) => {
@@ -228,6 +229,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   //     });
   // });
 
+  
   // production 👇
   // console.log('enter')
     const { originalname, buffer } = req.file;
