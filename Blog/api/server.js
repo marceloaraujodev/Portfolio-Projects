@@ -264,7 +264,7 @@ app.post('/logout', (req, res) => {
 //   res.json('ok')
 // });
 
-app.post('/post', async (req, res) => {
+app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   // app.post('/post',/* uploadMiddleware.single('file'), */ async (req, res) => {
 //   // // // development 👇 
 //   //     const { originalname, path } = req.file;
