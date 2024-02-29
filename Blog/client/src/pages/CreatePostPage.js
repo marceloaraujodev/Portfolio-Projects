@@ -32,9 +32,9 @@ export default function CreatePost() {
           method: 'POST',
           body: data,
           credentials: 'include',
-          // headers: {
-          //   'Content-Type': 'multipart/form-data'
-          // }
+          headers: {
+            'Content-Type': 'multipart/form-data', // Add Content-Type header
+          }
         }
         
       );
