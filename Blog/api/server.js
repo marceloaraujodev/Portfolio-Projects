@@ -264,6 +264,7 @@ app.post('/logout', (req, res) => {
   //   res.json('ok')
 // });
 
+// create post
 app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   // app.post('/post',/* uploadMiddleware.single('file'), */ async (req, res) => {
   // // development 👇 
@@ -329,25 +330,8 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   // });
 })
 
-app.get('/post', async (req, res) => {
-  
-  res.json(
-    await PostModel.find()
-      .populate('author', ['username'])
-      .sort({ createdAt: -1 })
-      .limit(20)
-  );
-});
-
-app.get('/post/:id', async (req, res) => {
-  const { id } = req.params;
-  const post = await PostModel.findById(id).populate('author', ['username']);
-  res.json(post);
-});
-
-
 // Edit Post
-app.put('/post/', uploadMiddleware.single('file'), async (req, res) => {
+app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
   let newPath = null;
   if (req.file) {
     const { originalname, path } = req.file;
@@ -384,6 +368,23 @@ app.put('/post/', uploadMiddleware.single('file'), async (req, res) => {
   });
 });
 
+
+
+app.get('/post', async (req, res) => {
+  
+  res.json(
+    await PostModel.find()
+      .populate('author', ['username'])
+      .sort({ createdAt: -1 })
+      .limit(20)
+  );
+});
+
+app.get('/post/:id', async (req, res) => {
+  const { id } = req.params;
+  const post = await PostModel.findById(id).populate('author', ['username']);
+  res.json(post);
+});
 
 app.delete('/post/:id', async (req, res) => {
   try {
