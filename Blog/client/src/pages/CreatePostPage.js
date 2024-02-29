@@ -22,20 +22,27 @@ export default function CreatePost() {
     data.set('file', files[0]);
     data.set('price', price)
 
-
-    const response = await fetch(
-      // 'http://localhost:4000/post', // development
-      'https://blog-rzyw.onrender.com/post', // production
-      {
-        method: 'POST',
-        body: data,
-        credentials: 'include',
-        mode: 'no-cors',
+    try {
+      const response = await fetch(
+        // 'http://localhost:4000/post', // development
+        'https://blog-rzyw.onrender.com/post', // production
+        {
+          method: 'POST',
+          body: data,
+          credentials: 'include',
+          // mode: 'no-cors',
+        }
+      );
+      if (response.ok) {
+        setRedirect(true);
+      }else{
+        console.log('error creating post:', response.statusText)
       }
-    );
-    if (response.ok) {
-      setRedirect(true);
+      
+    } catch (error) {
+      console.log(error)
     }
+
   }
 
   if (redirect) {
