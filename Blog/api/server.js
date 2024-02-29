@@ -295,7 +295,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
 
 
   // production 👇
-  app.post('/createPost', uploadMiddleware.single('file'), async (req, res) => {
+  app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     const { originalname, buffer } = req.file;
     const { title, summary, content } = req.body;
     // const nameParts = originalname.split('.');
