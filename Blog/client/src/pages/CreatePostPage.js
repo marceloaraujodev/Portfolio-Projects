@@ -25,7 +25,7 @@ export default function CreatePost() {
     try {
       const response = await fetch(
         // 'http://localhost:4000/post', // development
-        'https://blog-rzyw.onrender.com/post', // production
+        'https://blog-rzyw.onrender.com/createPost', // production
         {
           method: 'POST',
           body: data,
