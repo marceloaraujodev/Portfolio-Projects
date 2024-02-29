@@ -203,7 +203,7 @@ app.post('/logout', (req, res) => {
 });
 
 // create post
-app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
+app.post('/post',/* uploadMiddleware.single('file'), */ async (req, res) => {
   // // // development 👇 
   //     const { originalname, path } = req.file;
   //     const nameParts = originalname.split('.');
@@ -229,38 +229,39 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   //     });
   // });
 
-  
+
   // production 👇
   // console.log('enter')
-    const { originalname, buffer } = req.file;
-    const { title, summary, content, price } = req.body;
+  //   const { originalname, buffer } = req.file;
+  //   const { title, summary, content, price } = req.body;
 
-    const { token } = req.cookies;
-    jwt.verify(token, process.env.SECRET, async (err, info) => {
-      if (err) throw err;
-      try {
-        const fileUploadOptions = {
-          destination: `covers/${originalname}`,
-          metadata: {
-            contentType: 'image/jpeg',
-          }
-        }
-        await bucket.upload(buffer, fileUploadOptions);
-        const newPost = await PostModel.create({
-          title,
-          summary,
-          content,
-          cover: newPath,
-          author: info.id,
-          price
-        });
+  //   const { token } = req.cookies;
+  //   jwt.verify(token, process.env.SECRET, async (err, info) => {
+  //     if (err) throw err;
+  //     try {
+  //       const fileUploadOptions = {
+  //         destination: `covers/${originalname}`,
+  //         metadata: {
+  //           contentType: 'image/jpeg',
+  //         }
+  //       }
+  //       await bucket.upload(buffer, fileUploadOptions);
+  //       const newPost = await PostModel.create({
+  //         title,
+  //         summary,
+  //         content,
+  //         cover: newPath,
+  //         author: info.id,
+  //         price
+  //       });
         
-        res.json(newPost);
-      } catch (error) {
-        console.error('Error uploading file:', error);
-        res.status(500).json('Internal server error');
-      }
-  });
+  //       res.json(newPost);
+  //     } catch (error) {
+  //       console.error('Error uploading file:', error);
+  //       res.status(500).json('Internal server error');
+  //     }
+  // });
+  res.json('ok')
 });
 
 app.get('/post', async (req, res) => {
