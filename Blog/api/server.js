@@ -11,7 +11,7 @@ const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const fs = require('fs');
 const admin = require('firebase-admin');
-const {Storage} = require('@google-cloud/storage');
+const { Storage } = require('@google-cloud/storage');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 
@@ -24,8 +24,6 @@ const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 //     storageBucket: 'firebase-adminsdk-pli4d@blog-storage-fb319.iam.gserviceaccount.com',
 // });
 // remove after 👆
-
-
 
 // multer, config limits for the post size!
 const uploadMiddleware = multer({
@@ -43,7 +41,7 @@ app.use(morgan('dev')); // logger
 
 const corsOptions = {
   origin: ['https://summer-lab-1399.on.fleek.co', 'http://localhost:3000'],
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
@@ -60,78 +58,78 @@ const DB = process.env.DATABASE.replace(
 
 // DB connection
 mongoose.connect(DB).then(() => console.log('Connected to Database'));
- 
+
 // start server
 const PORT = 4000;
 const server = app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
 
-
 // Gets all posts
-// Turn on in production / its not need it locally 
+// Turn on in production / its not need it locally
 app.get('/', async (req, res) => {
-    try {
-      const [files] = await bucket.getFiles();
+  try {
+    const [files] = await bucket.getFiles();
 
-      const fileData = files.map(file => {
-        return {
-          name: file.name,
-          url: `https://storage.googleapis.com/${bucket.name}/${file.name}`
-        }
-      })
-      res.status('200').json({
-        status: 'success',
-        message: 'ok',
-        files: fileData
-      });
-    } catch (error) {
-      console.error('Error retrieving photos:', error);
-      res.status(500).json({
-          status: 'error',
-          message: 'Internal server error'
-      });
-    }
+    const fileData = files.map((file) => {
+      return {
+        name: file.name,
+        url: `https://storage.googleapis.com/${bucket.name}/${file.name}`,
+      };
+    });
+    res.status('200').json({
+      status: 'success',
+      message: 'ok',
+      files: fileData,
+    });
+  } catch (error) {
+    console.error('Error retrieving photos:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
 });
 
-
-app.get(`/checkout-session/:postId`, async (req, res,) => {
+app.get(`/checkout-session/:postId`, async (req, res) => {
   try {
-    const {postId} = req.params;
+    const { postId } = req.params;
     const post = await PostModel.findById(postId);
-    console.log(post)
+    console.log(post);
     // create stripe checkout session | Checkout -> The Session Object
     const session = await stripe.checkout.sessions.create({
       line_items: [
-        { // all fields here come from stripe
+        {
+          // all fields here come from stripe
           price_data: {
             currency: 'brl',
             unit_amount: post.price * 100,
             product_data: {
               name: post.title,
               description: post.title,
-            }
+            },
           },
-          quantity: 1
-        }],
-        mode: 'payment',
-        success_url: `${req.protocol}://${req.get('host')}/?tour=${req.params.postId}&user=test&price=$500`, // not secure temproraly
-        cancel_url: `${req.protocol}://${req.get('host')}/:postId`,
-        customer_email: 'ppzmarcelo@gmail.com', //req.user.email,
-        client_reference_id: req.params.postId,
-    })
-  
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: `${req.protocol}://${req.get('host')}/?tour=${
+        req.params.postId
+      }&user=test&price=$500`, // not secure temproraly
+      cancel_url: `${req.protocol}://${req.get('host')}/:postId`,
+      customer_email: 'ppzmarcelo@gmail.com', //req.user.email,
+      client_reference_id: req.params.postId,
+    });
+
     // create session  as response?!
     res.status(200).json({
       status: 'success',
-      session
-    })
-    
+      session,
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-
-}) 
+});
 
 // Register user
 app.post('/register', async (req, res) => {
@@ -146,7 +144,6 @@ app.post('/register', async (req, res) => {
       password: encryptPass,
     });
 
-    
     res.status(200).json(userDoc);
   } catch (error) {
     console.log(error);
@@ -168,22 +165,24 @@ app.post('/login', async (req, res) => {
 
     bcrypt.compare(password, user.password, function (err, result) {
       if (result) {
-        jwt.sign({ username, id: user.id }, process.env.SECRET, (err, token) => {
-          if (err) throw err;
-          res.cookie('token', token).json({
-            status: 'success',
-            id: user.id,
-            username,
-          });
-        });
+        jwt.sign(
+          { username, id: user.id },
+          process.env.SECRET,
+          (err, token) => {
+            if (err) throw err;
+            res.cookie('token', token).json({
+              status: 'success',
+              id: user.id,
+              username,
+            });
+          }
+        );
         console.log('Logged IN');
-        res.status(200).json('logged in')
+        res.status(200).json('logged in');
       } else {
         res.status(400).json('access denied');
       }
     });
-
-
   } catch (error) {
     console.log(error);
     res.status(500).json('Internal server error');
@@ -206,82 +205,90 @@ app.post('/logout', (req, res) => {
 });
 
 // create post
-  app.post('/post', uploadMiddleware.single('file'),  async (req, res) => {
-    // // // development 👇 
-      //     const { originalname, path } = req.file;
-      //     const nameParts = originalname.split('.');
-      //     const ext = nameParts[nameParts.length - 1];
-      //     const newPath = path + '.' + ext;
-      //     fs.renameSync(path, newPath);
+app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
+  // // // development 👇
+  //     const { originalname, path } = req.file;
+  //     const nameParts = originalname.split('.');
+  //     const ext = nameParts[nameParts.length - 1];
+  //     const newPath = path + '.' + ext;
+  //     fs.renameSync(path, newPath);
 
-      //   const { token } = req.cookies;
-      //   jwt.verify(token, process.env.SECRET, async (err, info) => {
-      //     if (err) throw err;
-      //     const { title, summary, content, price } = req.body;
-      //     const newPost = await PostModel.create({
-      //       title,
-      //       summary,
-      //       content,
-      //       cover: newPath,
-      //       price,
-      //       author: info.id,
-      //     });
-      //     res.status(200).json({
-      //       status: 'success',
-      //       newPost
-      //     });
-    // });
+  //     const { token } = req.cookies;
+  //     jwt.verify(token, process.env.SECRET, async (err, info) => {
+  //       if (err) throw err;
+  //       const { title, summary, content, price } = req.body;
+  //       const newPost = await PostModel.create({
+  //         title,
+  //         summary,
+  //         content,
+  //         cover: newPath,
+  //         price,
+  //         author: info.id,
+  //       });
+  //       res.status(200).json({
+  //         status: 'success',
+  //         newPost
+  //       });
+  // });
 
-
+  try {
     // production 👇
-    try {
-        const { originalname, buffer: file } = req.file;
-        console.log('req.file:', req.file)
-        
-        const { title, summary, content, price } = req.body;
-  
-        // const fileUploadOptions = {
-        //   destination: `covers/${originalname}`,
-        //   metadata: {
-        //     contentType: 'image/jpeg',
-        //   }
-        // }
-          // const { token } = req.cookies;
-          // jwt.verify(token, process.env.SECRET, async (err, info) => {
-          //   if (err) throw err;
-          const projectId = 'blog-storage-fb319';
-          const keyFilename = 'key.json'
-          const storage = new Storage({projectId, keyFilename})
+    const { originalname, buffer: file } = req.file;
+    console.log('req.file:', req.file);
 
-          const bucket = storage.bucket('blog-storage-fb319.appspot.com');
+    // const fileUploadOptions = {
+    //   destination: `covers/${originalname}`,
+    //   metadata: {
+    //     contentType: 'image/jpeg',
+    //   }
+    // }
+    const { token } = req.cookies;
+    jwt.verify(token, process.env.SECRET, async (err, info) => {
+      if (err) throw err;
+      const { title, summary, content, price } = req.body;
+      const newPost = await PostModel.create({
+        title,
+        summary,
+        content,
+        cover: newPath,
+        price,
+        author: info.id,
+      });
+      res.status(200).json({
+        status: 'success',
+        newPost,
+      });
+    });
+    const projectId = 'blog-storage-fb319';
+    const keyFilename = 'key.json';
+    const storage = new Storage({ projectId, keyFilename });
 
+    const bucket = storage.bucket('blog-storage-fb319.appspot.com');
 
-          // {destination: fileOutputName}
-          const ret = await bucket.upload(file, {destination: originalname});
-          
+    // {destination: fileOutputName}
+    const ret = await bucket.upload(file, { destination: originalname });
 
-          const newPost = await PostModel.create({
-            title,
-            summary,
-            content,
-            cover: newPath,
-            author: info.id,
-            price
-          });
+    const newPost = await PostModel.create({
+      title,
+      summary,
+      content,
+      cover: newPath,
+      author: info.id,
+      price,
+    });
 
-          res.status(200).json(newPost, ret);
-
-        } catch (error) {
-          console.error('Error uploading file:', error);
-          res.status(500).json('Internal server error');
-        }
-
+    res.status(200).json(newPost, ret);
+  } catch (error) {
+    // error
+    console.error('Error uploading file:', error);
+    res.status(500).json('Internal server error');
+  }
 });
 
 // // create post
 // app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
 //   // app.post('/post',/* uploadMiddleware.single('file'), */ async (req, res) => {
-//     // // // development 👇 
+//     // // // development 👇
 //     //     const { originalname, path } = req.file;
 //     //     const nameParts = originalname.split('.');
 //     //     const ext = nameParts[nameParts.length - 1];
@@ -305,8 +312,6 @@ app.post('/logout', (req, res) => {
 //     //       status: 'success',
 //     //       newPost
 //     //     });
-
-
 
 //   // production 👇
 //   app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
@@ -339,7 +344,7 @@ app.post('/logout', (req, res) => {
 //         console.error('Error uploading file:', error);
 //         res.status(500).json('Internal server error');
 //       }
-      
+
 //     });
 //   });
 
@@ -373,7 +378,7 @@ app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
         summary,
         content,
         cover: newPath ? newPath : dbPost.cover,
-        price
+        price,
       },
       {
         new: true,
@@ -383,10 +388,7 @@ app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
   });
 });
 
-
-
 app.get('/post', async (req, res) => {
-  
   res.json(
     await PostModel.find()
       .populate('author', ['username'])
@@ -403,16 +405,16 @@ app.get('/post/:id', async (req, res) => {
 
 app.delete('/post/:id', async (req, res) => {
   try {
-    await PostModel.findByIdAndDelete(req.params.id)
-  
+    await PostModel.findByIdAndDelete(req.params.id);
+
     res.status(200).json({
       status: 'success',
-      message: 'Post deleted successfully'
-    }) 
+      message: 'Post deleted successfully',
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 
 server.on('close', () => {
   console.log('Server shutting down');
