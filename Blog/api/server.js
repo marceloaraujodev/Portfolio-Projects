@@ -40,7 +40,7 @@ app.use(morgan('dev')); // logger
 // COORS OPTIONS
 
 const corsOptions = {
-  origin:  ['https://summer-lab-1399.on.fleek.co', 'https://blog-rzyw.onrender.com'],
+  origin:  ['http://localhost:3000', 'https://summer-lab-1399.on.fleek.co', 'https://blog-rzyw.onrender.com', 'https://blog-rzyw.onrender.com/post', 'https://summer-lab-1399.on.fleek.co/post'],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -91,17 +91,6 @@ app.get('/', async (req, res) => {
     }
 });
 
-/* What do I get from the post document 
-    "post": {
-        "_id": "65bd7f2a1fcdbb71edb5b9e2",
-        "title": "WHAT TO PACK FOR A BEACH TRIP",
-        "summary": "my first blog",
-        "content":
-        "cover": "uploads\\69b116e0fc0419b87c8ab60bff0da2d4.jpg",
-        "author": "65bd3967db2c90895d5069c5",
-        "createdAt": "2024-02-02T23:47:54.970Z",
-        "updatedAt": "2024-02-04T16:28:48.081Z",
-*/
 
 app.get(`/checkout-session/:postId`, async (req, res,) => {
   try {
@@ -215,32 +204,32 @@ app.post('/logout', (req, res) => {
 // create post
 app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   // // // development 👇 
-    //   const { originalname, path } = req.file;
-    //   const nameParts = originalname.split('.');
-    //   const ext = nameParts[nameParts.length - 1];
-    //   const newPath = path + '.' + ext;
-    //   fs.renameSync(path, newPath);
+  //     const { originalname, path } = req.file;
+  //     const nameParts = originalname.split('.');
+  //     const ext = nameParts[nameParts.length - 1];
+  //     const newPath = path + '.' + ext;
+  //     fs.renameSync(path, newPath);
 
-    // const { token } = req.cookies;
-    // jwt.verify(token, process.env.SECRET, async (err, info) => {
-    //   if (err) throw err;
-    //   const { title, summary, content, price } = req.body;
-    //   const newPost = await PostModel.create({
-    //     title,
-    //     summary,
-    //     content,
-    //     cover: newPath,
-    //     price,
-    //     author: info.id,
-    //   });
-    //   res.status(200).json({
-    //     status: 'success',
-    //     newPost
-    //   });
+  //   const { token } = req.cookies;
+  //   jwt.verify(token, process.env.SECRET, async (err, info) => {
+  //     if (err) throw err;
+  //     const { title, summary, content, price } = req.body;
+  //     const newPost = await PostModel.create({
+  //       title,
+  //       summary,
+  //       content,
+  //       cover: newPath,
+  //       price,
+  //       author: info.id,
+  //     });
+  //     res.status(200).json({
+  //       status: 'success',
+  //       newPost
+  //     });
   // });
 
   // production 👇
-  console.log('enter')
+  // console.log('enter')
     const { originalname, buffer } = req.file;
     const { title, summary, content, price } = req.body;
 

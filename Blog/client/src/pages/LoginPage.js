@@ -12,8 +12,8 @@ export default function LoginPage() {
     event.preventDefault();
 
       const response = await fetch(
-        // 'http://localhost:4000/login',  // pro
-        'https://blog-rzyw.onrender.com/login', 
+        'http://localhost:4000/login',  // pro
+        // 'https://blog-rzyw.onrender.com/login', 
         {
         method: 'POST',
         body: JSON.stringify({ username, password }),
