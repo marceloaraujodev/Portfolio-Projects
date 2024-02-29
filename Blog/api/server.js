@@ -40,7 +40,7 @@ app.use(morgan('dev')); // logger
 
 // COORS OPTIONS
 const corsOptions = {
-  origin:  'https://summer-lab-1399.on.fleek.co',
+  origin:  ['https://summer-lab-1399.on.fleek.co', 'https://summer-lab-1399.on.flee'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -147,8 +147,6 @@ app.post('/register', async (req, res) => {
 
   const encryptPass = await bcrypt.hash(password, 10);
 
-  
-
   try {
     const userDoc = await UserModel.create({
       username: username,
@@ -157,7 +155,6 @@ app.post('/register', async (req, res) => {
     });
 
     
-
     res.status(200).json(userDoc);
   } catch (error) {
     console.log(error);
