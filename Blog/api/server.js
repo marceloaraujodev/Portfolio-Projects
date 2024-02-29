@@ -158,27 +158,20 @@ app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   try {
     const user = await UserModel.findOne({ username });
-
     if (!user) {
       return res.status(400).json('User not found');
     }
-
     bcrypt.compare(password, user.password, function (err, result) {
       if (result) {
-        jwt.sign(
-          { username, id: user.id },
-          process.env.SECRET,
-          (err, token) => {
-            if (err) throw err;
-            res.cookie('token', token).json({
-              status: 'success',
-              id: user.id,
-              username,
-            });
-          }
-        );
+        jwt.sign({ username, id: user.id }, process.env.SECRET, (err, token) => {
+          if (err) throw err;
+          res.cookie('token', token).json({
+            status: 'success',
+            id: user.id,
+            username,
+          });
+        });
         console.log('Logged IN');
-        res.status(200).json('logged in');
       } else {
         res.status(400).json('access denied');
       }
