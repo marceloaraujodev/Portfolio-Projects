@@ -212,7 +212,8 @@ app.post('/logout', (req, res) => {
   res.cookie('token', '').json('logged out');
 });
 
-app.post('/createPost', uploadMiddleware.single('file'), async (req, res) => {
+// create post
+app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   // // // development 👇 
     //   const { originalname, path } = req.file;
     //   const nameParts = originalname.split('.');
