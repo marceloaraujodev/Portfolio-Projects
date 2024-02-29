@@ -259,7 +259,6 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
         res.status(500).json('Internal server error');
       }
   });
-  // res.status(200).json('ok')
 });
 
 app.get('/post', async (req, res) => {
