@@ -40,7 +40,7 @@ app.use(morgan('dev')); // logger
 // COORS OPTIONS
 
 const corsOptions = {
-  origin:  ['http://localhost:3000', 'https://summer-lab-1399.on.fleek.co', 'https://blog-rzyw.onrender.com', 'https://blog-rzyw.onrender.com/post', 'https://summer-lab-1399.on.fleek.co/post'],
+  origin: ['https://summer-lab-1399.on.fleek.co', 'http://localhost:3000'],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -266,68 +266,67 @@ app.post('/logout', (req, res) => {
 
 app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   // app.post('/post',/* uploadMiddleware.single('file'), */ async (req, res) => {
-//   // // // development 👇 
-//   //     const { originalname, path } = req.file;
-//   //     const nameParts = originalname.split('.');
-//   //     const ext = nameParts[nameParts.length - 1];
-//   //     const newPath = path + '.' + ext;
-//   //     fs.renameSync(path, newPath);
+  // // development 👇 
+      const { originalname, path } = req.file;
+      const nameParts = originalname.split('.');
+      const ext = nameParts[nameParts.length - 1];
+      const newPath = path + '.' + ext;
+      fs.renameSync(path, newPath);
 
-//   //   const { token } = req.cookies;
-//   //   jwt.verify(token, process.env.SECRET, async (err, info) => {
-//   //     if (err) throw err;
-//   //     const { title, summary, content, price } = req.body;
-//   //     const newPost = await PostModel.create({
-//   //       title,
-//   //       summary,
-//   //       content,
-//   //       cover: newPath,
-//   //       price,
-//   //       author: info.id,
-//   //     });
-//   //     res.status(200).json({
-//   //       status: 'success',
-//   //       newPost
-//   //     });
-//   // });
-
-
-  // production 👇
-    const { originalname, buffer } = req.file;
-    const { title, summary, content, price } = req.body;
-    console.log('pass 1')
     const { token } = req.cookies;
-    console.log('Token:', token);
-    console.log('pass 2')
+    console.log(token)
     jwt.verify(token, process.env.SECRET, async (err, info) => {
       if (err) throw err;
-      console.log('pass 3')
-      try {
-        const fileUploadOptions = {
-          destination: `covers/${originalname}`,
-          metadata: {
-            contentType: 'image/jpeg',
-          }
-        }
-        await bucket.upload(buffer, fileUploadOptions);
-        console.log('pass 4')
-        const newPost = await PostModel.create({
-          title,
-          summary,
-          content,
-          cover: newPath,
-          author: info.id,
-          price
-        });
-        
-        res.json(newPost);
-      } catch (error) {
-        console.error('Error uploading file:', error);
-        res.status(500).json('Internal server error');
-      }
+      const { title, summary, content, price } = req.body;
+      const newPost = await PostModel.create({
+        title,
+        summary,
+        content,
+        cover: newPath,
+        price,
+        author: info.id,
+      });
+      res.status(200).json({
+        status: 'success',
+        newPost
+      });
   });
-  res.json('ok')
 
+
+  // // production 👇
+  //   const { originalname, buffer } = req.file;
+  //   const { title, summary, content, price } = req.body;
+  //   console.log('pass 1')
+  //   const { token } = req.cookies;
+  //   console.log('Token:', token);
+  //   console.log('pass 2')
+  //   jwt.verify(token, process.env.SECRET, async (err, info) => {
+  //     if (err) throw err;
+  //     console.log('pass 3')
+  //     try {
+  //       const fileUploadOptions = {
+  //         destination: `covers/${originalname}`,
+  //         metadata: {
+  //           contentType: 'image/jpeg',
+  //         }
+  //       }
+  //       await bucket.upload(buffer, fileUploadOptions);
+  //       console.log('pass 4')
+  //       const newPost = await PostModel.create({
+  //         title,
+  //         summary,
+  //         content,
+  //         cover: newPath,
+  //         author: info.id,
+  //         price
+  //       });
+        
+  //       res.json(newPost);
+  //     } catch (error) {
+  //       console.error('Error uploading file:', error);
+  //       res.status(500).json('Internal server error');
+  //     }
+  // });
 })
 
 app.get('/post', async (req, res) => {
@@ -345,6 +344,7 @@ app.get('/post/:id', async (req, res) => {
   const post = await PostModel.findById(id).populate('author', ['username']);
   res.json(post);
 });
+
 
 // Edit Post
 app.put('/post/', uploadMiddleware.single('file'), async (req, res) => {

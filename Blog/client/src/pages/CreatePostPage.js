@@ -30,6 +30,9 @@ export default function CreatePost() {
           method: 'POST',
           body: data,
           credentials: 'include',
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         }
       );
       if (response.ok) {
@@ -70,7 +73,7 @@ export default function CreatePost() {
 
       <input
         type="file"
-        required
+        // required
         onChange={(e) => {
           setFiles(e.target.files);
         }}
