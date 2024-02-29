@@ -15,8 +15,6 @@ export default function CreatePost() {
   async function createNewPost(e) {
     e.preventDefault();
 
-    console.log('Cookies:', document.cookie);
-
     const data = new FormData();
     data.set('title', title);
     data.set('summary', summary);
