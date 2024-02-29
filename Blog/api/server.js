@@ -40,7 +40,7 @@ app.use(morgan('dev')); // logger
 
 // COORS OPTIONS
 const corsOptions = {
-  origin:  ['https://summer-lab-1399.on.fleek.co', 'https://summer-lab-1399.on.flee'],
+  origin:  'https://summer-lab-1399.on.fleek.co',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -239,6 +239,7 @@ app.post('/createPost', uploadMiddleware.single('file'), async (req, res) => {
   // });
 
   // production 👇
+  console.log('enter')
     const { originalname, buffer } = req.file;
     const { title, summary, content, price } = req.body;
 
