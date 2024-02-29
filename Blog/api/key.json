@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "blog-storage-fb319",
+  "private_key_id": "f2162e8873cebd2b748371be30e332690fd1d62c",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCoj8yjFqLLQVUO\nRfws+te4ZJtwChnBe18PuXrfl1SsnvMoIYEBk+O1bDS7foMZVtJPMEaeP71n2ssX\nAKqMV0PCxdM7gJeTIjGM/uFcpBPmt0tl9M6617w4mO7KJpDgoGZn+LHHyix+7M2s\nL7R1HWaqVAYkimImlakccOG9uKtxKGc7TX2yNin0O1Vuz59ym+qhbLEvXZ0yzqJW\nFukPlG5fzUnZhsibfgg2w7pDWWn+D3+zNmBVjXmZQYURfcSyGdvZ+QvHnQBq09ob\nYx03csb/j+ZR9XayFKeMMcyiQ+GxISFKLuJNLWXbpo9tMdiwh03bM2rpF44dtN+f\nEVDOgEz1AgMBAAECgf82Du2yv++MOBQw8ZM/lN05Ec8kTa72B1K+pjdMkQAeM6/O\nkju0iFzp9RaVlIWwZI5k9GoCoN9GLwyCHwgHXEHfj3KRIPXBcn4QtDkmBUCXTvon\nfxNZj2FNQXjOZi3MySp4hbA/Kl4OZDArLcYcCFQWQM6x4XBs4eOl6jFavrQGx3ss\nVNMk7tjCQSLLXLSvngjAmStBTxYZby10oM3oeylAgLIpTVf3G4bjhNzmbUhESp4I\nwyplR0GbVZlL+nDTUOdfFWf8SCPhbhpMm1jg+gmunYl55aW2ZvLIJw05S4Cb8bxD\nMISnjfJeN4Rm37doxsfRd8ZxEQgcB61B5A/HP9UCgYEA0lIU2/bIRoGG2fwzSDAT\nuMtnROlcxSMZ3sLShhWjagBFq2HWoEbtVOJlS5rFsqqrsIgyVzqLdrPlLbX3cMjs\nN4QMB1O3Xa5t3VC4F3blbTvvdIXo59O+3Ds2YCnzkw1h/1ncY+IJkpCPBezHrj+7\nTldtl2aZlvJS0mchtLcTcEsCgYEAzSvncaf+EDoucZyL2Z3b0EF/k4x6B+GT6LtB\nIZUUfM5NTopnGa2VWNyD9us9zg1/RaSXbs9BmJfcSLKD+SLtirQOt/z0HsLgLlgK\nCey04dOcnaHNmuVu/+3Lft7UryyGhelDMGAd5f8L/9+RXuUdoW+hWOGLi1rzgqw9\n29CNb78CgYEAndz8SSpPoxQ/ysiRGWL0uqT5y3C5sEKrfVeQOxJsyPiRUpUqSr1S\nEH+p9niiYXvXSLbBylVoLt3SbGAD7UTygKz9dlZw8MEnN5IJy5rzk+0Dy9tjOPbn\ncFiFdOKoL71AzDB/yvzzoG4e3ByguHqftarL2HMrX3BdmA3O79zmm0cCgYEAnmzR\nWQy7/HHAnQ+hWVcwfZ2l0hv9uoovuNymzTSdTkXKoePy+nvzv1r/NzGsVqhLZ05R\ndEnrP9W7ThMyHrUesSSZ3O4g3oPhsUdf8QvrHBlXbMycw4d3730BziRoHB+IfGyC\n6h6913PaIyjRynGmMJrO/p+iLef78iHn3g0quWcCgYA1DZn1eCdavbfqRkVBJekg\nR/xkD7PzyPbDb66+x+abAPx42h1V255zWTgXoXm/eU27WHnbk8K4zfv9DNpN2sCn\natNoQHG5EnSNPAu8PkVlW5Wo8KzLzO3eSFaELSQ5f22GSkjjMIJiUpoVCf7dLPpL\nwgBR03E5wHgEUq4tm2wLZw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "portfolioblog@blog-storage-fb319.iam.gserviceaccount.com",
+  "client_id": "104848191952389365711",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/portfolioblog%40blog-storage-fb319.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

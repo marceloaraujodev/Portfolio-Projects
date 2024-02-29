@@ -11,19 +11,21 @@ const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const fs = require('fs');
 const admin = require('firebase-admin');
+const {Storage} = require('@google-cloud/storage');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 
-const serviceAccount = require(`./${process.env.SERVICEACCOUNTPATH}`)
+// remove after
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    storageBucket: 'firebase-adminsdk-pli4d@blog-storage-fb319.iam.gserviceaccount.com',
-});
+// const serviceAccount = require(`./${process.env.SERVICEACCOUNTPATH}`)
+
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+//     storageBucket: 'firebase-adminsdk-pli4d@blog-storage-fb319.iam.gserviceaccount.com',
+// });
+// remove after 👆
 
 
-const bucket = admin.storage().bucket()
-// If I want to add multiple photos at once look at multer docs for .array instead of .single('file') and change the PostPage.js to support an array of photos instead of one object
 
 // multer, config limits for the post size!
 const uploadMiddleware = multer({
@@ -232,24 +234,32 @@ app.post('/logout', (req, res) => {
 
 
     // production 👇
-    console.log('enter')
-      const { originalname, buffer } = req.file;
-      const { title, summary, content, price } = req.body;
-      console.log(originalname, buffer, title, summary, content, price)
+    try {
+        const { originalname, buffer: file } = req.file;
+        console.log('req.file:', req.file)
+        
+        const { title, summary, content, price } = req.body;
+  
+        // const fileUploadOptions = {
+        //   destination: `covers/${originalname}`,
+        //   metadata: {
+        //     contentType: 'image/jpeg',
+        //   }
+        // }
+          // const { token } = req.cookies;
+          // jwt.verify(token, process.env.SECRET, async (err, info) => {
+          //   if (err) throw err;
+          const projectId = 'blog-storage-fb319';
+          const keyFilename = 'key.json'
+          const storage = new Storage({projectId, keyFilename})
 
-      // const { token } = req.cookies;
-      // jwt.verify(token, process.env.SECRET, async (err, info) => {
-      //   if (err) throw err;
-        try {
-          console.log('log 1')
-          const fileUploadOptions = {
-            destination: `covers/${originalname}`,
-            metadata: {
-              contentType: 'image/jpeg',
-            }
-          }
-          console.log('log 2')
-          await bucket.upload(buffer, fileUploadOptions);
+          const bucket = storage.bucket('blog-storage-fb319.appspot.com');
+
+
+          // {destination: fileOutputName}
+          const ret = await bucket.upload(file, {destination: originalname});
+          
+
           const newPost = await PostModel.create({
             title,
             summary,
@@ -258,16 +268,14 @@ app.post('/logout', (req, res) => {
             author: info.id,
             price
           });
-          console.log('log 3')
-          res.json(newPost);
+
+          res.status(200).json(newPost, ret);
+
         } catch (error) {
           console.error('Error uploading file:', error);
           res.status(500).json('Internal server error');
         }
 
-
-    // });
-    res.json('ok')
 });
 
 // // create post
