@@ -38,9 +38,10 @@ const app = express();
 app.use(morgan('dev')); // logger
 
 // COORS OPTIONS
+
 const corsOptions = {
   origin:  ['https://summer-lab-1399.on.fleek.co', 'https://blog-rzyw.onrender.com'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
