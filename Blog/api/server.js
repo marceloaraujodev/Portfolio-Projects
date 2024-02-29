@@ -67,29 +67,29 @@ const server = app.listen(PORT, () => {
 
 // Gets all posts
 // Turn on in production / its not need it locally 
-// app.get('/', async (req, res) => {
-  //   try {
-  //     const [files] = await bucket.getFiles();
+app.get('/', async (req, res) => {
+    try {
+      const [files] = await bucket.getFiles();
 
-  //     const fileData = files.map(file => {
-  //       return {
-  //         name: file.name,
-  //         url: `https://storage.googleapis.com/${bucket.name}/${file.name}`
-  //       }
-  //     })
-  //     res.status('200').json({
-  //       status: 'success',
-  //       message: 'ok',
-  //       files: fileData
-  //     });
-  //   } catch (error) {
-  //     console.error('Error retrieving photos:', error);
-  //     res.status(500).json({
-  //         status: 'error',
-  //         message: 'Internal server error'
-  //     });
-  //   }
-// });
+      const fileData = files.map(file => {
+        return {
+          name: file.name,
+          url: `https://storage.googleapis.com/${bucket.name}/${file.name}`
+        }
+      })
+      res.status('200').json({
+        status: 'success',
+        message: 'ok',
+        files: fileData
+      });
+    } catch (error) {
+      console.error('Error retrieving photos:', error);
+      res.status(500).json({
+          status: 'error',
+          message: 'Internal server error'
+      });
+    }
+});
 
 /* What do I get from the post document 
     "post": {
@@ -216,59 +216,60 @@ app.post('/logout', (req, res) => {
 });
 
 app.post('/createPost', uploadMiddleware.single('file'), async (req, res) => {
-  // // development 👇 
-    const { originalname, path } = req.file;
-    const nameParts = originalname.split('.');
-    const ext = nameParts[nameParts.length - 1];
-    const newPath = path + '.' + ext;
-    fs.renameSync(path, newPath);
+  // // // development 👇 
+  //   const { originalname, path } = req.file;
+  //   const nameParts = originalname.split('.');
+  //   const ext = nameParts[nameParts.length - 1];
+  //   const newPath = path + '.' + ext;
+  //   fs.renameSync(path, newPath);
 
-  const { token } = req.cookies;
-  jwt.verify(token, process.env.SECRET, async (err, info) => {
-    if (err) throw err;
-    const { title, summary, content, price } = req.body;
-    const newPost = await PostModel.create({
-      title,
-      summary,
-      content,
-      cover: newPath,
-      price,
-      author: info.id,
-    });
-    res.status(200).json({
-      status: 'success',
-      newPost
-    });
-  });
-
-  // // production 👇
-    // const { originalname, buffer } = req.file;
-    // const { title, summary, content } = req.body;
-
-    // const { token } = req.cookies;
-    // jwt.verify(token, process.env.SECRET, async (err, info) => {
-    //   if (err) throw err;
-    //   try {
-    //     const fileUploadOptions = {
-    //       destination: `covers/${originalname}`,
-    //       metadata: {
-    //         contentType: 'image/jpeg',
-    //       }
-    //     }
-    //     await bucket.upload(buffer, fileUploadOptions);
-    //     const newPost = await PostModel.create({
-    //       title,
-    //       summary,
-    //       content,
-    //       cover: newPath,
-    //       author: info.id,
-    //     });
-    //     res.json(newPost);
-    //   } catch (error) {
-    //     console.error('Error uploading file:', error);
-    //     res.status(500).json('Internal server error');
-    //   }
+  // const { token } = req.cookies;
+  // jwt.verify(token, process.env.SECRET, async (err, info) => {
+  //   if (err) throw err;
+  //   const { title, summary, content, price } = req.body;
+  //   const newPost = await PostModel.create({
+  //     title,
+  //     summary,
+  //     content,
+  //     cover: newPath,
+  //     price,
+  //     author: info.id,
+  //   });
+  //   res.status(200).json({
+  //     status: 'success',
+  //     newPost
+  //   });
   // });
+
+  // production 👇
+    const { originalname, buffer } = req.file;
+    const { title, summary, content, price } = req.body;
+
+    const { token } = req.cookies;
+    jwt.verify(token, process.env.SECRET, async (err, info) => {
+      if (err) throw err;
+      try {
+        const fileUploadOptions = {
+          destination: `covers/${originalname}`,
+          metadata: {
+            contentType: 'image/jpeg',
+          }
+        }
+        await bucket.upload(buffer, fileUploadOptions);
+        const newPost = await PostModel.create({
+          title,
+          summary,
+          content,
+          cover: newPath,
+          author: info.id,
+          price
+        });
+        res.json(newPost);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        res.status(500).json('Internal server error');
+      }
+  });
 });
 
 app.get('/post', async (req, res) => {
