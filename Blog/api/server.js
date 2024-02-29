@@ -22,7 +22,6 @@ admin.initializeApp({
 });
 
 
-  
 const bucket = admin.storage().bucket()
 // If I want to add multiple photos at once look at multer docs for .array instead of .single('file') and change the PostPage.js to support an array of photos instead of one object
 
@@ -212,7 +211,7 @@ app.post('/logout', (req, res) => {
   res.cookie('token', '').json('logged out');
 });
 
-app.post('/createPost', /*uploadMiddleware.single('file'),*/ async (req, res) => {
+app.post('/createPost', uploadMiddleware.single('file'), async (req, res) => {
   // // // development 👇 
     //   const { originalname, path } = req.file;
     //   const nameParts = originalname.split('.');
@@ -239,37 +238,37 @@ app.post('/createPost', /*uploadMiddleware.single('file'),*/ async (req, res) =>
   // });
 
   // production 👇
-  // console.log('enter')
-  //   const { originalname, buffer } = req.file;
-  //   const { title, summary, content, price } = req.body;
+  console.log('enter')
+    const { originalname, buffer } = req.file;
+    const { title, summary, content, price } = req.body;
 
-  //   const { token } = req.cookies;
-  //   jwt.verify(token, process.env.SECRET, async (err, info) => {
-  //     if (err) throw err;
-  //     try {
-  //       const fileUploadOptions = {
-  //         destination: `covers/${originalname}`,
-  //         metadata: {
-  //           contentType: 'image/jpeg',
-  //         }
-  //       }
-  //       await bucket.upload(buffer, fileUploadOptions);
-  //       const newPost = await PostModel.create({
-  //         title,
-  //         summary,
-  //         content,
-  //         cover: newPath,
-  //         author: info.id,
-  //         price
-  //       });
+    const { token } = req.cookies;
+    jwt.verify(token, process.env.SECRET, async (err, info) => {
+      if (err) throw err;
+      try {
+        const fileUploadOptions = {
+          destination: `covers/${originalname}`,
+          metadata: {
+            contentType: 'image/jpeg',
+          }
+        }
+        await bucket.upload(buffer, fileUploadOptions);
+        const newPost = await PostModel.create({
+          title,
+          summary,
+          content,
+          cover: newPath,
+          author: info.id,
+          price
+        });
         
-  //       res.json(newPost);
-  //     } catch (error) {
-  //       console.error('Error uploading file:', error);
-  //       res.status(500).json('Internal server error');
-  //     }
-  // });
-  res.status(200).json('ok')
+        res.json(newPost);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        res.status(500).json('Internal server error');
+      }
+  });
+  // res.status(200).json('ok')
 });
 
 app.get('/post', async (req, res) => {
