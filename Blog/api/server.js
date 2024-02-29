@@ -40,7 +40,7 @@ app.use(morgan('dev')); // logger
 
 // COORS OPTIONS
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: ['http://localhost:3000', 'https://summer-lab-1399.on.fleek.co'],
   // origin: 'https://summer-lab-1399.on.fleek.co',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -190,7 +190,7 @@ app.post('/login', async (req, res) => {
         });
         console.log('Logged IN');
       } else {
-        res.status(400).json('access denied', err);
+        res.status(400).json('access denied');
       }
     });
 

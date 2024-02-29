@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import Editor from '../components/Editor';
+import { url } from '../apiConfig';
 
 export default function EditPostPage() {
   const { id } = useParams();
@@ -14,8 +15,9 @@ export default function EditPostPage() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
+        `${url}/post/${id}`
         // `http://localhost:4000/post/${id}` // development
-        'https://blog-rzyw.onrender.com/post/' + id // production
+        // 'https://blog-rzyw.onrender.com/post/' + id // production
       );
       const postData = await response.json();
       setTitle(postData.title);
@@ -42,8 +44,9 @@ export default function EditPostPage() {
     }
 
     const response = await fetch(
+      `${url}/post`
       // `http://localhost:4000/post/` // prod
-      'https://blog-rzyw.onrender.com/post'
+      // 'https://blog-rzyw.onrender.com/post'
     , {
       method: 'PUT',
       body: postEditedData,

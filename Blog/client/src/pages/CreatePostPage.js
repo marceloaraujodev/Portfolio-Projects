@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
+import { url } from '../apiConfig';
 // import 'react-quill/dist/quill.snow.css'; // se nao mudar nada na pagina pode tirar coloquei no editor.js
 import Editor from '../components/Editor';
 
@@ -10,6 +11,7 @@ export default function CreatePost() {
   const [files, setFiles] = useState('');
   const [price, setPrice] = useState('');
   const [redirect, setRedirect] = useState(false);
+  
 
   async function createNewPost(e) {
     e.preventDefault();
@@ -23,8 +25,9 @@ export default function CreatePost() {
 
 
     const response = await fetch(
+      `${url}/createPost`,
       // 'http://localhost:4000/createPost', // development
-      'https://blog-rzyw.onrender.com/createPost', // production
+      // 'https://blog-rzyw.onrender.com/createPost', // production
       {
         method: 'POST',
         body: data,

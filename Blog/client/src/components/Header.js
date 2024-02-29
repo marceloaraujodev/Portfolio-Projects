@@ -2,6 +2,7 @@
 import { useContext, useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
+import { url } from '../apiConfig';
 
 // this is a test
 
@@ -11,16 +12,17 @@ export default function Header() {
 
   useEffect(() => {
     const fetchData = async () => {
-    // if(!userInfo){
+    if(!userInfo){
         const response = await fetch(
-          // 'http://localhost:4000/profile' // prod
-          'https://blog-rzyw.onrender.com/profile'
+          `${url}/profile`
+          // 'http://localhost:4000/profile' // dev
+          // 'https://blog-rzyw.onrender.com/profile'
           , {
           credentials: 'include',
         });
         const userData = await response.json();
         setUserInfo(userData)
-      // }
+      }
     }
     fetchData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -29,8 +31,9 @@ export default function Header() {
 
   function logout(){
     fetch(
-      // 'http://localhost:4000/logout' , //prod
-      'https://blog-rzyw.onrender.com/logout',
+      `${url}/logout`,
+      // 'http://localhost:4000/logout' , // dev
+      // 'https://blog-rzyw.onrender.com/logout',
      {
       credentials: 'include',
       method: 'POST'

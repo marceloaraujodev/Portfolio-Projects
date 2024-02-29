@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { UserContext } from '../components/UserContext';
+import { url } from '../apiConfig';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
@@ -11,25 +12,29 @@ export default function LoginPage() {
   async function login(event) {
     event.preventDefault();
 
-    // try {
-    const response = await fetch(
-      // 'http://localhost:4000/login',  // pro
-      'https://blog-rzyw.onrender.com/login', 
-      {
-      method: 'POST',
-      body: JSON.stringify({ username, password }),
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include', // includes cookie here
-    });
-    
-    if (response.ok) {
-      response.json().then((userInfo) => {
-        setUserInfo(userInfo);
-        setRedirect(true);
+      const response = await fetch(
+        `${url}/login`,
+        // 'http://localhost:4000/login',  // pro
+        // 'https://blog-rzyw.onrender.com/login', 
+        {
+        method: 'POST',
+        body: JSON.stringify({ username, password }),
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // includes cookie here
       });
-    } else {
-      alert('Wrong username or password')
-    }
+      
+      if (response.ok) {
+        response.json().then((userInfo) => {
+          setUserInfo(userInfo);
+          setRedirect(true);
+        });
+      } else {
+        alert('Wrong username or password')
+      }
+      
+
+
+
   }
   if (redirect) {
     return <Navigate to={'/'} />;

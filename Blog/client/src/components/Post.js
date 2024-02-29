@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
-
+import { url } from '../apiConfig';
 
 export default function Post({
   title,
@@ -16,8 +16,9 @@ export default function Post({
       <div className="image">
         <Link to={`/post/${_id}`}>
           <img src={
+            `${url}/${cover}` } alt="woman style" 
             // 'http://localhost:4000/' + cover} alt="woman style" // prod
-            'https://blog-rzyw.onrender.com/' + cover} alt="woman style"
+            // 'https://blog-rzyw.onrender.com/' + cover} alt="woman style"
             />
         </Link>
       </div>
