@@ -235,6 +235,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     //     contentType: 'image/jpeg',
     //   }
     // }
+    console.log(file)
     const { token } = req.cookies;
     jwt.verify(token, process.env.SECRET, async (err, info) => {
       if (err) throw err;
