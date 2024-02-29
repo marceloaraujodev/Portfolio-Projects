@@ -1,7 +1,6 @@
 import { useContext, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { UserContext } from '../components/UserContext';
-import { url } from '../apiConfig';
 
 export default function RegisterPage() {
   const { setUserInfo } = useContext(UserContext);
@@ -28,9 +27,8 @@ export default function RegisterPage() {
 
     try {
       const response = await fetch(
-        `${url}/register`,
         // `http://localhost:4000/register/`, // prod
-        // 'https://blog-rzyw.onrender.com/register',
+        'https://blog-rzyw.onrender.com/register',
         {
           method: 'POST',
           body: JSON.stringify(registerUser),

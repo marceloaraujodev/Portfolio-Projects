@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { UserContext } from '../components/UserContext';
 import Button from '../components/Button';
 import {loadStripe} from '@stripe/stripe-js';
-import { url } from '../apiConfig';
+
 const stripePromise = loadStripe("pk_test_51OmiFsBfcEidHzvrvgq1dJhIYcZDqKSQjDKqCBsSvQQuf60SsP6DS4yV4yn9SsLfP1SSrlBznzRwJgUXbdkDrn5T00Zk6x1RYT")
 
 
@@ -18,14 +18,12 @@ export default function PostPage() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        `${url}/post/${id}`
         // `http://localhost:4000/post/${id}` // dev
-        // `https://blog-rzyw.onrender.com/post/${id}`
+        `https://blog-rzyw.onrender.com/post/${id}`
       );
       const data = await response.json();
       setPostInfo(data);
     };
-    console.log(url)
     fetchData();
   }, [id]);
 
@@ -63,9 +61,8 @@ export default function PostPage() {
 
   async function checkout(){
     const response = await fetch(
-      `${url}/checkout-session/${id}`
       // `http://localhost:4000/checkout-session/${id}` // dev
-      // `https://blog-rzyw.onrender.com/checkout-session/${id}` // prod
+      `https://blog-rzyw.onrender.com/checkout-session/${id}` // prod
       )
     const data = await response.json();
     const publishableKey = data.session.id
@@ -143,9 +140,8 @@ export default function PostPage() {
       <div className="image">
         <img
           src={
-            `${url}/${postInfo.cover}`
             // `http://localhost:4000/${postInfo.cover}`
-            // `https://blog-rzyw.onrender.com/${postInfo.cover}`
+            `https://blog-rzyw.onrender.com/${postInfo.cover}`
           }
           alt="post"
         />

@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { UserContext } from '../components/UserContext';
-import { url } from '../apiConfig';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
@@ -13,9 +12,8 @@ export default function LoginPage() {
     event.preventDefault();
 
       const response = await fetch(
-        `${url}/login`,
         // 'http://localhost:4000/login',  // pro
-        // 'https://blog-rzyw.onrender.com/login', 
+        'https://blog-rzyw.onrender.com/login', 
         {
         method: 'POST',
         body: JSON.stringify({ username, password }),

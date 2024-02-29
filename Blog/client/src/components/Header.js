@@ -2,7 +2,7 @@
 import { useContext, useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
-import { url } from '../apiConfig';
+
 
 // this is a test
 
@@ -14,9 +14,8 @@ export default function Header() {
     const fetchData = async () => {
     if(!userInfo){
         const response = await fetch(
-          `${url}/profile`
           // 'http://localhost:4000/profile' // dev
-          // 'https://blog-rzyw.onrender.com/profile'
+          'https://blog-rzyw.onrender.com/profile'
           , {
           credentials: 'include',
         });
@@ -31,9 +30,8 @@ export default function Header() {
 
   function logout(){
     fetch(
-      `${url}/logout`,
       // 'http://localhost:4000/logout' , // dev
-      // 'https://blog-rzyw.onrender.com/logout',
+      'https://blog-rzyw.onrender.com/logout',
      {
       credentials: 'include',
       method: 'POST'
