@@ -37,27 +37,15 @@ const uploadMiddleware = multer({
   },
 });
 
-const cookieOptions = {
-  path: '/',
-  domain: 'https://summer-lab-1399.on.fleek.co/', // Or appropriate domain
-  httpOnly: true, // Recommended for extra security
-  secure: true, // If using HTTPS
-};
 
 const app = express();
 
 app.use(morgan('dev')); // logger
-
-
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one 
 
-// app.use((req, res, next) => {
-//   res.cookie = res.cookie.bind(res, '', cookieOptions); // Bind cookie function with options
-//   next();
-// });
 
 
 // WILL HAVE TO TURN ON DURING LOCAL TESTING
@@ -232,72 +220,70 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   //         newPost
   //       });
   // });
-
+  console.log('Request cookies:', req.cookies);
+  console.log('Request cookies:', req);
   
   // production 👇 
   // Add the Access-Control-Allow-Origin header
-  try {
-    const { token } = req.body.token;
-    if(!token){
-      return res.status(401).json({message: 'Unauthorized: Missing token'})
-    }
-    // const { originalname, path } = req.file;
-    // const nameParts = originalname.split('.');
-    // const ext = nameParts[nameParts.length - 1];
-    // let newPath = null;
-    // newPath = path + '.' + ext;
-    // // fs.renameSync(path, newPath);
-    // console.log('ORIGINAL NAME AND PATH:', originalname, path)
+  // try {
 
-    jwt.verify(token, process.env.SECRET, async (err, info) => {
+  //   // const { originalname, path } = req.file;
+  //   // const nameParts = originalname.split('.');
+  //   // const ext = nameParts[nameParts.length - 1];
+  //   // let newPath = null;
+  //   // newPath = path + '.' + ext;
+  //   // // fs.renameSync(path, newPath);
+  //   // console.log('ORIGINAL NAME AND PATH:', originalname, path)
 
-      if (err) {
-        console.log('JWT verification failed:', err)
-        return res.status(401).json({message: 'Unautohrized: Invalid token'})
-      }else{
-        console.log('Token verified')
-        console.log('3')
-        const { title, summary, content, price } = req.body;
+  //   jwt.verify(token, process.env.SECRET, async (err, info) => {
+
+  //     if (err) {
+  //       console.log('JWT verification failed:', err)
+  //       return res.status(401).json({message: 'Unautohrized: Invalid token'})
+  //     }else{
+  //       console.log('Token verified')
+  //       console.log('3')
+  //       const { title, summary, content, price } = req.body;
     
-        const newPost = await PostModel.create({
-          title,
-          summary,
-          content,
-          cover: req.file.path,
-          price,
-          author: info.id
-        });
-        console.log('4')
-        const fileUploadOptions = {
-          destination: `covers/${originalname}`,
-          metadata: {
-            contentType: 'image/jpeg',
-          }
-        }
-        console.log('-----------got here------')
-        const projectId = process.env.PROJECTID;
-        const keyFilename = process.env.KEYFILENAME;
+  //       const newPost = await PostModel.create({
+  //         title,
+  //         summary,
+  //         content,
+  //         cover: req.file.path,
+  //         price,
+  //         author: info.id
+  //       });
+  //       console.log('4')
+  //       const fileUploadOptions = {
+  //         destination: `covers/${originalname}`,
+  //         metadata: {
+  //           contentType: 'image/jpeg',
+  //         }
+  //       }
+  //       console.log('-----------got here------')
+  //       const projectId = process.env.PROJECTID;
+  //       const keyFilename = process.env.KEYFILENAME;
     
-        const storage = new Storage({ projectId, keyFilename });
+  //       const storage = new Storage({ projectId, keyFilename });
     
-        const bucket = storage.bucket('blog-storage-fb319.appspot.com');
-        console.log('5')
-        await bucket.upload(req.file.path, fileUploadOptions);
-        console.log('6')
-        res.status(200).json({
-          status: 'success',
-          newPost,
-        });
+  //       const bucket = storage.bucket('blog-storage-fb319.appspot.com');
+  //       console.log('5')
+  //       await bucket.upload(req.file.path, fileUploadOptions);
+  //       console.log('6')
+  //       res.status(200).json({
+  //         status: 'success',
+  //         newPost,
+  //       });
 
-      }
+  //     }
 
-    });
+  //   });
 
-  } catch (error) {
-    // error
-    console.error('Error uploading file:', error);
-    res.status(500).json('Internal server error');
-  }
+  // } catch (error) {
+  //   // error
+  //   console.error('Error uploading file:', error);
+  //   res.status(500).json('Internal server error');
+  // }
 
 });
 
