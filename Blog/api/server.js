@@ -233,7 +233,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     const ext = nameParts[nameParts.length - 1];
     let newPath = null;
     newPath = path + '.' + ext;
-    fs.renameSync(path, newPath);
+    // fs.renameSync(path, newPath);
     console.log(token)
 
     jwt.verify(token, process.env.SECRET, async (err, info) => {
