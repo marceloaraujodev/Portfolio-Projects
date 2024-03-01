@@ -40,7 +40,8 @@ const corsOptions = {
   'Access-Control-Allow-Headers',
   'Origin, X-Requested-With',
   'Access-Control-Allow-Methods',
-  'Content-Type'
+  'Access-Control-Allow-Credentials',
+  
   ],
   credentials: true,
 };
