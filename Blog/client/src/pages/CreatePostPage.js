@@ -30,6 +30,11 @@ export default function CreatePost() {
           method: 'POST',
           body: data,
           credentials: 'include',
+          headers: { 
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',  
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Origin': 'https://summer-lab-1399.on.fleek.co'
+        },
         }
         
       );
