@@ -224,7 +224,10 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   // production 👇 
   // Add the Access-Control-Allow-Origin header
   try {
-    const { token } = req.cookies;
+    const { token } = req.body.token;
+    if(!token){
+      return res.status(401).json({message: 'Unauthorized: Missing token'})
+    }
     // const { originalname, path } = req.file;
     // const nameParts = originalname.split('.');
     // const ext = nameParts[nameParts.length - 1];
@@ -237,7 +240,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
 
       if (err) {
         console.log('JWT verification failed:', err)
-        return res.status(401).json({message: 'Unautohrized'})
+        return res.status(401).json({message: 'Unautohrized: Invalid token'})
       }else{
         console.log('Token verified')
         console.log('3')
