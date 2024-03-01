@@ -30,24 +30,20 @@ app.use(morgan('dev')); // logger
 
 // COORS OPTIONS
 
-// const corsOptions = {
-//   origin: '*',
-//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-//   allowedHeaders: ['Content-Type', 'Authorization'],
-//   credentials: true,
-// };
+const corsOptions = {
+  origin: [
+    'https://summer-lab-1399.on.fleek.co/',
+    'https://summer-lab-1399.on.fleek.co',
+  ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one folder
-
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://summer-lab-1399.on.fleek.co/');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-});
 
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
