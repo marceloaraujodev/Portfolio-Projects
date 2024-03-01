@@ -55,7 +55,7 @@ app.use((req, res, next) => {
 // };
 
 
-// app.use(cors());
+app.use(cors({ origin: 'https://your-react-app-domain.com' }));
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one 
