@@ -38,20 +38,22 @@ app.use(morgan('dev')); // logger
 //   next();
 // });
 
+const allowedOrigins = ['https://summer-lab-1399.on.fleek.co'];
+
+// Set up CORS options
 const corsOptions = {
-  origin: [
-    'https://summer-lab-1399.on.fleek.co',
-  ],
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: [
-  'Content-Type', 
-  'Authorization',
-  'Access-Control-Allow-Headers',
-  'Origin, X-Requested-With',
-  'Content-Type'
-  ],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
+
 
 
 app.use(cors(corsOptions));
