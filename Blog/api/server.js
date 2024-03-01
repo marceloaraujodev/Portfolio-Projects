@@ -47,14 +47,14 @@ app.use(express.json());
 app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one 
 
-
-const DB = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
-);
+// WILL HAVE TO TURN ON DURING LOCAL TESTING
+// const DB = process.env.DATABASE.replace(
+//   '<PASSWORD>',
+//   process.env.DATABASE_PASSWORD
+// );
 
 // DB connection
-mongoose.connect(DB).then(() => console.log('Connected to Database'));
+mongoose.connect(process.env.DATABASE).then(() => console.log('Connected to Database'));
 
 // start server
 const PORT = 4000;
@@ -92,7 +92,6 @@ app.get(`/checkout-session/:postId`, async (req, res) => {
   try {
     const { postId } = req.params;
     const post = await PostModel.findById(postId);
-    console.log(post);
     // create stripe checkout session | Checkout -> The Session Object
     const session = await stripe.checkout.sessions.create({
       line_items: [
@@ -235,10 +234,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     // console.log('ORIGINAL NAME AND PATH:', originalname, path)
 
     jwt.verify(token, process.env.SECRET, async (err, info) => {
-      console.log('2')
-      console.log('THIS IS THE SECRET:', process.env.SECRET)
-      // console.log('req object:', req);  // Access and log req object here
-      // console.log('req.cookies:', req.cookies); 
+
       if (err) {
         console.log('JWT verification failed:', err)
         return res.status(401).json({message: 'Unautohrized'})
@@ -263,15 +259,15 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
           }
         }
         console.log('-----------got here------')
-        // const projectId = 'blog-storage-fb319';
-        // const keyFilename = process.env.KEYFILENAME;
+        const projectId = 'blog-storage-fb319';
+        const keyFilename = process.env.KEYFILENAME;
     
-        // const storage = new Storage({ projectId, keyFilename });
+        const storage = new Storage({ projectId, keyFilename });
     
-        // const bucket = storage.bucket('blog-storage-fb319.appspot.com');
-        // console.log('5')
-        // await bucket.upload(req.file.path, fileUploadOptions);
-        // console.log('6')
+        const bucket = storage.bucket('blog-storage-fb319.appspot.com');
+        console.log('5')
+        await bucket.upload(req.file.path, fileUploadOptions);
+        console.log('6')
         res.status(200).json({
           status: 'success',
           newPost,
