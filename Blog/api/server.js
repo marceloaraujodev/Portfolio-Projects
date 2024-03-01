@@ -55,7 +55,7 @@ app.use('/uploads', express.static(__dirname + '/uploads')); // serving all file
 //   process.env.DATABASE_PASSWORD
 // );
 
-// DB connection process.env.DATABASE
+// DB connection
 mongoose.connect(process.env.DATABASE).then(() => console.log('Connected to Database'));
 
 // start server
@@ -207,6 +207,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   
 
 });
+  
 
 
 // Edit Post
