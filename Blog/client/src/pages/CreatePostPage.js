@@ -22,15 +22,16 @@ export default function CreatePost() {
     data.set('file', files[0]);
     data.set('price', price)
 
+
     try {
       const response = await fetch(
-        // 'http://localhost:4000/post', // development
-        'https://blog-rzyw.onrender.com/post', // production
+        'http://localhost:4000/post', // development
+        // 'https://blog-rzyw.onrender.com/post', // production
         {
           method: 'POST',
           body: data,
           credentials: 'include',
-          headers: { 'Content-Type': 'multipart/form-data' }
+          // headers: { 'Content-Type': 'multipart/form-data' }
         }
         
       );
