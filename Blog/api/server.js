@@ -236,8 +236,9 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
 
     jwt.verify(token, process.env.SECRET, async (err, info) => {
       console.log('2')
-      console.log('req object:', req);  // Access and log req object here
-      console.log('req.cookies:', req.cookies); 
+      console.log('THIS IS THE SECRET:', process.env.SECRET)
+      // console.log('req object:', req);  // Access and log req object here
+      // console.log('req.cookies:', req.cookies); 
       if (err) {
         console.log('JWT verification failed:', err)
         return res.status(401).json({message: 'Unautohrized'})
