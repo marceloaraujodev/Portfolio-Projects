@@ -223,12 +223,12 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   //         newPost
   //       });
   // });
-
+  console.log('REQUEST:', req)
+  const { token } = req.cookies;
 
   // production 👇 
   // // Add the Access-Control-Allow-Origin header
   try {
-    const { token } = req.cookies;
     const { originalname, path } = req.file;
     const nameParts = originalname.split('.');
     const ext = nameParts[nameParts.length - 1];
@@ -262,16 +262,16 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
             contentType: 'image/jpeg',
           }
         }
+        console.log('-----------got here------')
+        // const projectId = 'blog-storage-fb319';
+        // const keyFilename = process.env.KEYFILENAME;
     
-        const projectId = 'blog-storage-fb319';
-        const keyFilename = process.env.KEYFILENAME;
+        // const storage = new Storage({ projectId, keyFilename });
     
-        const storage = new Storage({ projectId, keyFilename });
-    
-        const bucket = storage.bucket('blog-storage-fb319.appspot.com');
-        console.log('5')
-        await bucket.upload(req.file.path, fileUploadOptions);
-        console.log('6')
+        // const bucket = storage.bucket('blog-storage-fb319.appspot.com');
+        // console.log('5')
+        // await bucket.upload(req.file.path, fileUploadOptions);
+        // console.log('6')
         res.status(200).json({
           status: 'success',
           newPost,
