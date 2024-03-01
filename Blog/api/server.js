@@ -42,9 +42,6 @@ const app = express();
 app.use(morgan('dev')); // logger
 
 
-
-
-
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
@@ -226,6 +223,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   console.log('REQUEST:', req)
   const { token } = req.cookies;
   console.log('TOKEN:', token);
+  console.log(document.cookie)
 
   // production 👇 
   // // Add the Access-Control-Allow-Origin header
