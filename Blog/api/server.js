@@ -163,7 +163,10 @@ app.post('/login', async (req, res) => {
       if (result) {
         jwt.sign({ username, id: user.id }, process.env.SECRET, (err, token) => {
           if (err) throw err;
-          res.cookie('token', token).json({
+          res.cookie('token', token, {
+            sameSite: 'None',
+            secure: true
+          }).json({
             status: 'success',
             id: user.id,
             username,
