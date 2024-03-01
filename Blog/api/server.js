@@ -223,7 +223,8 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   //         newPost
   //       });
   // });
-  // res.setHeader('Access-Control-Allow-Origin', '*');
+
+  
   // production 👇 
   // Add the Access-Control-Allow-Origin header
   try {
@@ -236,13 +237,13 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     // fs.renameSync(path, newPath);
     console.log(token)
 
-    jwt.verify(token, process.env.SECRET, async (err, info) => {
-      console.log('2')
-      if (err) {
-        console.log('JWT verification failed:', err)
-        return res.status(401).json({message: 'Unautohrized'})
-      }else{
-        console.log('Token verified')
+    // jwt.verify(token, process.env.SECRET, async (err, info) => {
+    //   console.log('2')
+    //   if (err) {
+    //     console.log('JWT verification failed:', err)
+    //     return res.status(401).json({message: 'Unautohrized'})
+    //   }else{
+    //     console.log('Token verified')
         console.log('3')
         const { title, summary, content, price } = req.body;
     
@@ -276,11 +277,9 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
           newPost,
         });
 
-      }
+    //   }
 
-    });
-
-
+    // });
 
   } catch (error) {
     // error
