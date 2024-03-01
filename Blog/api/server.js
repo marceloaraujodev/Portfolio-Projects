@@ -16,6 +16,19 @@ dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 
 
+const corsOptions = {
+  origin: [
+    'https://summer-lab-1399.on.fleek.co', 'http://localhost:3000'
+  ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: [
+  'Content-Type', 
+  'Authorization',
+  ],
+  credentials: true,
+};
+
+
 // multer, config limits for the post size!
 const uploadMiddleware = multer({
   dest: 'uploads/',
@@ -29,17 +42,7 @@ const app = express();
 app.use(morgan('dev')); // logger
 
 
-const corsOptions = {
-  origin: [
-    'https://summer-lab-1399.on.fleek.co', 'http://localhost:3000'
-  ],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: [
-  'Content-Type', 
-  'Authorization',
-  ],
-  credentials: true,
-};
+
 
 
 app.use(cors(corsOptions));
@@ -250,7 +253,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
           content,
           cover: req.file.path,
           price,
-          author: info.id,
+          author: 'test', // change to info.id after jwt.verity
         });
         console.log('4')
         const fileUploadOptions = {
