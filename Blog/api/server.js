@@ -224,7 +224,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   //       });
   // });
   // res.setHeader('Access-Control-Allow-Origin', '*');
-  // production 👇
+  // production 👇 
   // Add the Access-Control-Allow-Origin header
   try {
     const { token } = req.cookies;
