@@ -220,71 +220,71 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   //         newPost
   //       });
   // });
-  console.log('REQUEST:', req)
-  // const { token } = req.cookies;
-  // console.log('TOKEN:', token);
-  // console.log(document.cookie)
-res.json(req)
+
+  
   // production 👇 
-  // // Add the Access-Control-Allow-Origin header
-  // try {
-  //   const { originalname, path } = req.file;
-  //   const nameParts = originalname.split('.');
-  //   const ext = nameParts[nameParts.length - 1];
-  //   let newPath = null;
-  //   newPath = path + '.' + ext;
-  //   fs.renameSync(path, newPath);
-  //   console.log('ORIGINAL NAME AND PATH:', originalname, path)
+  // Add the Access-Control-Allow-Origin header
+  try {
+    const { token } = req.cookies;
+    const { originalname, path } = req.file;
+    const nameParts = originalname.split('.');
+    const ext = nameParts[nameParts.length - 1];
+    let newPath = null;
+    newPath = path + '.' + ext;
+    fs.renameSync(path, newPath);
+    console.log('ORIGINAL NAME AND PATH:', originalname, path)
 
-  //   jwt.verify(token, process.env.SECRET, async (err, info) => {
-  //     console.log('2')
-  //     if (err) {
-  //       console.log('JWT verification failed:', err)
-  //       return res.status(401).json({message: 'Unautohrized'})
-  //     }else{
-  //       console.log('Token verified')
-  //       console.log('3')
-  //       const { title, summary, content, price } = req.body;
+    jwt.verify(token, process.env.SECRET, async (err, info) => {
+      console.log('2')
+      console.log('req object:', req);  // Access and log req object here
+      console.log('req.cookies:', req.cookies); 
+      if (err) {
+        console.log('JWT verification failed:', err)
+        return res.status(401).json({message: 'Unautohrized'})
+      }else{
+        console.log('Token verified')
+        console.log('3')
+        const { title, summary, content, price } = req.body;
     
-  //       const newPost = await PostModel.create({
-  //         title,
-  //         summary,
-  //         content,
-  //         cover: req.file.path,
-  //         price,
-  //         author: info.id
-  //       });
-  //       console.log('4')
-  //       const fileUploadOptions = {
-  //         destination: `covers/${originalname}`,
-  //         metadata: {
-  //           contentType: 'image/jpeg',
-  //         }
-  //       }
-  //       console.log('-----------got here------')
-  //       // const projectId = 'blog-storage-fb319';
-  //       // const keyFilename = process.env.KEYFILENAME;
+        const newPost = await PostModel.create({
+          title,
+          summary,
+          content,
+          cover: req.file.path,
+          price,
+          author: info.id
+        });
+        console.log('4')
+        const fileUploadOptions = {
+          destination: `covers/${originalname}`,
+          metadata: {
+            contentType: 'image/jpeg',
+          }
+        }
+        console.log('-----------got here------')
+        // const projectId = 'blog-storage-fb319';
+        // const keyFilename = process.env.KEYFILENAME;
     
-  //       // const storage = new Storage({ projectId, keyFilename });
+        // const storage = new Storage({ projectId, keyFilename });
     
-  //       // const bucket = storage.bucket('blog-storage-fb319.appspot.com');
-  //       // console.log('5')
-  //       // await bucket.upload(req.file.path, fileUploadOptions);
-  //       // console.log('6')
-  //       res.status(200).json({
-  //         status: 'success',
-  //         newPost,
-  //       });
+        // const bucket = storage.bucket('blog-storage-fb319.appspot.com');
+        // console.log('5')
+        // await bucket.upload(req.file.path, fileUploadOptions);
+        // console.log('6')
+        res.status(200).json({
+          status: 'success',
+          newPost,
+        });
 
-  //     }
+      }
 
-  //   });
+    });
 
-  // } catch (error) {
-  //   // error
-  //   console.error('Error uploading file:', error);
-  //   res.status(500).json('Internal server error');
-  // }
+  } catch (error) {
+    // error
+    console.error('Error uploading file:', error);
+    res.status(500).json('Internal server error');
+  }
 
 });
 
