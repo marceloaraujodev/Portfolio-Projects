@@ -225,6 +225,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   // });
   console.log('REQUEST:', req)
   const { token } = req.cookies;
+  console.log('TOKEN:', token);
 
   // production 👇 
   // // Add the Access-Control-Allow-Origin header
