@@ -75,29 +75,29 @@ const server = app.listen(PORT, () => {
 
 // Gets all posts
 // Turn on in production / its not need it locally
-app.get('/', async (req, res) => {
-  try {
-    const [files] = await bucket.getFiles();
+// app.get('/', async (req, res) => {
+//   try {
+//     const [files] = await bucket.getFiles();
 
-    const fileData = files.map((file) => {
-      return {
-        name: file.name,
-        url: `https://storage.googleapis.com/${bucket.name}/${file.name}`,
-      };
-    });
-    res.status('200').json({
-      status: 'success',
-      message: 'ok',
-      files: fileData,
-    });
-  } catch (error) {
-    console.error('Error retrieving photos:', error);
-    res.status(500).json({
-      status: 'error',
-      message: 'Internal server error',
-    });
-  }
-});
+//     const fileData = files.map((file) => {
+//       return {
+//         name: file.name,
+//         url: `https://storage.googleapis.com/${bucket.name}/${file.name}`,
+//       };
+//     });
+//     res.status('200').json({
+//       status: 'success',
+//       message: 'ok',
+//       files: fileData,
+//     });
+//   } catch (error) {
+//     console.error('Error retrieving photos:', error);
+//     res.status(500).json({
+//       status: 'error',
+//       message: 'Internal server error',
+//     });
+//   }
+// });
 
 app.get(`/checkout-session/:postId`, async (req, res) => {
   try {
@@ -206,7 +206,7 @@ app.post('/logout', (req, res) => {
 });
 
 // create post
-app.post('/post', uploadMiddleware.single('file'), (req, res) => {
+app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   // // // development 👇
   //     const { originalname, path } = req.file;
   //     const nameParts = originalname.split('.');
@@ -238,19 +238,18 @@ app.post('/post', uploadMiddleware.single('file'), (req, res) => {
   try {
     const { token } = req.cookies;
     const { originalname, path } = req.file;
-    console.log(req.file)
     const nameParts = originalname.split('.');
     const ext = nameParts[nameParts.length - 1];
     let newPath = null;
     newPath = path + '.' + ext;
-    console.log('test')
-
+    console.log('1')
 
     jwt.verify(token, process.env.SECRET, async (err, info) => {
+      console.log('2')
       if (err) throw err;
-      console.log('this is info:', info)
+      console.log('3')
       const { title, summary, content, price } = req.body;
-
+  
       const newPost = await PostModel.create({
         title,
         summary,
@@ -259,30 +258,30 @@ app.post('/post', uploadMiddleware.single('file'), (req, res) => {
         price,
         author: info.id,
       });
-
+      console.log('4')
       const fileUploadOptions = {
         destination: `covers/${originalname}`,
         metadata: {
           contentType: 'image/jpeg',
         }
       }
-
+  
       const projectId = 'blog-storage-fb319';
       const keyFilename = process.env.KEYFILENAME;
-      console.log(keyFilename);
-
+  
       const storage = new Storage({ projectId, keyFilename });
   
       const bucket = storage.bucket('blog-storage-fb319.appspot.com');
-
-      const ret = await bucket.upload(req.file.path, fileUploadOptions);
-      console.log(ret)
-
+      console.log('5')
+      await bucket.upload(req.file.path, fileUploadOptions);
+      console.log('6')
       res.status(200).json({
         status: 'success',
         newPost,
       });
     });
+
+
 
   } catch (error) {
     // error
@@ -291,70 +290,6 @@ app.post('/post', uploadMiddleware.single('file'), (req, res) => {
   }
 });
 
-// // create post
-// app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
-//   // app.post('/post',/* uploadMiddleware.single('file'), */ async (req, res) => {
-//     // // // development 👇
-//     //     const { originalname, path } = req.file;
-//     //     const nameParts = originalname.split('.');
-//     //     const ext = nameParts[nameParts.length - 1];
-//     //     const newPath = path + '.' + ext;
-//     //     fs.renameSync(path, newPath);
-
-//     //   const { token } = req.cookies;
-//     //   console.log(token)
-//     //   jwt.verify(token, process.env.SECRET, async (err, info) => {
-//     //     if (err) throw err;
-//     //     const { title, summary, content, price } = req.body;
-//     //     const newPost = await PostModel.create({
-//     //       title,
-//     //       summary,
-//     //       content,
-//     //       cover: newPath,
-//     //       price,
-//     //       author: info.id,
-//     //     });
-//     //     res.status(200).json({
-//     //       status: 'success',
-//     //       newPost
-//     //     });
-
-//   // production 👇
-//   app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
-//     const { originalname } = req.file;
-//     const { title, summary, content } = req.body;
-//     // const nameParts = originalname.split('.');
-//     // const ext = nameParts[nameParts.length - 1];
-//     // const newPath = path + '.' + ext;
-//     // fs.renameSync(path, newPath);
-//     const { token } = req.cookies;
-//     jwt.verify(token, process.env.SECRET, async (err, info) => {
-//       if (err) throw err;
-//       try {
-//         const fileUploadOptions = {
-//           destination: `covers/${originalname}`,
-//           metadata: {
-//             contentType: 'image/jpeg',
-//           }
-//         }
-//         await bucket.uploa, fileUploadOptions);
-//         const newPost = await PostModel.create({
-//           title,
-//           summary,
-//           content,
-//           cover: newPath,
-//           author: info.id,
-//         });
-//         res.json(newPost);
-//       } catch (error) {
-//         console.error('Error uploading file:', error);
-//         res.status(500).json('Internal server error');
-//       }
-
-//     });
-//   });
-
-// })
 
 // Edit Post
 app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
