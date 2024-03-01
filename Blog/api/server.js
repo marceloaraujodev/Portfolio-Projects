@@ -54,10 +54,10 @@ app.use(express.json());
 app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one 
 
-app.use((req, res, next) => {
-  res.cookie = res.cookie.bind(res, '', cookieOptions); // Bind cookie function with options
-  next();
-});
+// app.use((req, res, next) => {
+//   res.cookie = res.cookie.bind(res, '', cookieOptions); // Bind cookie function with options
+//   next();
+// });
 
 
 // WILL HAVE TO TURN ON DURING LOCAL TESTING
