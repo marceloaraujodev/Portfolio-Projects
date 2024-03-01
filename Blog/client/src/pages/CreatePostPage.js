@@ -30,7 +30,7 @@ export default function CreatePost() {
           method: 'POST',
           body: data,
           credentials: 'include',
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Content-Type': 'multipart/form-data' }
         }
         
       );
