@@ -236,7 +236,6 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   // res.setHeader('Access-Control-Allow-Origin', '*');
   // production 👇
   // Add the Access-Control-Allow-Origin header
-  res.setHeader('Access-Control-Allow-Origin', 'https://summer-lab-1399.on.fleek.co');
   try {
     const { token } = req.cookies;
     const { originalname, path } = req.file;
