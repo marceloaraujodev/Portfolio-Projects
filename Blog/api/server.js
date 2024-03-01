@@ -228,13 +228,13 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   // production 👇 
   // // Add the Access-Control-Allow-Origin header
   try {
-    // const { token } = req.cookies;
+    const { token } = req.cookies;
     const { originalname, path } = req.file;
     const nameParts = originalname.split('.');
     const ext = nameParts[nameParts.length - 1];
     let newPath = null;
     newPath = path + '.' + ext;
-    // fs.renameSync(path, newPath);
+    fs.renameSync(path, newPath);
     console.log('ORIGINAL NAME AND PATH:', originalname, path)
 
     jwt.verify(token, process.env.SECRET, async (err, info) => {
