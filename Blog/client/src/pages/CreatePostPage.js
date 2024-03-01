@@ -27,8 +27,8 @@ export default function CreatePost() {
       const token = localStorage.getItem('token');
       console.log(token)
       const response = await fetch(
-        'http://localhost:4000/post', // development
-        // 'https://blog-rzyw.onrender.com/post', // production
+        // 'http://localhost:4000/post', // development
+        'https://blog-rzyw.onrender.com/post', // production
         {
           method: 'POST',
           body: {
