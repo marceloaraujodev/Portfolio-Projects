@@ -274,7 +274,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
         console.log('6')
         res.status(200).json({
           status: 'success',
-          newPost,
+          // newPost,
         });
 
     //   }
