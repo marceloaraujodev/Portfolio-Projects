@@ -30,13 +30,27 @@ app.use(morgan('dev')); // logger
 
 // COORS OPTIONS
 
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', 'https://summer-lab-1399.on.fleek.co');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+//   res.setHeader('Access-Control-Allow-Credentials', true);
+//   next();
+// });
+
 const corsOptions = {
   origin: [
     'https://summer-lab-1399.on.fleek.co/',
     'https://summer-lab-1399.on.fleek.co',
   ],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: [
+  'Content-Type', 
+  'Authorization',
+  'Access-Control-Allow-Headers',
+  'Origin, X-Requested-With',
+  'Content-Type'
+  ],
   credentials: true,
 };
 
