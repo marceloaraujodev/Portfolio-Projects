@@ -39,6 +39,7 @@ const corsOptions = {
   'Authorization',
   'Access-Control-Allow-Headers',
   'Origin, X-Requested-With',
+  'Access-Control-Allow-Methods',
   'Content-Type'
   ],
   credentials: true,
