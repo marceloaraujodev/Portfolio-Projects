@@ -31,7 +31,7 @@ app.use(morgan('dev')); // logger
 // COORS OPTIONS
 
 const corsOptions = {
-  origin: ['https://summer-lab-1399.on.fleek.co', 'http://localhost:3000'],
+  origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -214,7 +214,7 @@ app.post('/post', uploadMiddleware.single('file'), (req, res) => {
   //         newPost
   //       });
   // });
-
+  // res.setHeader('Access-Control-Allow-Origin', '*');
   // production 👇
   try {
     const { token } = req.cookies;
@@ -224,7 +224,7 @@ app.post('/post', uploadMiddleware.single('file'), (req, res) => {
     const ext = nameParts[nameParts.length - 1];
     let newPath = null;
     newPath = path + '.' + ext;
-    console.log(newPath)
+    console.log('test')
 
 
     jwt.verify(token, process.env.SECRET, async (err, info) => {
