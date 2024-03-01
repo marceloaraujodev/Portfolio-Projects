@@ -259,7 +259,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
           }
         }
         console.log('-----------got here------')
-        const projectId = 'blog-storage-fb319';
+        const projectId = process.env.PROJECTID;
         const keyFilename = process.env.KEYFILENAME;
     
         const storage = new Storage({ projectId, keyFilename });
