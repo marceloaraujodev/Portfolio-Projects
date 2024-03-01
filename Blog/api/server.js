@@ -38,24 +38,23 @@ app.use(morgan('dev')); // logger
 //   next();
 // });
 
-// const corsOptions = {
-//   origin: [
-//     'https://summer-lab-1399.on.fleek.co',
-//     'https://summer-lab-1399.on.fleek.co/',
-//   ],
-//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-//   allowedHeaders: [
-//   'Content-Type', 
-//   'Authorization',
-//   'Access-Control-Allow-Headers',
-//   'Origin, X-Requested-With',
-//   'Content-Type'
-//   ],
-//   credentials: true,
-// };
+const corsOptions = {
+  origin: [
+    'https://summer-lab-1399.on.fleek.co',
+  ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: [
+  'Content-Type', 
+  'Authorization',
+  'Access-Control-Allow-Headers',
+  'Origin, X-Requested-With',
+  'Content-Type'
+  ],
+  credentials: true,
+};
 
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one 
