@@ -30,13 +30,13 @@ app.use(morgan('dev')); // logger
 
 // COORS OPTIONS
 
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://summer-lab-1399.on.fleek.co');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  next();
-});
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', 'https://summer-lab-1399.on.fleek.co');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+//   res.setHeader('Access-Control-Allow-Credentials', true);
+//   next();
+// });
 
 // const corsOptions = {
 //   origin: [
@@ -55,7 +55,7 @@ app.use((req, res, next) => {
 // };
 
 
-app.use(cors({ origin: 'https://your-react-app-domain.com' }));
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one 
