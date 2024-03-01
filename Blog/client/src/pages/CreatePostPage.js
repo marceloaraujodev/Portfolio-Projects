@@ -24,7 +24,7 @@ export default function CreatePost() {
 
 
     try {
-      // const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token');
       const response = await fetch(
         // 'http://localhost:4000/post', // development
         'https://blog-rzyw.onrender.com/post', // production
@@ -32,7 +32,7 @@ export default function CreatePost() {
           method: 'POST',
           body: {
             data,
-            // token: JSON.stringify(token)
+            token: JSON.stringify(token)
           },
           credentials: 'include',
         }
