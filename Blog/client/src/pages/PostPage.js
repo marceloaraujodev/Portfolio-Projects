@@ -41,8 +41,8 @@ export default function PostPage() {
     if (confirmed) {
       try {
         const response = await fetch(
-          `http://localhost:4000/post/${id}`,
-          // https://blog-rzyw.onrender.com/post/${id},
+          // `http://localhost:4000/post/${id}`,
+          `https://blog-rzyw.onrender.com/post/${id}`,
           {
             method: 'DELETE',
           }
