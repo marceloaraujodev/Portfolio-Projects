@@ -15,15 +15,6 @@ const { Storage } = require('@google-cloud/storage');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 
-// remove after
-
-// const serviceAccount = require(`./${process.env.SERVICEACCOUNTPATH}`)
-
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount),
-//     storageBucket: 'firebase-adminsdk-pli4d@blog-storage-fb319.iam.gserviceaccount.com',
-// });
-// remove after 👆
 
 // multer, config limits for the post size!
 const uploadMiddleware = multer({
@@ -198,7 +189,7 @@ app.post('/logout', (req, res) => {
 });
 
 // create post
-app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
+app.post('/post', uploadMiddleware.single('file'), (req, res) => {
   // // // development 👇
   //     const { originalname, path } = req.file;
   //     const nameParts = originalname.split('.');
@@ -224,54 +215,56 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   //       });
   // });
 
+  // production 👇
   try {
-    // production 👇
-    const { originalname, buffer: file } = req.file;
-    console.log('req.file:', req.file);
-
-    // const fileUploadOptions = {
-    //   destination: `covers/${originalname}`,
-    //   metadata: {
-    //     contentType: 'image/jpeg',
-    //   }
-    // }
-    console.log(file)
     const { token } = req.cookies;
+    const { originalname, path } = req.file;
+    console.log(req.file)
+    const nameParts = originalname.split('.');
+    const ext = nameParts[nameParts.length - 1];
+    let newPath = null;
+    newPath = path + '.' + ext;
+    console.log(newPath)
+
+
     jwt.verify(token, process.env.SECRET, async (err, info) => {
       if (err) throw err;
+      console.log('this is info:', info)
       const { title, summary, content, price } = req.body;
+
       const newPost = await PostModel.create({
         title,
         summary,
         content,
-        cover: newPath,
+        cover: req.file.path,
         price,
         author: info.id,
       });
+
+      const fileUploadOptions = {
+        destination: `covers/${originalname}`,
+        metadata: {
+          contentType: 'image/jpeg',
+        }
+      }
+
+      const projectId = 'blog-storage-fb319';
+      const keyFilename = process.env.KEYFILENAME;
+      console.log(keyFilename);
+
+      const storage = new Storage({ projectId, keyFilename });
+  
+      const bucket = storage.bucket('blog-storage-fb319.appspot.com');
+
+      const ret = await bucket.upload(req.file.path, fileUploadOptions);
+      console.log(ret)
+
       res.status(200).json({
         status: 'success',
         newPost,
       });
     });
-    const projectId = 'blog-storage-fb319';
-    const keyFilename = 'key.json';
-    const storage = new Storage({ projectId, keyFilename });
 
-    const bucket = storage.bucket('blog-storage-fb319.appspot.com');
-
-    // {destination: fileOutputName}
-    const ret = await bucket.upload(file, { destination: originalname });
-
-    const newPost = await PostModel.create({
-      title,
-      summary,
-      content,
-      cover: newPath,
-      author: info.id,
-      price,
-    });
-
-    res.status(200).json(newPost, ret);
   } catch (error) {
     // error
     console.error('Error uploading file:', error);
@@ -309,7 +302,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
 
 //   // production 👇
 //   app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
-//     const { originalname, buffer } = req.file;
+//     const { originalname } = req.file;
 //     const { title, summary, content } = req.body;
 //     // const nameParts = originalname.split('.');
 //     // const ext = nameParts[nameParts.length - 1];
@@ -325,7 +318,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
 //             contentType: 'image/jpeg',
 //           }
 //         }
-//         await bucket.upload(buffer, fileUploadOptions);
+//         await bucket.uploa, fileUploadOptions);
 //         const newPost = await PostModel.create({
 //           title,
 //           summary,
