@@ -237,13 +237,13 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     // fs.renameSync(path, newPath);
     console.log('ORIGINAL NAME AND PATH:', originalname, path)
 
-    // jwt.verify(token, process.env.SECRET, async (err, info) => {
-    //   console.log('2')
-    //   if (err) {
-    //     console.log('JWT verification failed:', err)
-    //     return res.status(401).json({message: 'Unautohrized'})
-    //   }else{
-    //     console.log('Token verified')
+    jwt.verify(token, process.env.SECRET, async (err, info) => {
+      console.log('2')
+      if (err) {
+        console.log('JWT verification failed:', err)
+        return res.status(401).json({message: 'Unautohrized'})
+      }else{
+        console.log('Token verified')
         console.log('3')
         const { title, summary, content, price } = req.body;
     
@@ -253,7 +253,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
           content,
           cover: req.file.path,
           price,
-          author: 'test', // change to info.id after jwt.verity
+          author: info.id
         });
         console.log('4')
         const fileUploadOptions = {
@@ -274,12 +274,12 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
         console.log('6')
         res.status(200).json({
           status: 'success',
-          // newPost,
+          newPost,
         });
 
-    //   }
+      }
 
-    // });
+    });
 
   } catch (error) {
     // error
