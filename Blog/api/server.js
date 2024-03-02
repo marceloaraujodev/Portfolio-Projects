@@ -230,6 +230,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
       contentType: 'image/jpeg',
     },
   };
+  console.log(fileUploadOptions)
 
   // upload files 
   await bucketUpload(req, fileUploadOptions)
