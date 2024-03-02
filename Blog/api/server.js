@@ -178,18 +178,46 @@ app.post('/logout', (req, res) => {
   res.cookie('token', '').json('logged out');
 });
 
-async function bucketUpload(req, fileUploadOptions){
+// const ret = await bucket.upload(file, {destination: fileOutputName});
+
+async function bucketUpload(req){
   try {
     console.log(req.file)
+
+    const { originalname, path } = req.file;
+    const nameParts = originalname.split('.');
+    const ext = nameParts[nameParts.length - 1];
+    let newFileName = null;
+    newFileName = path + '.' + ext;
+    console.log('New file name:', newFileName)
+
+
+    const fileUploadOptions = {
+      destination: 'uploads/covers/' + originalname, // Combine folders for clarity
+      metadata: {
+        contentType: 'image/jpeg',
+      },
+    };
+
+    console.log('file upload options', fileUploadOptions)
+
+
+
     const projectId = process.env.PROJECTID;
     const keyFilename = process.env.KEYFILENAME;
-    console.log(projectId, keyFilename)
+    console.log('projectid, keyfilename', projectId, keyFilename)
   
     const storage = new Storage({ projectId, keyFilename });
     const bucket = storage.bucket(process.env.BUCKET_NAME);
 
-    const ret = await bucket.upload(req.file.path, fileUploadOptions);
-    console.log(ret)
+    /// finis dest
+    const ret = await bucket.upload(req.file.path, {
+      destination: `uploads/${originalname}`,
+      metadata: {
+        contentType: 'image/jpeg',
+      },
+    });
+    console.log('ret await bucket', ret)
     return ret
   } catch (error) {
     console.error('Error uploading file:', error);
@@ -219,21 +247,11 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
       price,
       author: info.id,
     });
-    console.log('4');
   });
 
-  const originalName = req.file.originalname;
-
-  const fileUploadOptions = {
-    destination: `covers/${originalName}`,
-    metadata: {
-      contentType: 'image/jpeg',
-    },
-  };
-  console.log(fileUploadOptions)
 
   // upload files 
-  await bucketUpload(req, fileUploadOptions)
+  await bucketUpload(req)
 
   res.status(200).json({
     status: 'success',
