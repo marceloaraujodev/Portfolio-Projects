@@ -29,6 +29,7 @@ const corsOptions = {
   credentials: true,
 };
 
+
 // multer, config limits for the post size!
 const uploadMiddleware = multer({
   dest: 'uploads/',
@@ -64,27 +65,27 @@ const server = app.listen(PORT, () => {
 // Gets all posts
 // Turn on in production / its not need it locally
 // app.get('/', async (req, res) => {
-  //   try {
-  //     const [files] = await bucket.getFiles();
+//   try {
+//     const [files] = await bucket.getFiles();
 
-  //     const fileData = files.map((file) => {
-  //       return {
-  //         name: file.name,
-  //         url: `https://storage.googleapis.com/${bucket.name}/${file.name}`,
-  //       };
-  //     });
-  //     res.status('200').json({
-  //       status: 'success',
-  //       message: 'ok',
-  //       files: fileData,
-  //     });
-  //   } catch (error) {
-  //     console.error('Error retrieving photos:', error);
-  //     res.status(500).json({
-  //       status: 'error',
-  //       message: 'Internal server error',
-  //     });
-  //   }
+//     const fileData = files.map((file) => {
+//       return {
+//         name: file.name,
+//         url: `https://storage.googleapis.com/${bucket.name}/${file.name}`,
+//       };
+//     });
+//     res.status('200').json({
+//       status: 'success',
+//       message: 'ok',
+//       files: fileData,
+//     });
+//   } catch (error) {
+//     console.error('Error retrieving photos:', error);
+//     res.status(500).json({
+//       status: 'error',
+//       message: 'Internal server error',
+//     });
+//   }
 // });
 
 app.get(`/checkout-session/:postId`, async (req, res) => {
@@ -201,6 +202,24 @@ app.post('/logout', (req, res) => {
   res.cookie('token', '').json('logged out');
 });
 
+async function bucketUpload(req, fileUploadOptions){
+  try {
+    console.log(req.file)
+    const projectId = process.env.PROJECTID;
+    const keyFilename = process.env.KEYFILENAME;
+    console.log(projectId, keyFilename)
+  
+    const storage = new Storage({ projectId, keyFilename });
+    const bucket = storage.bucket(process.env.BUCKET_NAME);
+
+    const ret = await bucket.upload(req.file.path, fileUploadOptions);
+    console.log(ret)
+    return ret
+  } catch (error) {
+    console.error('Error uploading file:', error);
+  }
+}
+
 // create post
 app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   // try {
@@ -237,26 +256,22 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
       contentType: 'image/jpeg',
     },
   };
+
   console.log('-----------got here------');
-  const projectId = process.env.PROJECTID;
-  const keyFilename = process.env.KEYFILENAME;
 
-  const storage = new Storage({ projectId, keyFilename });
 
-  const bucket = storage.bucket(process.env.BUCKET_NAME);
-  console.log('5');
-  await bucket.upload(req.file.path, fileUploadOptions);
-  console.log('6');
+  bucketUpload(req, fileUploadOptions)
+
+
 
   res.status(200).json({
     status: 'success',
+    message: 'token verified confirmed'
   });
-  // } catch (error) {
-  //   // error
-  //   console.error('Error uploading file:', error);
-  //   res.status(500).json('Internal server error');
-  // }
+
 });
+
+
 
 // Edit Post
 app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
