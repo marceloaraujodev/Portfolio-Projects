@@ -201,14 +201,22 @@ app.post('/logout', (req, res) => {
 // create post
 app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   // production 👇 
-  res.status(200).json({
-    data: {
-      data: JSON.stringify(req.body), 
-      cookies: req.cookies.token
-    }
-  })
+  // res.status(200).json({
+  //   data: {
+  //     data: JSON.stringify(req.body), 
+  //     cookies: req.cookies.token
+  //   }
+  // })
 
   try {
+
+    const { originalname, path } = req.file;
+    const nameParts = originalname.split('.');
+    const ext = nameParts[nameParts.length - 1];
+    let newPath = null;
+    newPath = path + '.' + ext;
+    // fs.renameSync(path, newPath);
+    // console.log('ORIGINAL NAME AND PATH:', originalname, path)
 
     const token = req.cookies.token;
 
