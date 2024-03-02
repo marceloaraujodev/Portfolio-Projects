@@ -184,18 +184,18 @@ async function bucketUpload(req){
   try {
     console.log(req.file)
 
-    const { originalname, path } = req.file;
-    const nameParts = originalname.split('.');
-    const ext = nameParts[nameParts.length - 1];
-    let newFileName = null;
-    newFileName = path + '.' + ext;
-    fs.renameSync(path, newFileName);
-    console.log('New file name:', newFileName)
+    // const { originalname, path } = req.file;
+    // const nameParts = originalname.split('.');
+    // const ext = nameParts[nameParts.length - 1];
+    // let newFileName = null;
+    // newFileName = path + '.' + ext;
+    // fs.renameSync(path, newFileName);
+    console.log('New file name:', req.file.path)
 
     const fileUploadOptions = {
-      destination: `uploads/${req.file.originalname}`, // Adjust destination path here
+      destination: `covers/${req.file.originalname}`,
       metadata: {
-        contentType: 'image/jpeg',
+        contentType: req.file.mimetype,
       },
     };
 
@@ -208,7 +208,7 @@ async function bucketUpload(req){
     const bucket = storage.bucket(process.env.BUCKET_NAME);
 
     /// finis dest                    fileUploadOptions     'uploads/' + originalname,
-    const ret = await bucket.upload(newFileName, fileUploadOptions);
+    const ret = await bucket.upload(req.file.path, fileUploadOptions);
     console.log('ret await bucket', ret)
     return ret
   } catch (error) {
