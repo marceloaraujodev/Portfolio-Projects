@@ -16,22 +16,22 @@ dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 // const { v4: uuidv4 } = require('uuid');
 
-
 const corsOptions = {
-  origin: [
-    'https://summer-lab-1399.on.fleek.co', 'http://localhost:3000'
-  ],
+  origin: ['https://summer-lab-1399.on.fleek.co', 'http://localhost:3000'],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: [
-  'Content-Type', 
-  'Authorization',
-  'Access-Control-Allow-Origin',
-  'Access-Control-Allow-Methods', 
-  'Access-Control-Allow-Headers'
+    'Content-Type',
+    'Authorization',
+    'Access-Control-Allow-Origin',
+    'Access-Control-Allow-Methods',
+    'Access-Control-Allow-Headers',
   ],
   credentials: true,
 };
 
+// 'Access-Control-Allow-Origin',
+// 'Access-Control-Allow-Methods',
+// 'Access-Control-Allow-Headers'
 
 // multer, config limits for the post size!
 const uploadMiddleware = multer({
@@ -41,7 +41,6 @@ const uploadMiddleware = multer({
   },
 });
 
-
 const app = express();
 
 app.use(morgan('dev')); // logger
@@ -49,18 +48,16 @@ app.use(morgan('dev')); // logger
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
-app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one 
-
-
+app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one
 
 //// WILL HAVE TO TURN ON DURING LOCAL TESTING
-// const DB = process.env.DATABASE.replace(
-//   '<PASSWORD>',
-//   process.env.DATABASE_PASSWORD
-// );
+const DB = process.env.DATABASE.replace(
+  '<PASSWORD>',
+  process.env.DATABASE_PASSWORD
+);
 
 // DB connection // process.env.DATABASE
-mongoose.connect(process.env.DATABASE).then(() => console.log('Connected to Database'));
+mongoose.connect(DB).then(() => console.log('Connected to Database'));
 
 // start server
 const PORT = 4000;
@@ -165,17 +162,23 @@ app.post('/login', async (req, res) => {
     }
     bcrypt.compare(password, user.password, function (err, result) {
       if (result) {
-        jwt.sign({ username, id: user.id }, process.env.SECRET, (err, token) => {
-          if (err) throw err;
-          res.cookie('token', token, {
-            sameSite: 'None',
-            secure: true
-          }).json({
-            status: 'success',
-            id: user.id,
-            username,
-          });
-        });
+        jwt.sign(
+          { username, id: user.id },
+          process.env.SECRET,
+          (err, token) => {
+            if (err) throw err;
+            res
+              .cookie('token', token, {
+                sameSite: 'None',
+                secure: true,
+              })
+              .json({
+                status: 'success',
+                id: user.id,
+                username,
+              });
+          }
+        );
         console.log('Logged IN');
       } else {
         res.status(400).json('access denied');
@@ -205,62 +208,59 @@ app.post('/logout', (req, res) => {
 // create post
 app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   // try {
-    // const uniqueFilename = uuidv4(); // Generates a unique identifier
-        if (!req.cookies.token) {
-            return res.status(404).json({ message: 'No token found' });
-        }
 
-      jwt.verify(req.cookies.token, process.env.SECRET, async (err, info) => {
-  
-        if (err) {
-          console.log('JWT verification failed:', err)
-          return res.status(401).json({message: 'Unautohrized: Invalid token'})
-        }
-        
-        console.log('Token verified')
-        console.log('3')
-        const { title, summary, content, price } = req.body;
-    
-        await PostModel.create({
-          title,
-          summary,
-          content,
-          cover: req.file.path,
-          price,
-          author: info.id
-        });
+  if (!req.cookies.token) {
+    return res.status(404).json({ message: 'No token found' });
+  }
 
-        const originalName = req.file.originalname;
-        console.log('This is Original Name:', originalName)
-        const fileUploadOptions = {
-          destination: `${originalName}`,
-          metadata: {
-            contentType: 'image/jpeg',
-          }
-        }
-        console.log('-----------got here------')
-        const projectId = process.env.PROJECTID;
-        const keyFilename = process.env.KEYFILENAME;
-    
-        const storage = new Storage({ projectId, keyFilename });
-    
-        const bucket = storage.bucket(process.env.BUCKET_NAME);
-        await bucket.upload(req.file.path, fileUploadOptions);
-        console.log('6')          
-        
-      });
-      
-      res.status(200).json({
-        status: 'success',
-      });
-    // } catch (error) {
-    //   // error
-    //   console.error('Error uploading file:', error);
-    //   res.status(500).json('Internal server error');
-    // }
+  jwt.verify(req.cookies.token, process.env.SECRET, async (err, info) => {
+    if (err) {
+      console.log('JWT verification failed:', err);
+      return res.status(401).json({ message: 'Unautohrized: Invalid token' });
+    }
+
+    console.log('Token verified');
+    const { title, summary, content, price } = req.body;
+
+    await PostModel.create({
+      title,
+      summary,
+      content,
+      cover: req.file.path,
+      price,
+      author: info.id,
+    });
+    console.log('4');
+  });
+
+  const originalName = req.file.originalname;
+  console.log('This is Original Name:', originalName);
+  const fileUploadOptions = {
+    destination: `${originalName}`,
+    metadata: {
+      contentType: 'image/jpeg',
+    },
+  };
+  console.log('-----------got here------');
+  const projectId = process.env.PROJECTID;
+  const keyFilename = process.env.KEYFILENAME;
+
+  const storage = new Storage({ projectId, keyFilename });
+
+  const bucket = storage.bucket(process.env.BUCKET_NAME);
+  console.log('5');
+  await bucket.upload(req.file.path, fileUploadOptions);
+  console.log('6');
+
+  res.status(200).json({
+    status: 'success',
+  });
+  // } catch (error) {
+  //   // error
+  //   console.error('Error uploading file:', error);
+  //   res.status(500).json('Internal server error');
+  // }
 });
-  
-
 
 // Edit Post
 app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
@@ -332,104 +332,99 @@ server.on('close', () => {
   console.log('Server shutting down');
 });
 
+// const { originalname, path } = req.file;
+// const nameParts = originalname.split('.');
+// const ext = nameParts[nameParts.length - 1];
+// let newPath = null;
+// newPath = path + '.' + ext;
+// // fs.renameSync(path, newPath);
+// console.log('ORIGINAL NAME AND PATH:', originalname, path)
 
+// try {
 
-    // const { originalname, path } = req.file;
-    // const nameParts = originalname.split('.');
-    // const ext = nameParts[nameParts.length - 1];
-    // let newPath = null;
-    // newPath = path + '.' + ext;
-    // // fs.renameSync(path, newPath);
-    // console.log('ORIGINAL NAME AND PATH:', originalname, path)
+//   jwt.verify(token, process.env.SECRET, async (err, info) => {
 
+//     if (err) {
+//       console.log('JWT verification failed:', err)
+//       return res.status(401).json({message: 'Unautohrized: Invalid token'})
+//     }else{
+//       console.log('Token verified')
+//       console.log('3')
+//       const { title, summary, content, price } = req.body;
 
-    // try {
+//       const newPost = await PostModel.create({
+//         title,
+//         summary,
+//         content,
+//         cover: req.file.path,
+//         price,
+//         author: info.id
+//       });
+//       console.log('4')
+//       const fileUploadOptions = {
+//         destination: `covers/${originalname}`,
+//         metadata: {
+//           contentType: 'image/jpeg',
+//         }
+//       }
+//       console.log('-----------got here------')
+//       const projectId = process.env.PROJECTID;
+//       const keyFilename = process.env.KEYFILENAME;
 
-    //   jwt.verify(token, process.env.SECRET, async (err, info) => {
-  
-    //     if (err) {
-    //       console.log('JWT verification failed:', err)
-    //       return res.status(401).json({message: 'Unautohrized: Invalid token'})
-    //     }else{
-    //       console.log('Token verified')
-    //       console.log('3')
-    //       const { title, summary, content, price } = req.body;
-      
-    //       const newPost = await PostModel.create({
-    //         title,
-    //         summary,
-    //         content,
-    //         cover: req.file.path,
-    //         price,
-    //         author: info.id
-    //       });
-    //       console.log('4')
-    //       const fileUploadOptions = {
-    //         destination: `covers/${originalname}`,
-    //         metadata: {
-    //           contentType: 'image/jpeg',
-    //         }
-    //       }
-    //       console.log('-----------got here------')
-    //       const projectId = process.env.PROJECTID;
-    //       const keyFilename = process.env.KEYFILENAME;
-      
-    //       const storage = new Storage({ projectId, keyFilename });
-      
-    //       const bucket = storage.bucket('blog-storage-fb319.appspot.com');
-    //       console.log('5')
-    //       await bucket.upload(req.file.path, fileUploadOptions);
-    //       console.log('6')
-    //       res.status(200).json({
-    //         status: 'success',
-    //         newPost,
-    //       });
-  
-    //     }
-  
-    //   });
-  
-    // } catch (error) {
-    //   // error
-    //   console.error('Error uploading file:', error);
-    //   res.status(500).json('Internal server error');
-    // }
+//       const storage = new Storage({ projectId, keyFilename });
 
-      // // // development 👇
-  //     const { originalname, path } = req.file;
-  //     const nameParts = originalname.split('.');
-  //     const ext = nameParts[nameParts.length - 1];
-  //     const newPath = path + '.' + ext;
-  //     fs.renameSync(path, newPath);
+//       const bucket = storage.bucket('blog-storage-fb319.appspot.com');
+//       console.log('5')
+//       await bucket.upload(req.file.path, fileUploadOptions);
+//       console.log('6')
+//       res.status(200).json({
+//         status: 'success',
+//         newPost,
+//       });
 
-  //     const { token } = req.cookies;
-  //     jwt.verify(token, process.env.SECRET, async (err, info) => {
-  //       if (err) throw err;
-  //       const { title, summary, content, price } = req.body;
-  //       const newPost = await PostModel.create({
-  //         title,
-  //         summary,
-  //         content,
-  //         cover: newPath,
-  //         price,
-  //         author: info.id,
-  //       });
-  //       res.status(200).json({
-  //         status: 'success',
-  //         newPost
-  //       });
-  // });
+//     }
 
+//   });
 
+// } catch (error) {
+//   // error
+//   console.error('Error uploading file:', error);
+//   res.status(500).json('Internal server error');
+// }
 
-    //// production 👇 
-  // res.status(200).json({
-  //   data: {
-  //     data: JSON.stringify(req.body), 
-  //     cookies: req.cookies.token
-  //   }
-  // })
+// // // development 👇
+//     const { originalname, path } = req.file;
+//     const nameParts = originalname.split('.');
+//     const ext = nameParts[nameParts.length - 1];
+//     const newPath = path + '.' + ext;
+//     fs.renameSync(path, newPath);
 
-    // res.json(req.file)
+//     const { token } = req.cookies;
+//     jwt.verify(token, process.env.SECRET, async (err, info) => {
+//       if (err) throw err;
+//       const { title, summary, content, price } = req.body;
+//       const newPost = await PostModel.create({
+//         title,
+//         summary,
+//         content,
+//         cover: newPath,
+//         price,
+//         author: info.id,
+//       });
+//       res.status(200).json({
+//         status: 'success',
+//         newPost
+//       });
+// });
 
-  // res.status(200).json(req.cookies.token)
+// //// production 👇
+// // res.status(200).json({
+// //   data: {
+// //     data: JSON.stringify(req.body),
+// //     cookies: req.cookies.token
+// //   }
+// // })
+
+//   // res.json(req.file)
+
+// // res.status(200).json(req.cookies.token)
