@@ -214,7 +214,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
 
   // res.status(200).json(req.cookies.token)
 
-  try {
+  // try {
     // const uniqueFilename = uuidv4(); // Generates a unique identifier
 
         if (!req.cookies.token) {
@@ -243,7 +243,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
           const originalName = req.file.originalname;
           console.log('This is Original Name:', originalName)
           const fileUploadOptions = {
-            destination: `covers/${originalName}`,
+            destination: `${originalName}`,
             metadata: {
               contentType: 'image/jpeg',
             }
@@ -254,24 +254,23 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
       
           const storage = new Storage({ projectId, keyFilename });
       
-          const bucket = storage.bucket(process.env.BUCKET_NAME, originalName, originalName);
+          const bucket = storage.bucket(process.env.BUCKET_NAME);
           console.log('5')
           await bucket.upload(req.file.path, fileUploadOptions);
-          console.log('6')
-          res.status(200).json({
-            status: 'success',
-            newPost,
-          });
-  
+          console.log('6')          
         }
-  
+        
+        res.status(200).json({
+          status: 'success',
+          newPost,
+        });
       });
   
-    } catch (error) {
-      // error
-      console.error('Error uploading file:', error);
-      res.status(500).json('Internal server error');
-    }
+    // } catch (error) {
+    //   // error
+    //   console.error('Error uploading file:', error);
+    //   res.status(500).json('Internal server error');
+    // }
   
 
 });
