@@ -193,7 +193,7 @@ async function bucketUpload(req){
 
 
     const fileUploadOptions = {
-      destination: 'uploads/covers/' + originalname,
+      destination: 'uploads/' + originalname,
       metadata: {
         contentType: 'image/jpeg',
       },
@@ -205,18 +205,13 @@ async function bucketUpload(req){
 
     const projectId = process.env.PROJECTID;
     const keyFilename = process.env.KEYFILENAME;
-    console.log('projectid, keyfilename', projectId, keyFilename)
+    console.log('projectid, keyfilename', projectId, keyFilename);
   
     const storage = new Storage({ projectId, keyFilename });
     const bucket = storage.bucket(process.env.BUCKET_NAME);
 
     /// finis dest
-    const ret = await bucket.upload(req.file.path, {
-      destination: `uploads/${originalname}`,
-      metadata: {
-        contentType: 'image/jpeg',
-      },
-    });
+    const ret = await bucket.upload(req.file.path, fileUploadOptions);
     console.log('ret await bucket', ret)
     return ret
   } catch (error) {
