@@ -234,7 +234,6 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
           return res.status(401).json({message: 'Unautohrized: Invalid token'})
         }else{
           console.log('Token verified')
-          console.log('3')
           const { title, summary, content, price } = req.body;
       
           const newPost = await PostModel.create({
@@ -245,7 +244,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
             price,
             author: info.id
           });
-          console.log('4')
+
           const fileUploadOptions = {
             destination: `covers/${originalname}`,
             metadata: {
