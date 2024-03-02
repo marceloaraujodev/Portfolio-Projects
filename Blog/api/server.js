@@ -232,7 +232,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   };
 
   // upload files 
-  bucketUpload(req, fileUploadOptions)
+  await bucketUpload(req, fileUploadOptions)
 
   res.status(200).json({
     status: 'success',
