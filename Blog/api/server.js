@@ -204,21 +204,8 @@ app.post('/logout', (req, res) => {
 
 // create post
 app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
-  //// production 👇 
-  // res.status(200).json({
-  //   data: {
-  //     data: JSON.stringify(req.body), 
-  //     cookies: req.cookies.token
-  //   }
-  // })
-
-    // res.json(req.file)
-
-  // res.status(200).json(req.cookies.token)
-
   // try {
     // const uniqueFilename = uuidv4(); // Generates a unique identifier
-
         if (!req.cookies.token) {
             return res.status(404).json({ message: 'No token found' });
         }
@@ -234,7 +221,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
         console.log('3')
         const { title, summary, content, price } = req.body;
     
-        const newPost = await PostModel.create({
+        await PostModel.create({
           title,
           summary,
           content,
@@ -242,6 +229,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
           price,
           author: info.id
         });
+
         const originalName = req.file.originalname;
         console.log('This is Original Name:', originalName)
         const fileUploadOptions = {
@@ -260,12 +248,11 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
         await bucket.upload(req.file.path, fileUploadOptions);
         console.log('6')          
         
-        res.status(200).json({
-          status: 'success',
-          newPost,
-        });
       });
-  
+      
+      res.status(200).json({
+        status: 'success',
+      });
     // } catch (error) {
     //   // error
     //   console.error('Error uploading file:', error);
@@ -432,3 +419,17 @@ server.on('close', () => {
   //         newPost
   //       });
   // });
+
+
+
+    //// production 👇 
+  // res.status(200).json({
+  //   data: {
+  //     data: JSON.stringify(req.body), 
+  //     cookies: req.cookies.token
+  //   }
+  // })
+
+    // res.json(req.file)
+
+  // res.status(200).json(req.cookies.token)
