@@ -14,7 +14,7 @@ const admin = require('firebase-admin');
 const { Storage } = require('@google-cloud/storage');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
-const { v4: uuidv4 } = require('uuid');
+// const { v4: uuidv4 } = require('uuid');
 
 
 const corsOptions = {
@@ -210,10 +210,12 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   //   }
   // })
 
+    // res.json(req.file)
+
   // res.status(200).json(req.cookies.token)
 
-  // try {
-    const uniqueFilename = uuidv4(); // Generates a unique identifier
+  try {
+    // const uniqueFilename = uuidv4(); // Generates a unique identifier
 
         if (!req.cookies.token) {
             return res.status(404).json({ message: 'No token found' });
@@ -238,8 +240,10 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
             author: info.id
           });
           console.log('4')
+          const originalName = req.file.originalname;
+          console.log('This is Original Name:', originalName)
           const fileUploadOptions = {
-            destination: `covers/${uniqueFilename}`,
+            destination: `covers/${originalName}`,
             metadata: {
               contentType: 'image/jpeg',
             }
@@ -250,7 +254,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
       
           const storage = new Storage({ projectId, keyFilename });
       
-          const bucket = storage.bucket(process.env.BUCKET_NAME);
+          const bucket = storage.bucket(process.env.BUCKET_NAME, originalName, originalName);
           console.log('5')
           await bucket.upload(req.file.path, fileUploadOptions);
           console.log('6')
@@ -263,11 +267,11 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   
       });
   
-    // } catch (error) {
-    //   // error
-    //   console.error('Error uploading file:', error);
-    //   res.status(500).json('Internal server error');
-    // }
+    } catch (error) {
+      // error
+      console.error('Error uploading file:', error);
+      res.status(500).json('Internal server error');
+    }
   
 
 });
