@@ -201,12 +201,14 @@ app.post('/logout', (req, res) => {
 // create post
 app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   //// production 👇 
-  res.status(200).json({
-    data: {
-      data: JSON.stringify(req.body), 
-      cookies: req.cookies.token
-    }
-  })
+  // res.status(200).json({
+  //   data: {
+  //     data: JSON.stringify(req.body), 
+  //     cookies: req.cookies.token
+  //   }
+  // })
+
+  res.status(200).json(req.cookies.token)
 
   // try {
       
