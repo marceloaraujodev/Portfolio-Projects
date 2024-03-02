@@ -193,7 +193,7 @@ async function bucketUpload(req){
 
 
     const fileUploadOptions = {
-      destination: 'uploads/covers/' + originalname, // Combine folders for clarity
+      destination: 'uploads/covers/' + originalname,
       metadata: {
         contentType: 'image/jpeg',
       },
