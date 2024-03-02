@@ -189,6 +189,7 @@ async function bucketUpload(req){
     const ext = nameParts[nameParts.length - 1];
     let newFileName = null;
     newFileName = path + '.' + ext;
+    fs.renameSync(path, newFileName);
     console.log('New file name:', newFileName)
 
     const fileUploadOptions = {
