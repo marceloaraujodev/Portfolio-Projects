@@ -208,76 +208,75 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   //   }
   // })
 
-  res.status(200).json(req.cookies.token)
+  // res.status(200).json(req.cookies.token)
 
-  // try {
+  try {
       
-  //     console.log(req.file)
-  //     const { originalname } = req.file;
-  //     // const { originalname, path } = req.file;
-  //     // const nameParts = originalname.split('.');
-  //     // const ext = nameParts[nameParts.length - 1];
-  //     // let newPath = null;
-  //     // newPath = path + 1 + '.' + ext;
-  //     // fs.renameSync(path, newPath);
+      console.log(req.file)
+      const { originalname } = req.file;
+      // const { originalname, path } = req.file;
+      // const nameParts = originalname.split('.');
+      // const ext = nameParts[nameParts.length - 1];
+      // let newPath = null;
+      // newPath = path + 1 + '.' + ext;
+      // fs.renameSync(path, newPath);
       
-  //     const token = req.cookies.token;
-  //     console.log(token)
+      console.log(req.cookies.token)
 
-  //       // Token validation (replace with your actual implementation)
-  //       if (!token) {
-  //           return res.status(404).json({ message: 'No token found' });
-  //       }
+        // Token validation (replace with your actual implementation)
+        if (!req.cookies.token) {
+            return res.status(404).json({ message: 'No token found' });
+        }
 
-  //     jwt.verify(token, process.env.SECRET, async (err, info) => {
+      jwt.verify(req.cookies.token, process.env.SECRET, async (err, info) => {
   
-  //       if (err) {
-  //         console.log('JWT verification failed:', err)
-  //         return res.status(401).json({message: 'Unautohrized: Invalid token'})
-  //       }else{
-  //         console.log('Token verified')
-  //         console.log('3')
-  //         const { title, summary, content, price } = req.body;
+        if (err) {
+          console.log('JWT verification failed:', err)
+          return res.status(401).json({message: 'Unautohrized: Invalid token'})
+        }else{
+          console.log('Token verified')
+          console.log('3')
+          const { title, summary, content, price } = req.body;
       
-  //         const newPost = await PostModel.create({
-  //           title,
-  //           summary,
-  //           content,
-  //           cover: req.file.path,
-  //           price,
-  //           author: info.id
-  //         });
-  //         console.log('4')
-  //         const fileUploadOptions = {
-  //           destination: `covers/${originalname}`,
-  //           metadata: {
-  //             contentType: 'image/jpeg',
-  //           }
-  //         }
-  //         console.log('-----------got here------')
-  //         const projectId = process.env.PROJECTID;
-  //         const keyFilename = process.env.KEYFILENAME;
+          const newPost = await PostModel.create({
+            title,
+            summary,
+            content,
+            cover: req.file.path,
+            price,
+            author: info.id
+          });
+          console.log('4')
+          const fileUploadOptions = {
+            destination: `covers/${originalname}`,
+            metadata: {
+              contentType: 'image/jpeg',
+            }
+          }
+          console.log('-----------got here------')
+          const projectId = process.env.PROJECTID;
+          const keyFilename = process.env.KEYFILENAME;
       
-  //         const storage = new Storage({ projectId, keyFilename });
+          const storage = new Storage({ projectId, keyFilename });
       
-  //         const bucket = storage.bucket(process.env.BUCKET_NAME);
-  //         console.log('5')
-  //         await bucket.upload(req.file.path, fileUploadOptions);
-  //         console.log('6')
-  //         res.status(200).json({
-  //           status: 'success',
-  //           newPost,
-  //         });
+          const bucket = storage.bucket(process.env.BUCKET_NAME);
+          console.log('5')
+          await bucket.upload(req.file.path, fileUploadOptions);
+          console.log('6')
+          res.status(200).json({
+            status: 'success',
+            newPost,
+          });
   
-  //       }
+        }
   
-  //     });
+      });
   
-  //   } catch (error) {
-  //     // error
-  //     console.error('Error uploading file:', error);
-  //     res.status(500).json('Internal server error');
-  //   }
+    } catch (error) {
+      // error
+      console.error('Error uploading file:', error);
+      res.status(500).json('Internal server error');
+    }
   
 
 });
