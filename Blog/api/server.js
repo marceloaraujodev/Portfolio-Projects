@@ -49,13 +49,13 @@ app.use('/uploads', express.static(__dirname + '/uploads')); // serving all file
 
 
 
-// WILL HAVE TO TURN ON DURING LOCAL TESTING
+//// WILL HAVE TO TURN ON DURING LOCAL TESTING
 // const DB = process.env.DATABASE.replace(
 //   '<PASSWORD>',
 //   process.env.DATABASE_PASSWORD
 // );
 
-// DB connection
+// DB connection // process.env.DATABASE
 mongoose.connect(process.env.DATABASE).then(() => console.log('Connected to Database'));
 
 // start server
@@ -209,15 +209,23 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   // })
 
   try {
+      
+      console.log(req.file)
+      const { originalname } = req.file;
+      // const { originalname, path } = req.file;
+      // const nameParts = originalname.split('.');
+      // const ext = nameParts[nameParts.length - 1];
+      // let newPath = null;
+      // newPath = path + 1 + '.' + ext;
+      // fs.renameSync(path, newPath);
+      
+      const token = req.cookies.token;
+      console.log(token)
 
-    const token = req.cookies.token;
-
-      if(!token){
-        res.status(404).json({
-          status: 'fail',
-          message: 'No token found'
-        })
-      }
+        // Token validation (replace with your actual implementation)
+        if (!token) {
+            return res.status(404).json({ message: 'No token found' });
+        }
 
       jwt.verify(token, process.env.SECRET, async (err, info) => {
   
@@ -250,7 +258,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
       
           const storage = new Storage({ projectId, keyFilename });
       
-          const bucket = storage.bucket('blog-storage-fb319.appspot.com');
+          const bucket = storage.bucket(process.env.BUCKET_NAME);
           console.log('5')
           await bucket.upload(req.file.path, fileUploadOptions);
           console.log('6')
@@ -268,6 +276,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
       console.error('Error uploading file:', error);
       res.status(500).json('Internal server error');
     }
+  
 
 });
   
