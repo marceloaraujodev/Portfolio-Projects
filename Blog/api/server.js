@@ -28,6 +28,7 @@ const corsOptions = {
   credentials: true,
 };
 
+
 // multer, config limits for the post size!
 const uploadMiddleware = multer({
   dest: 'uploads/',
@@ -35,6 +36,7 @@ const uploadMiddleware = multer({
     fieldSize: 1024 * 1024 * 10, // 10MB limit for field size
   },
 });
+
 
 const app = express();
 
@@ -46,13 +48,14 @@ app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one 
 
 
+
 // WILL HAVE TO TURN ON DURING LOCAL TESTING
 // const DB = process.env.DATABASE.replace(
 //   '<PASSWORD>',
 //   process.env.DATABASE_PASSWORD
 // );
 
-// DB connection  // process.env.DATABASE
+// DB connection
 mongoose.connect(process.env.DATABASE).then(() => console.log('Connected to Database'));
 
 // start server
@@ -64,28 +67,28 @@ const server = app.listen(PORT, () => {
 // Gets all posts
 // Turn on in production / its not need it locally
 // app.get('/', async (req, res) => {
-  //   try {
-  //     const [files] = await bucket.getFiles();
+//   try {
+//     const [files] = await bucket.getFiles();
 
-  //     const fileData = files.map((file) => {
-  //       return {
-  //         name: file.name,
-  //         url: `https://storage.googleapis.com/${bucket.name}/${file.name}`,
-  //       };
-  //     });
-  //     res.status('200').json({
-  //       status: 'success',
-  //       message: 'ok',
-  //       files: fileData,
-  //     });
-  //   } catch (error) {
-  //     console.error('Error retrieving photos:', error);
-  //     res.status(500).json({
-  //       status: 'error',
-  //       message: 'Internal server error',
-  //     });
-  //   }
-// }); 
+//     const fileData = files.map((file) => {
+//       return {
+//         name: file.name,
+//         url: `https://storage.googleapis.com/${bucket.name}/${file.name}`,
+//       };
+//     });
+//     res.status('200').json({
+//       status: 'success',
+//       message: 'ok',
+//       files: fileData,
+//     });
+//   } catch (error) {
+//     console.error('Error retrieving photos:', error);
+//     res.status(500).json({
+//       status: 'error',
+//       message: 'Internal server error',
+//     });
+//   }
+// });
 
 app.get(`/checkout-session/:postId`, async (req, res) => {
   try {
@@ -207,14 +210,6 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
 
   try {
 
-    const { originalname, path } = req.file;
-    const nameParts = originalname.split('.');
-    const ext = nameParts[nameParts.length - 1];
-    let newPath = null;
-    newPath = path + '.' + ext;
-    // fs.renameSync(path, newPath);
-    // console.log('ORIGINAL NAME AND PATH:', originalname, path)
-    
     const token = req.cookies.token;
 
       if(!token){
@@ -231,6 +226,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
           return res.status(401).json({message: 'Unautohrized: Invalid token'})
         }else{
           console.log('Token verified')
+          console.log('3')
           const { title, summary, content, price } = req.body;
       
           const newPost = await PostModel.create({
@@ -241,7 +237,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
             price,
             author: info.id
           });
-
+          console.log('4')
           const fileUploadOptions = {
             destination: `covers/${originalname}`,
             metadata: {
@@ -254,7 +250,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
       
           const storage = new Storage({ projectId, keyFilename });
       
-          const bucket = storage.bucket(process.env.BUCKET_NAME);
+          const bucket = storage.bucket('blog-storage-fb319.appspot.com');
           console.log('5')
           await bucket.upload(req.file.path, fileUploadOptions);
           console.log('6')
