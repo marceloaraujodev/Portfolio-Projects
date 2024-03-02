@@ -14,6 +14,7 @@ const admin = require('firebase-admin');
 const { Storage } = require('@google-cloud/storage');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
+const { v4: uuidv4 } = require('uuid');
 
 
 const corsOptions = {
@@ -211,9 +212,9 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   // res.status(200).json(req.cookies.token)
 
   try {
-      
+    const uniqueFilename = uuidv4(); // Generates a unique identifier
       console.log(req.file)
-      const { originalname } = req.file;
+      // const { originalname } = req.file;
       // const { originalname, path } = req.file;
       // const nameParts = originalname.split('.');
       // const ext = nameParts[nameParts.length - 1];
@@ -248,7 +249,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
           });
           console.log('4')
           const fileUploadOptions = {
-            destination: `covers/${originalname}`,
+            destination: `covers/${uniqueFilename}`,
             metadata: {
               contentType: 'image/jpeg',
             }
