@@ -182,24 +182,17 @@ app.post('/logout', (req, res) => {
 
 async function bucketUpload(req){
   try {
-    console.log(req.file)
 
-    // const { originalname, path } = req.file;
-    // const nameParts = originalname.split('.');
-    // const ext = nameParts[nameParts.length - 1];
-    // let newFileName = null;
-    // newFileName = path + '.' + ext;
-    // fs.renameSync(path, newFileName);
     console.log('New file name:', req.file.path)
 
-    const fileUploadOptions = {
-      destination: `covers/${req.file.originalname}`,
-      metadata: {
-        contentType: req.file.mimetype,
-      },
-    };
+    // const fileUploadOptions = {
+    //   destination: `uploads/` + req.file.originalname,
+    //   metadata: {
+    //     contentType: req.file.mimetype,
+    //   },
+    // };
 
-    console.log('file upload options', fileUploadOptions)
+    // console.log('file upload options', fileUploadOptions)
     const projectId = process.env.PROJECTID;
     const keyFilename = process.env.KEYFILENAME;
     console.log('projectid, keyfilename', projectId, keyFilename);
@@ -208,8 +201,7 @@ async function bucketUpload(req){
     const bucket = storage.bucket(process.env.BUCKET_NAME);
 
     /// finis dest                    fileUploadOptions     'uploads/' + originalname,
-    const ret = await bucket.upload(req.file.path, fileUploadOptions);
-    console.log('ret await bucket', ret)
+    const ret = await bucket.upload(req.file.path, {destination: req.file.originalname} );
     return ret
   } catch (error) {
     console.error('Error uploading file:', error);
@@ -323,3 +315,13 @@ server.on('close', () => {
   console.log('Server shutting down');
 });
 
+
+
+    // console.log(req.file)
+
+    // const { originalname, path } = req.file;
+    // const nameParts = originalname.split('.');
+    // const ext = nameParts[nameParts.length - 1];
+    // let newFileName = null;
+    // newFileName = path + '.' + ext;
+    // fs.renameSync(path, newFileName);
