@@ -25,7 +25,9 @@ const corsOptions = {
   allowedHeaders: [
   'Content-Type', 
   'Authorization',
-  'Access-Control-Allow-Origin'
+  'Access-Control-Allow-Origin',
+  'Access-Control-Allow-Methods', 
+  'Access-Control-Allow-Headers'
   ],
   credentials: true,
 };
@@ -240,7 +242,6 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
           price,
           author: info.id
         });
-        console.log('4')
         const originalName = req.file.originalname;
         console.log('This is Original Name:', originalName)
         const fileUploadOptions = {
@@ -256,7 +257,6 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
         const storage = new Storage({ projectId, keyFilename });
     
         const bucket = storage.bucket(process.env.BUCKET_NAME);
-        console.log('5')
         await bucket.upload(req.file.path, fileUploadOptions);
         console.log('6')          
         
