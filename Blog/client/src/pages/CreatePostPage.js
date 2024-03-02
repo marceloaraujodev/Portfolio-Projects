@@ -24,7 +24,7 @@ export default function CreatePost() {
 
 
     try {
-      const response = await fetch(
+      await fetch(
         // 'http://localhost:4000/post', // development
         'https://blog-rzyw.onrender.com/post', // production
         {
@@ -34,11 +34,12 @@ export default function CreatePost() {
         }
         
       );
-      if (response.ok) {
-        setRedirect(true);
-      }else{
-        console.log('error creating post:', response.statusText)
-      }
+      // if (response.status === '201') {
+      //   setRedirect(true);
+      // }else{
+      //   console.log('error creating post:', response.statusText)
+      // }
+      setRedirect(true);
       
     } catch (error) {
       console.log(error)
