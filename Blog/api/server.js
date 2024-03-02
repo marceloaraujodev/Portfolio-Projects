@@ -227,43 +227,43 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
           console.log('JWT verification failed:', err)
           return res.status(401).json({message: 'Unautohrized: Invalid token'})
         }
-      });
-
-      console.log('Token verified')
-      console.log('3')
-      const { title, summary, content, price } = req.body;
-  
-      const newPost = await PostModel.create({
-        title,
-        summary,
-        content,
-        cover: req.file.path,
-        price,
-        author: info.id
-      });
-      console.log('4')
-      const originalName = req.file.originalname;
-      console.log('This is Original Name:', originalName)
-      const fileUploadOptions = {
-        destination: `${originalName}`,
-        metadata: {
-          contentType: 'image/jpeg',
+        
+        console.log('Token verified')
+        console.log('3')
+        const { title, summary, content, price } = req.body;
+    
+        const newPost = await PostModel.create({
+          title,
+          summary,
+          content,
+          cover: req.file.path,
+          price,
+          author: info.id
+        });
+        console.log('4')
+        const originalName = req.file.originalname;
+        console.log('This is Original Name:', originalName)
+        const fileUploadOptions = {
+          destination: `${originalName}`,
+          metadata: {
+            contentType: 'image/jpeg',
+          }
         }
-      }
-      console.log('-----------got here------')
-      const projectId = process.env.PROJECTID;
-      const keyFilename = process.env.KEYFILENAME;
-  
-      const storage = new Storage({ projectId, keyFilename });
-  
-      const bucket = storage.bucket(process.env.BUCKET_NAME);
-      console.log('5')
-      await bucket.upload(req.file.path, fileUploadOptions);
-      console.log('6')          
-      
-      res.status(200).json({
-        status: 'success',
-        newPost,
+        console.log('-----------got here------')
+        const projectId = process.env.PROJECTID;
+        const keyFilename = process.env.KEYFILENAME;
+    
+        const storage = new Storage({ projectId, keyFilename });
+    
+        const bucket = storage.bucket(process.env.BUCKET_NAME);
+        console.log('5')
+        await bucket.upload(req.file.path, fileUploadOptions);
+        console.log('6')          
+        
+        res.status(200).json({
+          status: 'success',
+          newPost,
+        });
       });
   
     // } catch (error) {
@@ -271,8 +271,6 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     //   console.error('Error uploading file:', error);
     //   res.status(500).json('Internal server error');
     // }
-  
-
 });
   
 
