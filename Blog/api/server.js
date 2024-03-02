@@ -217,6 +217,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     newPath = path + '.' + ext;
     // fs.renameSync(path, newPath);
     // console.log('ORIGINAL NAME AND PATH:', originalname, path)
+    console.log('Google Info:', process.env.PROJECTID, process.env.KEYFILENAME, )
 
     const token = req.cookies.token;
 
@@ -257,7 +258,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
       
           const storage = new Storage({ projectId, keyFilename });
       
-          const bucket = storage.bucket('blog-storage-fb319.appspot.com');
+          const bucket = storage.bucket(process.env.BUCKET_NAME);
           console.log('5')
           await bucket.upload(req.file.path, fileUploadOptions);
           console.log('6')
