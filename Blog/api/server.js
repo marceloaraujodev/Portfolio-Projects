@@ -214,8 +214,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     newPath = path + '.' + ext;
     // fs.renameSync(path, newPath);
     // console.log('ORIGINAL NAME AND PATH:', originalname, path)
-    console.log('Google Info:', process.env.PROJECTID, process.env.KEYFILENAME, )
-
+    
     const token = req.cookies.token;
 
       if(!token){
