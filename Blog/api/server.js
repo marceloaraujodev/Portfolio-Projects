@@ -196,13 +196,20 @@ async function bucketUpload(req){
     newFileName = path + '.' + ext;
     // // fs.renameSync(path, newFileName);
 
+    const fileUploadOptions = {
+      destination: `covers/` + path,
+      metadata: {
+        contentType: req.file.mimetype,
+      },
+    };
+
     console.log(req.file)
     const projectId = process.env.PROJECTID;
     const keyFilename = process.env.KEYFILENAME;
 
     const storage = new Storage({ projectId, keyFilename });
 
-    const [file] = await storage.bucket(process.env.BUCKET_NAME).upload(path + '.' + 'jpeg');
+    const [file] = await storage.bucket(process.env.BUCKET_NAME).upload(fileUploadOptions);
     const publicUrl = file.publicUrl();
 
     // console.log(`${req.path} uploaded to ${process.env.BUCKET_NAME}`);
