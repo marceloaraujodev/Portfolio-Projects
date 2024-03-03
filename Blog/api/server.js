@@ -189,25 +189,27 @@ app.post('/logout', (req, res) => {
 
 async function bucketUpload(req){
   try {
-
-    console.log('New file name:', req.file.path)
-    
-
+    console.log('REQ.file:', req.file)
+    const {originalname, path} = req.file;
+    console.log('this is Orinianl name and path:', originalname, path)
+  
     // console.log('file upload options', fileUploadOptions)
     const projectId = process.env.PROJECTID;
     const keyFilename = process.env.KEYFILENAME;
-    console.log('projectid, keyfilename', projectId, keyFilename);
+    // console.log('projectid, keyfilename', projectId, keyFilename);
   
     const storage = new Storage({ projectId, keyFilename });
     const bucket = storage.bucket(process.env.BUCKET_NAME);
+    console.log('passed---------')
 
     /// finis dest                    fileUploadOptions     'uploads/' + originalname,
-    const ret = await bucket.upload(req.file.path, {destination: 'uploads/' + req.file.originalname} );
+    const ret = await bucket.upload(path, {destination: 'uploads/' + originalname} );
     return ret
   } catch (error) {
     console.error('Error uploading file:', error);
   }
 }
+
 
 // create post
 app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
