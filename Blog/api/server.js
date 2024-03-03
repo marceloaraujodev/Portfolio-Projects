@@ -178,84 +178,7 @@ app.post('/logout', (req, res) => {
   res.cookie('token', '').json('logged out');
 });
 
-// async function bucketUpload(req) {
-//   console.log('This is Req.file:', req.file);
-
-//   const projectId = process.env.PROJECTID;
-//   const keyFilename = process.env.KEYFILENAME;
-//   const bucketName = process.env.BUCKET_NAME;
-
-//   try {
-//     const storage = new Storage({
-//       projectId,
-//       keyFilename,
-//     });
-
-//     const bucket = storage.bucket(bucketName);
-
-//     const filePath = req.file.path; 
-
-//     // Create a new file object in the bucket with the original filename
-//     const originalFilename = req.file.originalname;
-//     const file = bucket.file(originalFilename);
-
-//     console.log(file)
-
-//     // Create a readable stream from the uploaded file
-//     const fileStream = fs.createReadStream(filePath);
-
-//     console.log(fileStream)
-
-//     // Upload the file to the bucket
-//     await file.upload({
-//       file: fileStream,
-//       metadata: {
-//         contentType: req.file.mimetype,
-//       },
-//     });
-
-//     console.log(`File ${originalFilename} uploaded to Google Cloud Storage`);
-
-//     // Delete the temporary file after upload (optional)
-//     fs.unlinkSync(filePath); // Uncomment if necessary
-
-//   } catch (error) {
-//     console.error('Error uploading file:', error);
-//     // Handle errors appropriately, e.g., return an error response
-//   }
-// }
-
-
-
-// create post
-app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
-
-  if (!req.cookies.token) {
-    return res.status(404).json({ message: 'No token found' });
-  }
-
-  jwt.verify(req.cookies.token, process.env.SECRET, async (err, info) => {
-    if (err) {
-      console.log('JWT verification failed:', err);
-      return res.status(401).json({ message: 'Unautohrized: Invalid token' });
-    }
-
-    const { title, summary, content, price } = req.body;
-
-    await PostModel.create({
-      title,
-      summary,
-      content,
-      cover: req.file.path,
-      price,
-      author: info.id,
-    });
-  });
-
-  // // upload files 
-  // await bucketUpload(req)
-
-
+async function bucketUpload(req) {
   console.log('This is Req.file:', req.file);
 
   const projectId = process.env.PROJECTID;
@@ -300,8 +223,43 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     console.error('Error uploading file:', error);
     // Handle errors appropriately, e.g., return an error response
   }
+}
 
+// create post
+app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
 
+  if (!req.cookies.token) {
+    return res.status(404).json({ message: 'No token found' });
+  }
+
+  jwt.verify(req.cookies.token, process.env.SECRET, async (err, info) => {
+    if (err) {
+      console.log('JWT verification failed:', err);
+      return res.status(401).json({ message: 'Unautohrized: Invalid token' });
+    }
+
+    const { title, summary, content, price } = req.body;
+
+    await PostModel.create({
+      title,
+      summary,
+      content,
+      cover: req.file.path,
+      price,
+      author: info.id,
+    });
+  });
+try {
+  await bucketUpload(req);
+  res.status(200).json({
+    status: 'success',
+    message: 'Post created and file uploaded',
+  });
+} catch (error) {
+  console.error('Error during upload:', error);
+  res.status(500).json({ message: 'Internal server error' });
+}
+  // upload files 
 
   res.status(200).json({
     status: 'success',

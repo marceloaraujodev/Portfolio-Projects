@@ -11,7 +11,6 @@ export default function CreatePost() {
   const [price, setPrice] = useState('');
   const [redirect, setRedirect] = useState(false);
   
-
   async function createNewPost(e) {
     e.preventDefault();
 
@@ -21,7 +20,6 @@ export default function CreatePost() {
     data.set('content', content);
     data.set('file', files[0]);
     data.set('price', price)
-
 
     try {
       const response = await fetch(
