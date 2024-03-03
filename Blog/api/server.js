@@ -212,7 +212,7 @@ async function bucketUpload(req){
     console.log('passed---------')
 
     /// finis dest                    fileUploadOptions     'uploads/' + originalname,
-    const ret = await bucket.upload(path, fileUploadOptions);
+    const ret = await bucket.upload(req.file.path);
     return ret
   } catch (error) {
     console.error('Error uploading file:', error);
