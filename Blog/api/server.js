@@ -190,17 +190,23 @@ app.post('/logout', (req, res) => {
 async function bucketUpload(req){
   try {
 
-    const fileUploadOptions = {
-      destination: `covers/` + req.file.originalname,
-      metadata: {
-        contentType: req.file.mimetype,
-      },
-    };
+    // const fileUploadOptions = {
+    //   destination: `covers/` + req.file.originalname,
+    //   metadata: {
+    //     contentType: req.file.mimetype,
+    //   },
+    // };
 
+    const { originalname, path } = req.file;
+    const nameParts = originalname.split('.');
+    const ext = nameParts[nameParts.length - 1];
+    let newFileName = null;
+    newFileName = path + '.' + ext;
+    fs.renameSync(path, newFileName);
 
+    console.log('this is Orinianl name:', originalname)
+    console.log('this is path:', path)
     console.log('REQ.file:', req.file)
-    const {originalname, path} = req.file;
-    console.log('this is Orinianl name and path:', originalname, path)
   
     // console.log('file upload options', fileUploadOptions)
     const projectId = process.env.PROJECTID;
@@ -212,7 +218,7 @@ async function bucketUpload(req){
     console.log('passed---------')
 
     /// finis dest                    fileUploadOptions     'uploads/' + originalname,
-    const ret = await bucket.upload(req.file.path);
+    const ret = await bucket.upload(req.file.path + '.' + ext);
     return ret
   } catch (error) {
     console.error('Error uploading file:', error);
