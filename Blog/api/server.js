@@ -201,7 +201,7 @@ async function bucketUpload(req){
     const bucket = storage.bucket(process.env.BUCKET_NAME);
 
     /// finis dest                    fileUploadOptions     'uploads/' + originalname,
-    const ret = await bucket.upload(req.file.path, {destination: req.file.originalname} );
+    const ret = await bucket.upload(req.file.path, {destination: 'test'} );
     return ret
   } catch (error) {
     console.error('Error uploading file:', error);
