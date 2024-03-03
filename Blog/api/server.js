@@ -191,9 +191,9 @@ async function bucketUpload(req){
   try {
     const { originalname, path } = req.file;
     const nameParts = originalname.split('.');
-    // const ext = nameParts[nameParts.length - 1];
-    // // let newFileName = null;
-    // // newFileName = path + '.' + ext;
+    const ext = nameParts[nameParts.length - 1];
+    let newFileName = null;
+    newFileName = path + '.' + ext;
     // // fs.renameSync(path, newFileName);
 
     console.log(req.file)
