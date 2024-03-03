@@ -14,7 +14,7 @@ const admin = require('firebase-admin');
 const { Storage } = require('@google-cloud/storage');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
-// const { v4: uuidv4 } = require('uuid');
+
 
 const corsOptions = {
   origin: ['https://summer-lab-1399.on.fleek.co', 'http://localhost:3000'],
@@ -48,7 +48,7 @@ app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one
 
 //// WILL HAVE TO TURN ON DURING LOCAL TESTING
-// const DB = process.env.DATABASE.replace(
+// const db = process.env.DATABASE.replace(
 //   '<PASSWORD>',
 //   process.env.DATABASE_PASSWORD
 // );
@@ -187,43 +187,44 @@ app.post('/logout', (req, res) => {
 
     // path: 'uploads\\8c2a5829e6780fe7bd653775acf5ef71', = req.file.path
 
-// async function bucketUpload(req){
-//   try {
+async function bucketUpload(req){
+  try {
 
-//     // const fileUploadOptions = {
-//     //   destination: `covers/` + req.file.originalname,
-//     //   metadata: {
-//     //     contentType: req.file.mimetype,
-//     //   },
-//     // };
+    // const fileUploadOptions = {
+    //   destination: `covers/` + req.file.originalname,
+    //   metadata: {
+    //     contentType: req.file.mimetype,
+    //   },
+    // };
 
-//     const { originalname, path } = req.file;
-//     const nameParts = originalname.split('.');
-//     const ext = nameParts[nameParts.length - 1];
-//     let newFileName = null;
-//     newFileName = path + '.' + ext;
-//     fs.renameSync(path, newFileName);
+    const { originalname, path } = req.file;
+    const nameParts = originalname.split('.');
+    const ext = nameParts[nameParts.length - 1];
+    let newFileName = null;
+    newFileName = path + '.' + ext;
+    fs.renameSync(path, newFileName);
 
-//     console.log('this is Orinianl name:', originalname)
-//     console.log('this is path:', path)
-//     console.log('REQ.file:', req.file)
+    console.log('this is Orinianl name:', originalname)
+    console.log('this is path:', path)
+    console.log('REQ.file:', req.file)
   
-//     // console.log('file upload options', fileUploadOptions)
-//     const projectId = process.env.PROJECTID;
-//     const keyFilename = process.env.KEYFILENAME;
-//     // console.log('projectid, keyfilename', projectId, keyFilename);
+    // console.log('file upload options', fileUploadOptions)
+    const projectId = process.env.PROJECTID;
+    const keyFilename = process.env.KEYFILENAME;
+    // console.log('projectid, keyfilename', projectId, keyFilename);
   
-//     const storage = new Storage({ projectId, keyFilename });
-//     const bucket = storage.bucket(process.env.BUCKET_NAME);
-//     console.log('passed---------')
+    const storage = new Storage({ projectId, keyFilename });
+    const upload = await storage
+    .bucket(process.env.BUCKET_NAME)
+    .upload(req.file.path + '.' + ext);
 
-//     /// finis dest                    fileUploadOptions     'uploads/' + originalname,
-//     const ret = await bucket.upload(req.file.path + '.' + ext);
-//     return ret
-//   } catch (error) {
-//     console.error('Error uploading file:', error);
-//   }
-// }
+    console.log(upload)
+    return upload
+  
+  } catch (error) {
+    console.error('Error uploading file:', error);
+  }
+}
 
 
 // create post
@@ -251,38 +252,12 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     });
   });
 
-  // upload files -------------------------------
-  // await bucketUpload(req)
-
-  const { originalname, path } = req.file;
-  const nameParts = originalname.split('.');
-  const ext = nameParts[nameParts.length - 1];
-  let newFileName = null;
-  newFileName = path + '.' + ext;
-  fs.renameSync(path, newFileName);
-
-  console.log('this is Orinianl name:', originalname)
-  console.log('this is path:', path)
-  console.log('REQ.file:', req.file)
-
-  // console.log('file upload options', fileUploadOptions)
-  const projectId = process.env.PROJECTID;
-  const keyFilename = process.env.KEYFILENAME;
-  // console.log('projectid, keyfilename', projectId, keyFilename);
-
-  const storage = new Storage({ projectId, keyFilename });
-  const bucket = storage.bucket(process.env.BUCKET_NAME);
-  console.log('passed---------')
-
-  /// finis dest                    fileUploadOptions     'uploads/' + originalname,
-  const ret = await bucket.upload(req.file.path + '.' + ext);
+  // upload files 
+  await bucketUpload(req)
 
   res.status(200).json({
     status: 'success',
-    message: 'token verified confirmed',
-    data: {
-      ret
-    }
+    message: 'token verified confirmed'
   });
 
 });
