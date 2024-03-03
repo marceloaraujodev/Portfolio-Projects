@@ -197,14 +197,12 @@ async function bucketUpload(req){
     const projectId = process.env.PROJECTID;
     const keyFilename = process.env.KEYFILENAME;
     console.log('projectid, keyfilename', projectId, keyFilename);
-    const newName = req.file.originalname
-    console.log('this is New Name:', newName)
   
     const storage = new Storage({ projectId, keyFilename });
     const bucket = storage.bucket(process.env.BUCKET_NAME);
 
     /// finis dest                    fileUploadOptions     'uploads/' + originalname,
-    const ret = await bucket.upload(req.file.path, {destination: newName} );
+    const ret = await bucket.upload(req.file.path, {destination: 'uploads/' + req.file.originalname} );
     return ret
   } catch (error) {
     console.error('Error uploading file:', error);
@@ -235,7 +233,6 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
       author: info.id,
     });
   });
-
 
   // upload files 
   await bucketUpload(req)
