@@ -189,6 +189,15 @@ app.post('/logout', (req, res) => {
 
 async function bucketUpload(req){
   try {
+
+    const fileUploadOptions = {
+      destination: `covers/` + req.file.originalname,
+      metadata: {
+        contentType: req.file.mimetype,
+      },
+    };
+
+
     console.log('REQ.file:', req.file)
     const {originalname, path} = req.file;
     console.log('this is Orinianl name and path:', originalname, path)
@@ -203,7 +212,7 @@ async function bucketUpload(req){
     console.log('passed---------')
 
     /// finis dest                    fileUploadOptions     'uploads/' + originalname,
-    const ret = await bucket.upload(path, {destination: 'uploads/' + originalname} );
+    const ret = await bucket.upload(path, fileUploadOptions);
     return ret
   } catch (error) {
     console.error('Error uploading file:', error);
