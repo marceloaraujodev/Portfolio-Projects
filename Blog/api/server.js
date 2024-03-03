@@ -191,10 +191,10 @@ async function bucketUpload(req){
   try {
     const { originalname, path } = req.file;
     const nameParts = originalname.split('.');
-    const ext = nameParts[nameParts.length - 1];
-    let newFileName = null;
-    newFileName = path + '.' + ext;
-    fs.renameSync(path, newFileName);
+    // const ext = nameParts[nameParts.length - 1];
+    // // let newFileName = null;
+    // // newFileName = path + '.' + ext;
+    // // fs.renameSync(path, newFileName);
 
     console.log(req.file)
     const projectId = process.env.PROJECTID;
@@ -202,7 +202,7 @@ async function bucketUpload(req){
 
     const storage = new Storage({ projectId, keyFilename });
 
-    const [file] = await storage.bucket(process.env.BUCKET_NAME).upload(newFileName);
+    const [file] = await storage.bucket(process.env.BUCKET_NAME).upload(path + '.' + 'jpeg');
     const publicUrl = file.publicUrl();
 
     // console.log(`${req.path} uploaded to ${process.env.BUCKET_NAME}`);
