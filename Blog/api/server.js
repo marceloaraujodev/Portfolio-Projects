@@ -187,43 +187,43 @@ app.post('/logout', (req, res) => {
 
     // path: 'uploads\\8c2a5829e6780fe7bd653775acf5ef71', = req.file.path
 
-async function bucketUpload(req){
-  try {
+// async function bucketUpload(req){
+//   try {
 
-    // const fileUploadOptions = {
-    //   destination: `covers/` + req.file.originalname,
-    //   metadata: {
-    //     contentType: req.file.mimetype,
-    //   },
-    // };
+//     // const fileUploadOptions = {
+//     //   destination: `covers/` + req.file.originalname,
+//     //   metadata: {
+//     //     contentType: req.file.mimetype,
+//     //   },
+//     // };
 
-    const { originalname, path } = req.file;
-    const nameParts = originalname.split('.');
-    const ext = nameParts[nameParts.length - 1];
-    let newFileName = null;
-    newFileName = path + '.' + ext;
-    fs.renameSync(path, newFileName);
+//     const { originalname, path } = req.file;
+//     const nameParts = originalname.split('.');
+//     const ext = nameParts[nameParts.length - 1];
+//     let newFileName = null;
+//     newFileName = path + '.' + ext;
+//     fs.renameSync(path, newFileName);
 
-    console.log('this is Orinianl name:', originalname)
-    console.log('this is path:', path)
-    console.log('REQ.file:', req.file)
+//     console.log('this is Orinianl name:', originalname)
+//     console.log('this is path:', path)
+//     console.log('REQ.file:', req.file)
   
-    // console.log('file upload options', fileUploadOptions)
-    const projectId = process.env.PROJECTID;
-    const keyFilename = process.env.KEYFILENAME;
-    // console.log('projectid, keyfilename', projectId, keyFilename);
+//     // console.log('file upload options', fileUploadOptions)
+//     const projectId = process.env.PROJECTID;
+//     const keyFilename = process.env.KEYFILENAME;
+//     // console.log('projectid, keyfilename', projectId, keyFilename);
   
-    const storage = new Storage({ projectId, keyFilename });
-    const bucket = storage.bucket(process.env.BUCKET_NAME);
-    console.log('passed---------')
+//     const storage = new Storage({ projectId, keyFilename });
+//     const bucket = storage.bucket(process.env.BUCKET_NAME);
+//     console.log('passed---------')
 
-    /// finis dest                    fileUploadOptions     'uploads/' + originalname,
-    const ret = await bucket.upload(req.file.path + '.' + ext);
-    return ret
-  } catch (error) {
-    console.error('Error uploading file:', error);
-  }
-}
+//     /// finis dest                    fileUploadOptions     'uploads/' + originalname,
+//     const ret = await bucket.upload(req.file.path + '.' + ext);
+//     return ret
+//   } catch (error) {
+//     console.error('Error uploading file:', error);
+//   }
+// }
 
 
 // create post
@@ -251,12 +251,38 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     });
   });
 
-  // upload files 
-  await bucketUpload(req)
+  // upload files -------------------------------
+  // await bucketUpload(req)
+
+  const { originalname, path } = req.file;
+  const nameParts = originalname.split('.');
+  const ext = nameParts[nameParts.length - 1];
+  let newFileName = null;
+  newFileName = path + '.' + ext;
+  fs.renameSync(path, newFileName);
+
+  console.log('this is Orinianl name:', originalname)
+  console.log('this is path:', path)
+  console.log('REQ.file:', req.file)
+
+  // console.log('file upload options', fileUploadOptions)
+  const projectId = process.env.PROJECTID;
+  const keyFilename = process.env.KEYFILENAME;
+  // console.log('projectid, keyfilename', projectId, keyFilename);
+
+  const storage = new Storage({ projectId, keyFilename });
+  const bucket = storage.bucket(process.env.BUCKET_NAME);
+  console.log('passed---------')
+
+  /// finis dest                    fileUploadOptions     'uploads/' + originalname,
+  const ret = await bucket.upload(req.file.path + '.' + ext);
 
   res.status(200).json({
     status: 'success',
-    message: 'token verified confirmed'
+    message: 'token verified confirmed',
+    data: {
+      ret
+    }
   });
 
 });
