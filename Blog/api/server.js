@@ -178,47 +178,52 @@ app.post('/logout', (req, res) => {
   res.cookie('token', '').json('logged out');
 });
 
-async function bucketUpload(req) {
+// async function bucketUpload(req) {
+//   console.log('This is Req.file:', req.file);
 
-  const projectId = process.env.PROJECTID;
-  const keyFilename = process.env.KEYFILENAME;
-  const bucketName = process.env.BUCKET_NAME;
+//   const projectId = process.env.PROJECTID;
+//   const keyFilename = process.env.KEYFILENAME;
+//   const bucketName = process.env.BUCKET_NAME;
 
-  try {
-    const storage = new Storage({
-      projectId,
-      keyFilename,
-    });
+//   try {
+//     const storage = new Storage({
+//       projectId,
+//       keyFilename,
+//     });
 
-    const bucket = storage.bucket(bucketName);
+//     const bucket = storage.bucket(bucketName);
 
-    const filePath = req.file.path; 
+//     const filePath = req.file.path; 
 
-    // Create a new file object in the bucket with the original filename
-    const originalFilename = req.file.originalname;
-    const file = bucket.file(originalFilename);
+//     // Create a new file object in the bucket with the original filename
+//     const originalFilename = req.file.originalname;
+//     const file = bucket.file(originalFilename);
 
-    // Create a readable stream from the uploaded file
-    const fileStream = fs.createReadStream(filePath);
+//     console.log(file)
 
-    // Upload the file to the bucket
-    await file.upload({
-      file: fileStream,
-      metadata: {
-        contentType: req.file.mimetype,
-      },
-    });
+//     // Create a readable stream from the uploaded file
+//     const fileStream = fs.createReadStream(filePath);
 
-    console.log(`File ${originalFilename} uploaded to Google Cloud Storage`);
+//     console.log(fileStream)
 
-    // Delete the temporary file after upload (optional)
-    fs.unlinkSync(filePath); // Uncomment if necessary
+//     // Upload the file to the bucket
+//     await file.upload({
+//       file: fileStream,
+//       metadata: {
+//         contentType: req.file.mimetype,
+//       },
+//     });
 
-  } catch (error) {
-    console.error('Error uploading file:', error);
-    // Handle errors appropriately, e.g., return an error response
-  }
-}
+//     console.log(`File ${originalFilename} uploaded to Google Cloud Storage`);
+
+//     // Delete the temporary file after upload (optional)
+//     fs.unlinkSync(filePath); // Uncomment if necessary
+
+//   } catch (error) {
+//     console.error('Error uploading file:', error);
+//     // Handle errors appropriately, e.g., return an error response
+//   }
+// }
 
 
 
@@ -247,8 +252,56 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     });
   });
 
-  // upload files 
-  await bucketUpload(req)
+  // // upload files 
+  // await bucketUpload(req)
+
+
+  console.log('This is Req.file:', req.file);
+
+  const projectId = process.env.PROJECTID;
+  const keyFilename = process.env.KEYFILENAME;
+  const bucketName = process.env.BUCKET_NAME;
+
+  try {
+    const storage = new Storage({
+      projectId,
+      keyFilename,
+    });
+
+    const bucket = storage.bucket(bucketName);
+
+    const filePath = req.file.path; 
+
+    // Create a new file object in the bucket with the original filename
+    const originalFilename = req.file.originalname;
+    const file = bucket.file(originalFilename);
+
+    console.log(file)
+
+    // Create a readable stream from the uploaded file
+    const fileStream = fs.createReadStream(filePath);
+
+    console.log(fileStream)
+
+    // Upload the file to the bucket
+    await file.upload({
+      file: fileStream,
+      metadata: {
+        contentType: req.file.mimetype,
+      },
+    });
+
+    console.log(`File ${originalFilename} uploaded to Google Cloud Storage`);
+
+    // Delete the temporary file after upload (optional)
+    fs.unlinkSync(filePath); // Uncomment if necessary
+
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    // Handle errors appropriately, e.g., return an error response
+  }
+
+
 
   res.status(200).json({
     status: 'success',
