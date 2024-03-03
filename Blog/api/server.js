@@ -259,12 +259,7 @@ try {
   console.error('Error during upload:', error);
   res.status(500).json({ message: 'Internal server error' });
 }
-  // upload files 
 
-  res.status(200).json({
-    status: 'success',
-    message: 'token verified confirmed'
-  });
 
 });
 
