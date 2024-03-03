@@ -178,57 +178,48 @@ app.post('/logout', (req, res) => {
   res.cookie('token', '').json('logged out');
 });
 
+async function bucketUpload(req) {
 
-async function bucketUpload(req){
+  const projectId = process.env.PROJECTID;
+  const keyFilename = process.env.KEYFILENAME;
+  const bucketName = process.env.BUCKET_NAME;
+
   try {
-    const { originalname, path } = req.file;
-    const nameParts = originalname.split('.');
-    const ext = nameParts[nameParts.length - 1];
-    let newFileName = null;
-    newFileName = path + '.' + ext;
-    fs.renameSync(path, newFileName);
+    const storage = new Storage({
+      projectId,
+      keyFilename,
+    });
 
-    console.log(req.file)
-    const projectId = process.env.PROJECTID;
-    const keyFilename = process.env.KEYFILENAME;
+    const bucket = storage.bucket(bucketName);
 
-    const storage = new Storage({ projectId, keyFilename });
+    const filePath = req.file.path; 
 
-    async function listBuckets() {
-      const [buckets] = await storage.getBuckets();
-    
-      console.log('Buckets:');
-      buckets.forEach(bucket => {
-        console.log(bucket.name);
-      });
-    }
-    
-    listBuckets().catch(console.error);
+    // Create a new file object in the bucket with the original filename
+    const originalFilename = req.file.originalname;
+    const file = bucket.file(originalFilename);
 
-    await storage.bucket(process.env.BUCKET_NAME).upload(newFileName);
-    console.log(`${req.path} uploaded to ${process.env.BUCKET_NAME}`);
+    // Create a readable stream from the uploaded file
+    const fileStream = fs.createReadStream(filePath);
 
-    // console.log('this is Orinianl name:', originalname)
-    // console.log('this is path:', path)
-    // console.log('REQ.file:', req.file)
-  
-    // // console.log('file upload options', fileUploadOptions)
-    // const projectId = process.env.PROJECTID;
-    // const keyFilename = process.env.KEYFILENAME;
-    // // console.log('projectid, keyfilename', projectId, keyFilename);
-  
-    // const storage = new Storage({ projectId, keyFilename });
-    // const upload = await storage
-    // .bucket(process.env.BUCKET_NAME)
-    // .upload(req.file.path + '.' + ext);
+    // Upload the file to the bucket
+    await file.upload({
+      file: fileStream,
+      metadata: {
+        contentType: req.file.mimetype,
+      },
+    });
 
-    // console.log(upload)
-    // return upload
-  
+    console.log(`File ${originalFilename} uploaded to Google Cloud Storage`);
+
+    // Delete the temporary file after upload (optional)
+    fs.unlinkSync(filePath); // Uncomment if necessary
+
   } catch (error) {
     console.error('Error uploading file:', error);
+    // Handle errors appropriately, e.g., return an error response
   }
 }
+
 
 
 // create post
@@ -352,3 +343,44 @@ server.on('close', () => {
     // let newFileName = null;
     // newFileName = path + '.' + ext;
     // fs.renameSync(path, newFileName);
+
+
+    // async function bucketUpload(req){
+    //   try {
+    //     const { originalname, path } = req.file;
+    //     const nameParts = originalname.split('.');
+    //     const ext = nameParts[nameParts.length - 1];
+    //     let newFileName = null;
+    //     newFileName = path + '.' + ext;
+    //     fs.renameSync(path, newFileName);
+    
+    //     console.log(req.file)
+    //     const projectId = process.env.PROJECTID;
+    //     const keyFilename = process.env.KEYFILENAME;
+    
+    //     const storage = new Storage({ projectId, keyFilename });
+    
+    //     const multerStorage = multer.memoryStorage();
+    //     const multerUpload = multer({ storage: multerStorage });
+    
+    //     // console.log('this is Orinianl name:', originalname)
+    //     // console.log('this is path:', path)
+    //     // console.log('REQ.file:', req.file)
+      
+    //     // // console.log('file upload options', fileUploadOptions)
+    //     // const projectId = process.env.PROJECTID;
+    //     // const keyFilename = process.env.KEYFILENAME;
+    //     // // console.log('projectid, keyfilename', projectId, keyFilename);
+      
+    //     // const storage = new Storage({ projectId, keyFilename });
+    //     // const upload = await storage
+    //     // .bucket(process.env.BUCKET_NAME)
+    //     // .upload(req.file.path + '.' + ext);
+    
+    //     // console.log(upload)
+    //     // return upload
+      
+    //   } catch (error) {
+    //     console.error('Error uploading file:', error);
+    //   }
+    // }
