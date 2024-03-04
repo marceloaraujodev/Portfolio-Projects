@@ -48,13 +48,13 @@ app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one
 
 //// WILL HAVE TO TURN ON DURING LOCAL TESTING
-// const db = process.env.DATABASE.replace(
-//   '<PASSWORD>',
-//   process.env.DATABASE_PASSWORD
-// );
+const db = process.env.DATABASE.replace(
+  '<PASSWORD>',
+  process.env.DATABASE_PASSWORD
+);  
 
 // DB connection // process.env.DATABASE
-mongoose.connect(process.env.DATABASE).then(() => console.log('Connected to Database'));
+mongoose.connect(db).then(() => console.log('Connected to Database'));
 
 // start server
 const PORT = 4000;
@@ -178,41 +178,34 @@ app.post('/logout', (req, res) => {
   res.cookie('token', '').json('logged out');
 });
 
-    // const { originalname, path } = req.file;
-    // const nameParts = originalname.split('.');
-    // const ext = nameParts[nameParts.length - 1];
-    // let newFileName = null;
-    // newFileName = path + '.' + ext;
-    // fs.renameSync(path, newFileName);
-
-    // path: 'uploads\\8c2a5829e6780fe7bd653775acf5ef71', = req.file.path
-
+// let newFileName = null;
+// newFileName = path + '.' + ext;
+// // fs.renameSync(path, newFileName);
 async function bucketUpload(req){
   try {
-    const { originalname, path } = req.file;
+    const { originalname } = req.file;
     const nameParts = originalname.split('.');
     const ext = nameParts[nameParts.length - 1];
-    // let newFileName = null;
-    // newFileName = path + '.' + ext;
-    // // fs.renameSync(path, newFileName);
+    // console.log(req.file.buffer)
 
     console.log(req.file)
     const projectId = process.env.PROJECTID;
     const keyFilename = process.env.KEYFILENAME;
 
     const storage = new Storage({ projectId, keyFilename });
+    const bucket = storage.bucket(process.env.BUCKET_NAME)
 
-    // console.log('new file name:', newFileName);
-    console.log('This is Path:', path);
-    console.log('This is original name:', originalname);
-    console.log('we passed---------here------')
-    const [file] = await storage.bucket(process.env.BUCKET_NAME).upload(path);
-    const publicUrl = file.publicUrl();
-    console.log('we passed---------------')
-    // console.log(`${req.path} uploaded to ${process.env.BUCKET_NAME}`);
-    // console.log(ret)
-    console.log(`File ${originalname} uploaded to Google Cloud Storage with URL: ${publicUrl}`);
-    return publicUrl
+    console.log("File found, trying to upload...");
+    const blob = bucket.file(req.file.originalname);
+    const blobStream = blob.createWriteStream();
+
+    blobStream.on("finish", () => {
+      // res.status(200).send("Success");
+      console.log("Success");
+    });
+    console.log('this is req.file.buffer', req.file.path)
+    blobStream.end(req.file.path);
+    console.log('Success pass all the code')
 
   } catch (error) {
     console.error('Error uploading file:', error);
