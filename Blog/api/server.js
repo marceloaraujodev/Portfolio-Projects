@@ -189,12 +189,11 @@ app.post('/logout', (req, res) => {
 
 async function bucketUpload(req){
   try {
+    console.log(req.file)
+
     const { originalname, path } = req.file;
     const nameParts = originalname.split('.');
     const ext = nameParts[nameParts.length - 1];
-    // let newFileName = null;
-    // newFileName = path + '.' + ext;
-    // // fs.renameSync(path, newFileName);
 
     console.log(req.file)
     const projectId = process.env.PROJECTID;
@@ -209,6 +208,7 @@ async function bucketUpload(req){
             metadata: metadata,
           });
           
+          console.log('File uploaded successfully to Google Cloud Storage.');
           const publicUrl = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/uploads/${req.file.filename + ext}`;
           console.log('Public URL:', publicUrl);
           return publicUrl;
