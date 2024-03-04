@@ -233,7 +233,7 @@ app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
         const publicUrl = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/uploads/${uniqueFilename}`;
         console.log('Public URL:', publicUrl);
 
-  res.status(200).json('ok')
+  res.status(200).json('ok');
 })
 
 // create post
