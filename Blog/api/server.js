@@ -10,8 +10,10 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const fs = require('fs');
+const path = require('path');
 const admin = require('firebase-admin');
 const { Storage } = require('@google-cloud/storage');
+const { v4: uuidv4 } = require('uuid');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 
@@ -30,7 +32,7 @@ const corsOptions = {
 
 // multer, config limits for the post size!
 const uploadMiddleware = multer({
-  dest: 'uploads/',
+  destination: path.join(__dirname, '../uploads'),
   limits: {
     fieldSize: 1024 * 1024 * 10, // 10MB limit for field size
   },
@@ -208,6 +210,8 @@ app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
   const { originalname, path } = req.file;
   const nameParts = originalname.split('.');
   const ext = nameParts[nameParts.length - 1];
+  const uniqueFilename = uuidv4() + '.' + ext;
+  console.log('uniqueFilename --------', uniqueFilename);
 
   const projectId = process.env.PROJECTID;
   const keyFilename = process.env.KEYFILENAME;
@@ -221,12 +225,12 @@ app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
   
   await bucket.upload(path, {
           // destination: `uploads/${req.file.filename + ext}`, 
-          destination: `uploads/${originalname}`, 
+          destination: `uploads/${uniqueFilename}`, 
           metadata: metadata,
         });
         
         console.log('File uploaded successfully to Google Cloud Storage.');
-        const publicUrl = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/uploads/${originalname}`;
+        const publicUrl = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/uploads/${uniqueFilename}`;
         console.log('Public URL:', publicUrl);
 
   res.status(200).json('ok')
