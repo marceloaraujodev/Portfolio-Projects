@@ -192,8 +192,8 @@ async function bucketUpload(req){
     const { originalname, path } = req.file;
     const nameParts = originalname.split('.');
     const ext = nameParts[nameParts.length - 1];
-    let newFileName = null;
-    newFileName = path + '.' + ext;
+    // let newFileName = null;
+    // newFileName = path + '.' + ext;
     // // fs.renameSync(path, newFileName);
 
     console.log(req.file)
@@ -202,13 +202,13 @@ async function bucketUpload(req){
 
     const storage = new Storage({ projectId, keyFilename });
 
-    console.log('new file name:', newFileName);
+    // console.log('new file name:', newFileName);
     console.log('This is Path:', path);
     console.log('This is original name:', originalname);
-
-    const [file] = await storage.bucket(process.env.BUCKET_NAME).upload(path, originalname);
+    console.log('we passed---------here------')
+    const [file] = await storage.bucket(process.env.BUCKET_NAME).upload(path);
     const publicUrl = file.publicUrl();
-
+    console.log('we passed---------------')
     // console.log(`${req.path} uploaded to ${process.env.BUCKET_NAME}`);
     // console.log(ret)
     console.log(`File ${originalname} uploaded to Google Cloud Storage with URL: ${publicUrl}`);
