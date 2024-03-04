@@ -212,10 +212,13 @@ app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
   const nameParts = originalname.split('.');
   const ext = nameParts[nameParts.length - 1];
   const uniqueFilename = uuidv4() + '.' + ext;
-  console.log('uniqueFilename --------', uniqueFilename);
-
+  
   const projectId = process.env.PROJECTID;
   const keyFilename = process.env.KEYFILENAME;
+  console.log('uniqueFilename --------', uniqueFilename);
+  console.log('projectid --------', projectId);
+  console.log('keyfilename --------', keyFilename);
+  console.log('buffer --------', req.file.buffer);
 
   const metadata = { contentType: 'image/' + ext}
   const storage = new Storage({ projectId, keyFilename });
@@ -225,7 +228,6 @@ app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
   // storage.getBuckets().then(x => console.log('Google Buckets:', x))
   
   await bucket.upload(req.file.buffer, {
-          // destination: `uploads/${req.file.filename + ext}`, 
           destination: `uploads/${uniqueFilename}`, 
           metadata: metadata,
         });

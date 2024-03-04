@@ -14,7 +14,8 @@ export default function Test() {
       {
         method: 'POST',
         body: data,
-        // credentials: 'include',
+        credentials: 'include',
+        headers: 'Access-Control-Allow-Origin'
       }
       );
       const resData = await response.json();
