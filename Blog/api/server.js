@@ -19,7 +19,7 @@ const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 
 const corsOptions = {
   origin: ['https://summer-lab-1399.on.fleek.co', 'http://localhost:3000', 'http://localhost:4000'],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  methods: 'GET,POST,HEAD,PUT,PATCH,DELETE',
   allowedHeaders: [
     'Content-Type',
     'Authorization',
@@ -226,7 +226,7 @@ app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
   
   // checks buckets
   // storage.getBuckets().then(x => console.log('Google Buckets:', x))
-  
+
   await bucket.upload(req.file.buffer, {
           destination: `uploads/${uniqueFilename}`, 
           metadata: metadata,
