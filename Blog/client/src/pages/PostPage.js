@@ -18,8 +18,8 @@ export default function PostPage() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        `http://localhost:4000/post/${id}` // dev
-        // `https://blog-rzyw.onrender.com/post/${id}`
+        // `http://localhost:4000/post/${id}` // dev
+        `https://blog-rzyw.onrender.com/post/${id}`
       );
       const data = await response.json();
       setPostInfo(data);
@@ -41,8 +41,8 @@ export default function PostPage() {
     if (confirmed) {
       try {
         const response = await fetch(
-          `http://localhost:4000/post/${id}`,
-          // `https://blog-rzyw.onrender.com/post/${id}`,
+          // `http://localhost:4000/post/${id}`,
+          `https://blog-rzyw.onrender.com/post/${id}`,
           {
             method: 'DELETE',
           }
@@ -61,8 +61,8 @@ export default function PostPage() {
 
   async function checkout(){
     const response = await fetch(
-      `http://localhost:4000/checkout-session/${id}` // dev
-      // `https://blog-rzyw.onrender.com/checkout-session/${id}` // prod
+      // `http://localhost:4000/checkout-session/${id}` // dev
+      `https://blog-rzyw.onrender.com/checkout-session/${id}` // prod
       )
     const data = await response.json();
     const publishableKey = data.session.id
@@ -140,8 +140,8 @@ export default function PostPage() {
       <div className="image">
         <img
           src={
-            `http://localhost:4000/${postInfo.cover}`
-            // `https://blog-rzyw.onrender.com/${postInfo.cover}`
+            // `http://localhost:4000/${postInfo.cover}`
+            `https://blog-rzyw.onrender.com/${postInfo.cover}`
           }
           alt="post"
         />
