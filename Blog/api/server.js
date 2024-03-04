@@ -38,11 +38,12 @@ const uploadMiddleware = multer({
   },
 });
 const app = express();
-app.use(morgan('dev')); // logger
 app.use(cors(corsOptions));
+app.use(morgan('dev')); // logger
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one
+app.options('*', cors(corsOptions))
 //// WILL HAVE TO TURN ON DURING LOCAL TESTING
 // const db = process.env.DATABASE.replace(
 //   '<PASSWORD>',
@@ -223,7 +224,7 @@ app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
   // checks buckets
   // storage.getBuckets().then(x => console.log('Google Buckets:', x))
   
-  await bucket.upload(path, {
+  await bucket.upload(req.file.buffer, {
           // destination: `uploads/${req.file.filename + ext}`, 
           destination: `uploads/${uniqueFilename}`, 
           metadata: metadata,
