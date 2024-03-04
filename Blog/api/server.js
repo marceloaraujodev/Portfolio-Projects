@@ -43,7 +43,11 @@ app.use(morgan('dev')); // logger
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one
-app.options('*', cors(corsOptions))
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*'); // Allow all origins (adjust as needed)
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Allowed methods
+  next();
+});
 //// WILL HAVE TO TURN ON DURING LOCAL TESTING
 // const db = process.env.DATABASE.replace(
 //   '<PASSWORD>',
@@ -207,10 +211,6 @@ async function bucketUpload(req){
   }
 }
 app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://summer-lab-1399.on.fleek.co');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', true);
 
 
   console.log(req.file)
