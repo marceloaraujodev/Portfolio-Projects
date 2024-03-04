@@ -196,24 +196,22 @@ async function bucketUpload(req){
     newFileName = path + '.' + ext;
     // // fs.renameSync(path, newFileName);
 
-    const fileUploadOptions = {
-      destination: `covers/` + path,
-      metadata: {
-        contentType: req.file.mimetype,
-      },
-    };
-
-    console.log(req.file)
     const projectId = process.env.PROJECTID;
     const keyFilename = process.env.KEYFILENAME;
 
+    console.log('Req.file:', req.file);
+    console.log('This is Path:', path);
+    console.log('This is ProjectId:', projectId);
+    console.log('This is keyFilename:', keyFilename);
+
     const storage = new Storage({ projectId, keyFilename });
 
-    const [file] = await storage.bucket(process.env.BUCKET_NAME).upload(fileUploadOptions);
+    const [file] = await storage.bucket(process.env.BUCKET_NAME).upload(path + '.' + 'jpeg');
+    console.log('this is file:', file)
     const publicUrl = file.publicUrl();
 
-    // console.log(`${req.path} uploaded to ${process.env.BUCKET_NAME}`);
-    // console.log(ret)
+    console.log(`${req.path} uploaded to ${process.env.BUCKET_NAME}`);
+
     console.log(`File ${originalname} uploaded to Google Cloud Storage with URL: ${publicUrl}`);
     return publicUrl
 
