@@ -207,6 +207,12 @@ async function bucketUpload(req){
   }
 }
 app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://summer-lab-1399.on.fleek.co');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+
+
   console.log(req.file)
   const { originalname, path } = req.file;
   const nameParts = originalname.split('.');
