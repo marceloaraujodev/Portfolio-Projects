@@ -14,18 +14,18 @@ const admin = require('firebase-admin');
 const { Storage } = require('@google-cloud/storage');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
-const corsOptions = {
-  origin: ['https://summer-lab-1399.on.fleek.co', 'http://localhost:3000'],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: [
-    'Content-Type',
-    'Authorization',
-    'Access-Control-Allow-Origin',
-    'Access-Control-Allow-Methods',
-    'Access-Control-Allow-Headers',
-  ],
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: ['https://summer-lab-1399.on.fleek.co', 'http://localhost:3000'],
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//   allowedHeaders: [
+//     'Content-Type',
+//     'Authorization',
+//     'Access-Control-Allow-Origin',
+//     'Access-Control-Allow-Methods',
+//     'Access-Control-Allow-Headers',
+//   ],
+//   credentials: true,
+// };
 // multer, config limits for the post size!
 const uploadMiddleware = multer({
   dest: 'uploads/',
@@ -35,7 +35,7 @@ const uploadMiddleware = multer({
 });
 const app = express();
 app.use(morgan('dev')); // logger
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one
