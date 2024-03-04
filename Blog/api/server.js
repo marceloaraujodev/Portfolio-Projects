@@ -48,13 +48,13 @@ app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one
 
 //// WILL HAVE TO TURN ON DURING LOCAL TESTING
-const db = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
-);  
+// const db = process.env.DATABASE.replace(
+//   '<PASSWORD>',
+//   process.env.DATABASE_PASSWORD
+// );  
 
 // DB connection // process.env.DATABASE
-mongoose.connect(db).then(() => console.log('Connected to Database'));
+mongoose.connect(process.env.DATABASE).then(() => console.log('Connected to Database'));
 
 // start server
 const PORT = 4000;
