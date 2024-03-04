@@ -187,40 +187,42 @@ app.post('/logout', (req, res) => {
 
     // path: 'uploads\\8c2a5829e6780fe7bd653775acf5ef71', = req.file.path
 
-async function bucketUpload(req){
-  try {
-    const { originalname, path } = req.file;
-    const nameParts = originalname.split('.');
-    const ext = nameParts[nameParts.length - 1];
-    let newFileName = null;
-    newFileName = path + '.' + ext;
-    // // fs.renameSync(path, newFileName);
-
-    const projectId = process.env.PROJECTID;
-    const keyFilename = process.env.KEYFILENAME;
-
-    console.log('Req.file:', req.file);
-    console.log('This is Path:', path);
-    console.log('This is ProjectId:', projectId);
-    console.log('This is keyFilename:', keyFilename);
-
-    const storage = new Storage({ projectId, keyFilename });
-
-    // const [file] = await storage.bucket(process.env.BUCKET_NAME).uploadFile(process.env.BUCKET_NAME, );
-  const ret = await storage.bucket(process.env.BUCKET_NAME).uploadFile(process.env.BUCKET_NAME, path, req.file.filename + '.' + ext);
-
-    // console.log('this is file:', file)
-    // const publicUrl = file.publicUrl();
-
-    console.log(`${req.path} uploaded to ${process.env.BUCKET_NAME}`);
-
-    console.log(`File ${originalname} uploaded to Google Cloud Storage with URL: ${publicUrl}`);
-    return publicUrl
-
-  } catch (error) {
-    console.error('Error uploading file:', error);
-  }
-}
+    async function bucketUpload(req) {
+      try {
+        const { originalname, path } = req.file;
+        const nameParts = originalname.split('.');
+        const ext = nameParts[nameParts.length - 1];
+        let newFileName = null;
+        newFileName = path + '.' + ext;
+    
+        const projectId = process.env.PROJECTID;
+        const keyFilename = process.env.KEYFILENAME;
+    
+        console.log('Req.file:', req.file);
+        console.log('This is Path:', path);
+    
+        const storage = new Storage({ projectId, keyFilename });
+        const bucket = storage.bucket(process.env.BUCKET_NAME);
+        console.log('this is bucket upload', bucket.upload)
+    
+        const uploadResponse = await bucket.upload(req.file.path, newFileName);
+    
+        // Verify if 'publicUrl' property is available in 'uploadResponse'
+        if (uploadResponse.hasOwnProperty('publicUrl')) {
+          const publicUrl = uploadResponse.publicUrl();
+          console.log(`${req.path} uploaded to ${process.env.BUCKET_NAME}`);
+          console.log(`File ${originalname} uploaded to Google Cloud Storage with URL: ${publicUrl}`);
+          return publicUrl;
+        } else {
+          // Handle the case where 'publicUrl' is not available
+          console.error('Public URL not available in upload response');
+          // Provide appropriate error response or throw an error
+        }
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        // Handle error appropriately based on your application logic
+      }
+    }
 
 
 // create post
