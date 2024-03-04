@@ -203,6 +203,8 @@ async function bucketUpload(req){
         const storage = new Storage({ projectId, keyFilename });
         const bucket = storage.bucket(process.env.BUCKET_NAME);
 
+    storage.getBuckets().then(x => console.log('Google Buckets:', x))
+    
     await bucket.upload(path, {
             destination: `uploads/${req.file.filename + ext}`, 
             metadata: metadata,
