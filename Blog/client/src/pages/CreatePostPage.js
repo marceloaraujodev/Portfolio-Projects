@@ -111,3 +111,36 @@ export default function CreatePost() {
 //     // Handle errors from the backend
 //   }
 // });
+
+
+//----------------bucket uploading
+
+    // async function bucketUpload(req){
+    //   try {
+    //     const { originalname, path } = req.file;
+    //     const nameParts = originalname.split('.');
+    //     const ext = nameParts[nameParts.length - 1];
+    
+    //     const projectId = process.env.PROJECTID;
+    //     const keyFilename = process.env.KEYFILENAME;
+    //     console.log('req.file', req.file)
+    //     // console.log('New file name:', newFileName)
+    //     const metadata = { contentType: 'image/' + ext}
+    //     const storage = new Storage({ projectId, keyFilename });
+    //     const bucket = storage.bucket(process.env.BUCKET_NAME);
+    
+    //     await bucket.upload(path, {
+    //       destination: `uploads/${req.file.filename + ext}`, 
+    //       metadata: metadata,
+    //     });
+        
+    //     const publicUrl = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/uploads/${req.file.filename + ext}`;
+    //     console.log('Public URL:', publicUrl);
+    
+    //     return publicUrl; // Or any other relevant data
+    
+    //   } catch (error) {
+    //     console.error('Error uploading file:', error);
+    //     throw error; 
+    //   }
+    // }

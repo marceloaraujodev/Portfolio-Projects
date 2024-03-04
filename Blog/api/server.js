@@ -51,7 +51,7 @@ app.use('/uploads', express.static(__dirname + '/uploads')); // serving all file
 // const db = process.env.DATABASE.replace(
 //   '<PASSWORD>',
 //   process.env.DATABASE_PASSWORD
-// );  
+// );
 
 // DB connection // process.env.DATABASE
 mongoose.connect(process.env.DATABASE).then(() => console.log('Connected to Database'));
@@ -178,34 +178,40 @@ app.post('/logout', (req, res) => {
   res.cookie('token', '').json('logged out');
 });
 
-// let newFileName = null;
-// newFileName = path + '.' + ext;
-// // fs.renameSync(path, newFileName);
+    // const { originalname, path } = req.file;
+    // const nameParts = originalname.split('.');
+    // const ext = nameParts[nameParts.length - 1];
+    // let newFileName = null;
+    // newFileName = path + '.' + ext;
+    // fs.renameSync(path, newFileName);
+
+    // path: 'uploads\\8c2a5829e6780fe7bd653775acf5ef71', = req.file.path
+
 async function bucketUpload(req){
   try {
-    const { originalname } = req.file;
+    const { originalname, path } = req.file;
     const nameParts = originalname.split('.');
     const ext = nameParts[nameParts.length - 1];
-    // console.log(req.file.buffer)
+    // let newFileName = null;
+    // newFileName = path + '.' + ext;
+    // // fs.renameSync(path, newFileName);
 
     console.log(req.file)
     const projectId = process.env.PROJECTID;
     const keyFilename = process.env.KEYFILENAME;
 
-    const storage = new Storage({ projectId, keyFilename });
-    const bucket = storage.bucket(process.env.BUCKET_NAME)
+        const metadata = { contentType: 'image/' + ext}
+        const storage = new Storage({ projectId, keyFilename });
+        const bucket = storage.bucket(process.env.BUCKET_NAME);
 
-    console.log("File found, trying to upload...");
-    const blob = bucket.file(req.file.originalname);
-    const blobStream = blob.createWriteStream();
-
-    blobStream.on("finish", () => {
-      // res.status(200).send("Success");
-      console.log("Success");
-    });
-    console.log('this is req.file.buffer', req.file.path)
-    blobStream.end(req.file.path);
-    console.log('Success pass all the code')
+    await bucket.upload(path, {
+            destination: `uploads/${req.file.filename + ext}`, 
+            metadata: metadata,
+          });
+          
+          const publicUrl = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/uploads/${req.file.filename + ext}`;
+          console.log('Public URL:', publicUrl);
+          return publicUrl;
 
   } catch (error) {
     console.error('Error uploading file:', error);
@@ -319,6 +325,40 @@ app.delete('/post/:id', async (req, res) => {
 server.on('close', () => {
   console.log('Server shutting down');
 });
+
+
+
+    // async function bucketUpload(req){
+    //   try {
+    //     const { originalname, path } = req.file;
+    //     const nameParts = originalname.split('.');
+    //     const ext = nameParts[nameParts.length - 1];
+    
+    //     const projectId = process.env.PROJECTID;
+    //     const keyFilename = process.env.KEYFILENAME;
+    //     console.log('req.file', req.file)
+    //     // console.log('New file name:', newFileName)
+    //     const metadata = { contentType: 'image/' + ext}
+    //     const storage = new Storage({ projectId, keyFilename });
+    //     const bucket = storage.bucket(process.env.BUCKET_NAME);
+    
+    //     await bucket.upload(path, {
+    //       destination: `uploads/${req.file.filename + ext}`, 
+    //       metadata: metadata,
+    //     });
+        
+    //     const publicUrl = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/uploads/${req.file.filename + ext}`;
+    //     console.log('Public URL:', publicUrl);
+    
+    //     return publicUrl; // Or any other relevant data
+    
+    //   } catch (error) {
+    //     console.error('Error uploading file:', error);
+    //     throw error; 
+    //   }
+    // }
+
+
 
     // const fileUploadOptions = {
     //   destination: `uploads/` + req.file.originalname,
