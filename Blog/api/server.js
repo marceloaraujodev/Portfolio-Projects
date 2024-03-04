@@ -14,15 +14,16 @@ const admin = require('firebase-admin');
 const { Storage } = require('@google-cloud/storage');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
+
 const corsOptions = {
-  origin: ['https://summer-lab-1399.on.fleek.co', 'http://localhost:3000'],
+  origin: ['https://summer-lab-1399.on.fleek.co', 'http://localhost:3000', 'http://localhost:4000'],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: [
     'Content-Type',
     'Authorization',
-    'Access-Control-Allow-Origin',
-    'Access-Control-Allow-Methods',
-    'Access-Control-Allow-Headers',
+    // 'Access-Control-Allow-Origin',
+    // 'Access-Control-Allow-Methods',
+    // 'Access-Control-Allow-Headers',
   ],
   credentials: true,
 };
@@ -44,7 +45,7 @@ app.use('/uploads', express.static(__dirname + '/uploads')); // serving all file
 // const db = process.env.DATABASE.replace(
 //   '<PASSWORD>',
 //   process.env.DATABASE_PASSWORD
-// );
+// ); 
 // DB connection // process.env.DATABASE
 mongoose.connect(process.env.DATABASE).then(() => console.log('Connected to Database'));
 // start server
@@ -202,6 +203,34 @@ async function bucketUpload(req){
     console.error('Error uploading file:', error);
   }
 }
+app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
+  console.log(req.file)
+  const { originalname, path } = req.file;
+  const nameParts = originalname.split('.');
+  const ext = nameParts[nameParts.length - 1];
+
+  const projectId = process.env.PROJECTID;
+  const keyFilename = process.env.KEYFILENAME;
+
+  const metadata = { contentType: 'image/' + ext}
+  const storage = new Storage({ projectId, keyFilename });
+  const bucket = storage.bucket(process.env.BUCKET_NAME);
+  
+  // checks buckets
+  // storage.getBuckets().then(x => console.log('Google Buckets:', x))
+  
+  await bucket.upload(path, {
+          // destination: `uploads/${req.file.filename + ext}`, 
+          destination: `uploads/${originalname}`, 
+          metadata: metadata,
+        });
+        
+        console.log('File uploaded successfully to Google Cloud Storage.');
+        const publicUrl = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/uploads/${originalname}`;
+        console.log('Public URL:', publicUrl);
+
+  res.status(200).json('ok')
+})
 
 // create post
 app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
@@ -225,6 +254,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
   });
   // upload files 
   const bucketRes = await bucketUpload(req)
+
   res.status(200).json({
     status: 'success',
     message: 'token verified confirmed',
