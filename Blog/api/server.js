@@ -38,16 +38,16 @@ const uploadMiddleware = multer({
   },
 });
 const app = express();
-app.use(cors(corsOptions));
 app.use(morgan('dev')); // logger
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*'); // Allow all origins (adjust as needed)
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Allowed methods
-  next();
-});
+// app.use(function(req, res, next) {
+//   res.header('Access-Control-Allow-Origin', '*'); // Allow all origins (adjust as needed)
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Allowed methods
+//   next();
+// });
 //// WILL HAVE TO TURN ON DURING LOCAL TESTING
 // const db = process.env.DATABASE.replace(
 //   '<PASSWORD>',
