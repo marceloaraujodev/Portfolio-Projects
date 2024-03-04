@@ -207,9 +207,10 @@ async function bucketUpload(req){
     const storage = new Storage({ projectId, keyFilename });
 
     // const [file] = await storage.bucket(process.env.BUCKET_NAME).uploadFile(process.env.BUCKET_NAME, );
-  const ret = await storage.bucket(process.env.BUCKET_NAME).uploadFile(process.env.BUCKET_NAME, path);
-    console.log('this is file:', file)
-    const publicUrl = file.publicUrl();
+  const ret = await storage.bucket(process.env.BUCKET_NAME).uploadFile(process.env.BUCKET_NAME, path, req.file.filename + '.' + ext);
+
+    // console.log('this is file:', file)
+    // const publicUrl = file.publicUrl();
 
     console.log(`${req.path} uploaded to ${process.env.BUCKET_NAME}`);
 
