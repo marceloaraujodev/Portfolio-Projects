@@ -60,6 +60,31 @@ const PORT = 4000;
 const server = app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
+
+// Gets all posts // Turn on in production / its not need it locally
+// app.get('/', async (req, res) => {
+  //   try {
+  //     const [files] = await bucket.getFiles();
+  //     const fileData = files.map((file) => {
+  //       return {
+  //         name: file.name,
+  //         url: `https://storage.googleapis.com/${bucket.name}/${file.name}`,
+  //       };
+  //     });
+  //     res.status('200').json({
+  //       status: 'success',
+  //       message: 'ok',
+  //       files: fileData,
+  //     });
+  //   } catch (error) {
+  //     console.error('Error retrieving photos:', error);
+  //     res.status(500).json({
+  //       status: 'error',
+  //       message: 'Internal server error',
+  //     });
+  //   }
+// });
+
 app.get(`/checkout-session/:postId`, async (req, res) => {
   try {
     const { postId } = req.params;
@@ -213,34 +238,34 @@ async function bucketUpload(req){
 app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
 
 
-  console.log(req.file)
-  const { originalname, path } = req.file;
-  const nameParts = originalname.split('.');
-  const ext = nameParts[nameParts.length - 1];
-  const uniqueFilename = uuidv4() + '.' + ext;
+  // console.log(req.file)
+  // const { originalname, path } = req.file;
+  // const nameParts = originalname.split('.');
+  // const ext = nameParts[nameParts.length - 1];
+  // const uniqueFilename = uuidv4() + '.' + ext;
   
-  const projectId = process.env.PROJECTID;
-  const keyFilename = process.env.KEYFILENAME;
-  console.log('uniqueFilename --------', uniqueFilename);
-  console.log('projectid --------', projectId);
-  console.log('keyfilename --------', keyFilename);
-  console.log('buffer --------', req.file.buffer);
+  // const projectId = process.env.PROJECTID;
+  // const keyFilename = process.env.KEYFILENAME;
+  // console.log('uniqueFilename --------', uniqueFilename);
+  // console.log('projectid --------', projectId);
+  // console.log('keyfilename --------', keyFilename);
+  // console.log('buffer --------', req.file.buffer);
 
-  const metadata = { contentType: 'image/' + ext}
-  const storage = new Storage({ projectId, keyFilename });
-  const bucket = storage.bucket(process.env.BUCKET_NAME);
+  // const metadata = { contentType: 'image/' + ext}
+  // const storage = new Storage({ projectId, keyFilename });
+  // const bucket = storage.bucket(process.env.BUCKET_NAME);
   
-  // checks buckets
-  // storage.getBuckets().then(x => console.log('Google Buckets:', x))
+  // // checks buckets
+  // // storage.getBuckets().then(x => console.log('Google Buckets:', x))
 
-  await bucket.upload(req.file.buffer, {
-          destination: `uploads/${uniqueFilename}`, 
-          metadata: metadata,
-        });
+  // await bucket.upload(req.file.buffer, {
+  //         destination: `uploads/${uniqueFilename}`, 
+  //         metadata: metadata,
+  //       });
         
-        console.log('File uploaded successfully to Google Cloud Storage.');
-        const publicUrl = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/uploads/${uniqueFilename}`;
-        console.log('Public URL:', publicUrl);
+  //       console.log('File uploaded successfully to Google Cloud Storage.');
+  //       const publicUrl = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/uploads/${uniqueFilename}`;
+  //       console.log('Public URL:', publicUrl);
 
   res.status(200).json('ok');
 })
