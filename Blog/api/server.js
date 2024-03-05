@@ -16,10 +16,11 @@ const { Storage } = require('@google-cloud/storage');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 const serviceAccount = JSON.parse(process.env.KEYFIREBASE);
-console.log('this is Service Account:', serviceAccount)
+
+
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert(serviceAccount), 
   storageBucket: "gs://blogport-740b8.appspot.com"
 });
 
@@ -202,47 +203,38 @@ app.post('/logout', (req, res) => {
 });
 
 async function bucketUpload(req){
-  try {
-    const { originalname, path } = req.file;
-    const nameParts = originalname.split('.');
-    const ext = nameParts[nameParts.length - 1];
-    let newFileName = null;
-    newFileName = path + '.' + ext;
-    // // fs.renameSync(path, newFileName);
 
-    const fileUploadOptions = {
-      destination: `covers/` + path,
-      metadata: {
-        contentType: req.file.mimetype,
-      },
-    };
-
-    console.log(req.file)
-    const projectId = process.env.PROJECTID;
-    const keyFilename = process.env.KEYFILENAME;
-
-    const metadata = { contentType: 'image/' + ext}
-    const storage = new Storage({ projectId, keyFilename });
-    const bucket = storage.bucket(process.env.BUCKET_NAME);
-    
-    storage.getBuckets().then(x => console.log('Google Buckets:', x))
-    
-    await bucket.upload(path, {
-            // destination: `uploads/${req.file.filename + ext}`, 
-            destination: `uploads/${originalname + ext}`, 
-            metadata: metadata,
-          });
-          
-          console.log('File uploaded successfully to Google Cloud Storage.');
-          const publicUrl = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/uploads/${req.file.filename + ext}`;
-          console.log('Public URL:', publicUrl);
-          return publicUrl;
-  } catch (error) {
-    console.error('Error uploading file:', error);
+  if(!req.file) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'No file uploaded'
+    });
   }
-}
-app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
+  const metadata = {
+    contentType: req.file.mimetype,
+    cacheControl: "public, max-age=31536000"
+  };
+
+  const blob = bucket.file(req.file.originalname);
+  const blobStream = blob.createWriteStream({
+    metadata: metadata,
+    gzip: true
+  });
+
+  blobStream.on("error", err => {
+    return res.status(500).json({error: "Unable to upload image."});
+  });
   
+  blobStream.on('finish', () => {
+    const imageUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+    return res.status(201).json({ imageUrl});
+  });
+
+  blobStream.end(req.file.buffer);
+}
+
+app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
+  console.log('this is req.file:---------------', req.file)
   if(!req.file) {
     return res.status(400).json({
       status: 'fail',
