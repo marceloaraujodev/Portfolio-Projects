@@ -18,7 +18,6 @@ const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 const serviceAccount = JSON.parse(process.env.KEYFIREBASE);
 
 
-
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount), 
   storageBucket: "gs://blogport-740b8.appspot.com"
@@ -202,6 +201,7 @@ app.post('/logout', (req, res) => {
   res.cookie('token', '').json('logged out');
 });
 
+// uploads image to firebase bucket
 async function bucketUpload(req){
 
   if(!req.file) {
