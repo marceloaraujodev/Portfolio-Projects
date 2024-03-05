@@ -14,8 +14,8 @@ export default function Header() {
     const fetchData = async () => {
     if(!userInfo){
         const response = await fetch(
-          'http://localhost:4000/profile' // dev
-          // 'https://blog-rzyw.onrender.com/profile'
+          // 'http://localhost:4000/profile' // dev
+          'https://blog-rzyw.onrender.com/profile'
           , {
           credentials: 'include',
         });
@@ -30,8 +30,8 @@ export default function Header() {
 
   function logout(){
     fetch(
-      // 'http://localhost:4000/logout' , // dev
-      'https://blog-rzyw.onrender.com/logout',
+      'http://localhost:4000/logout' , // dev
+      // 'https://blog-rzyw.onrender.com/logout',
      {
       credentials: 'include',
       method: 'POST'

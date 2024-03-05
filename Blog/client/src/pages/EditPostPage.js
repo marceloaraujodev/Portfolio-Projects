@@ -14,8 +14,8 @@ export default function EditPostPage() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        // `http://localhost:4000/post/${id}` // development
-        'https://blog-rzyw.onrender.com/post/' + id // production
+        `http://localhost:4000/post/${id}` // development
+        // 'https://blog-rzyw.onrender.com/post/' + id // production
       );
       const postData = await response.json();
       setTitle(postData.title);
@@ -42,8 +42,8 @@ export default function EditPostPage() {
     }
 
     const response = await fetch(
-      // `http://localhost:4000/post/` // dev
-      'https://blog-rzyw.onrender.com/post'
+      `http://localhost:4000/post/` // dev
+      // 'https://blog-rzyw.onrender.com/post'
     , {
       method: 'PUT',
       body: postEditedData,

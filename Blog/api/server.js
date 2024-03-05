@@ -12,10 +12,16 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const admin = require('firebase-admin');
-const { Storage } = require('@google-cloud/storage');
+// const { Storage } = require('@google-cloud/storage');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
-const serviceAccount = JSON.parse(process.env.KEYFIREBASE);
+const { v4: uuidv4 } = require('uuid');
+// const serviceAccount = JSON.parse(process.env.KEYFIREBASE);
+const serviceAccount = require('./keyfirebase.json');
+
+
+
+// today cover: req.file.path, this is the connection to the url, in any post i will be getting the postmodel which has all the infor for the cover, where I can store and create the url! line 280
 
 
 admin.initializeApp({
@@ -37,9 +43,19 @@ const corsOptions = {
 };
 
 const bucket = admin.storage().bucket();
-const storage = multer.memoryStorage(); 
 
-// multer, config limits for the post size!
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, './uploads'); // Specify the directory where you want to store uploaded files
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.originalname);
+//   }
+// });
+// const uploadMiddleware = multer({ storage: storage });
+
+// // multer, config limits for the post size!
+const storage = multer.memoryStorage(); 
 const uploadMiddleware = multer({
   storage: storage,
   destination: path.join(__dirname, '../uploads'),
@@ -203,6 +219,11 @@ app.post('/logout', (req, res) => {
 
 // uploads image to firebase bucket
 async function bucketUpload(req){
+  const uniqueId = uuidv4();
+  const ext = req.file.originalname.split('.').pop()
+  const newName = uniqueId + '.' + ext;
+  console.log(newName)
+  console.log(req.file)
 
   if(!req.file) {
     return res.status(400).json({
@@ -215,57 +236,33 @@ async function bucketUpload(req){
     cacheControl: "public, max-age=31536000"
   };
 
-  const blob = bucket.file(req.file.originalname);
+  const blob = bucket.file(newName);
   const blobStream = blob.createWriteStream({
     metadata: metadata,
     gzip: true
   });
 
-  blobStream.on("error", err => {
-    return res.status(500).json({error: "Unable to upload image."});
-  });
+  return new Promise ((resolve, reject) => {
+    blobStream.on("error", err => {
+      // return res.status(500).json({error: "Unable to upload image."});
+      reject("Unable to upload image.");
+    });
+    
+    blobStream.on('finish', () => {
+      const imageUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+      // console.log('imgurl', imageUrl)
+      resolve(imageUrl);
+      // return res.status(201).json({ imageUrl});
+    });
   
-  blobStream.on('finish', () => {
-    const imageUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-    return res.status(201).json({ imageUrl});
-  });
+    blobStream.end(req.file.buffer);
+  })
 
-  blobStream.end(req.file.buffer);
 }
-
-app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
-  console.log('this is req.file:---------------', req.file)
-  if(!req.file) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'No file uploaded'
-    });
-  }
-  const metadata = {
-    contentType: req.file.mimetype,
-    cacheControl: "public, max-age=31536000"
-  };
-
-  const blob = bucket.file(req.file.originalname);
-  const blobStream = blob.createWriteStream({
-    metadata: metadata,
-    gzip: true
-  });
-
-  blobStream.on("error", err => {
-    return res.status(500).json({error: "Unable to upload image."});
-  });
-  
-  blobStream.on('finish', () => {
-    const imageUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-    return res.status(201).json({ imageUrl});
-  });
-
-  blobStream.end(req.file.buffer);
-})
 
 // create post
 app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
+  console.log('this is req.file', req.file)
   if (!req.cookies.token) {
     return res.status(404).json({ message: 'No token found' });
   }
@@ -275,23 +272,30 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
       return res.status(401).json({ message: 'Unautohrized: Invalid token' });
     }
     const { title, summary, content, price } = req.body;
-    await PostModel.create({
-      title,
-      summary,
-      content,
-      cover: req.file.path,
-      price,
-      author: info.id,
-    });
+    try {
+      await PostModel.create({
+        title,
+        summary,
+        content,
+        cover: req.file.path, 
+        price,
+        author: info.id,
+      });
+      const imageUrl = await bucketUpload(req)
+      // console.log('image url:', imageUrl)
+    
+      res.status(200).json({
+        status: 'success',
+        message: 'token verified confirmed',
+        url: imageUrl
+      });
+      
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      res.status(500).json({ error: 'Unable to upload image.' });
+    }
   });
   // upload files 
-  const bucketRes = await bucketUpload(req)
-
-  res.status(200).json({
-    status: 'success',
-    message: 'token verified confirmed',
-    bucketData: bucketRes
-  });
 });
 
 // Edit Post
@@ -356,6 +360,37 @@ app.delete('/post/:id', async (req, res) => {
     console.log(error);
   }
 });
+
+app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
+  console.log('this is req.file:---------------', req.file)
+  if(!req.file) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'No file uploaded'
+    });
+  }
+  const metadata = {
+    contentType: req.file.mimetype,
+    cacheControl: "public, max-age=31536000"
+  };
+
+  const blob = bucket.file(req.file.originalname);
+  const blobStream = blob.createWriteStream({
+    metadata: metadata,
+    gzip: true
+  });
+
+  blobStream.on("error", err => {
+    return res.status(500).json({error: "Unable to upload image."});
+  });
+  
+  blobStream.on('finish', () => {
+    const imageUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+    return res.status(201).json({ imageUrl});
+  });
+
+  blobStream.end(req.file.buffer);
+})
 
 server.on('close', () => {
   console.log('Server shutting down');

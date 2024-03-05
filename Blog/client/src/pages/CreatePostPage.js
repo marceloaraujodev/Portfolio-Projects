@@ -11,6 +11,7 @@ export default function CreatePost() {
   const [price, setPrice] = useState('');
   const [redirect, setRedirect] = useState(false);
   
+  
   async function createNewPost(e) {
     e.preventDefault();
 
@@ -23,8 +24,8 @@ export default function CreatePost() {
 
     try {
       const response = await fetch(
-        // 'http://localhost:4000/post', // development
-        'https://blog-rzyw.onrender.com/post', // production
+        'http://localhost:4000/post', // development
+        // 'https://blog-rzyw.onrender.com/post', // production
         {
           method: 'POST',
           body: data,
@@ -32,7 +33,12 @@ export default function CreatePost() {
         }
         
       );
+      const resdata = await response.json();
+      console.log(resdata.url);
+      // const url = resdata.url;
+
       if (response.ok) {
+
         setRedirect(true);
       }else{
         console.log('error creating post:', response.statusText)
