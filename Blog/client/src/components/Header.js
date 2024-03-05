@@ -30,8 +30,8 @@ export default function Header() {
 
   function logout(){
     fetch(
-      'http://localhost:4000/logout' , // dev
-      // 'https://blog-rzyw.onrender.com/logout',
+      // 'http://localhost:4000/logout' , // dev
+      'https://blog-rzyw.onrender.com/logout',
      {
       credentials: 'include',
       method: 'POST'
@@ -53,14 +53,12 @@ export default function Header() {
           <>
             <Link to="/create">+Create New Post</Link>
             <a onClick={logout}>Logout</a>
-            <Link to="/test">test</Link>
           </>
         )}
         {!username && (
           <>
             <Link to="/login">Login</Link>
             <Link to="/register">Register</Link>
-            <Link to="/test">test</Link>
           </>
         )}
       </nav>

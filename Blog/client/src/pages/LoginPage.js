@@ -7,32 +7,32 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [redirect, setRedirect] = useState(false);
   const { setUserInfo } = useContext(UserContext);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   async function login(event) {
     event.preventDefault();
+    setIsLoggingIn(true);
 
-      const response = await fetch(
-        // 'http://localhost:4000/login',  // pro
-        'https://blog-rzyw.onrender.com/login', 
-        {
+    const response = await fetch(
+      // 'http://localhost:4000/login',  // pro
+      'https://blog-rzyw.onrender.com/login',
+      {
         method: 'POST',
         body: JSON.stringify({ username, password }),
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', 
-      });
-      
-      if (response.ok) {
-        response.json().then((userInfo) => {
-          setUserInfo(userInfo);
-          setRedirect(true);
-        });
-      } else {
-        alert('Wrong username or password')
+        credentials: 'include',
       }
-      
+    );
 
-
-
+    if (response.ok) {
+      response.json().then((userInfo) => {
+        setUserInfo(userInfo);
+        setRedirect(true);
+      });
+    } else {
+      setIsLoggingIn(true);
+      alert('Wrong username or password');
+    }
   }
   if (redirect) {
     return <Navigate to={'/'} />;
@@ -56,7 +56,9 @@ export default function LoginPage() {
         value={password}
         onChange={(event) => setPassword(event.target.value)}
       />
-      <button>Login</button>
+      <button disabled={isLoggingIn}>
+      {isLoggingIn ? 'Logging in...' : 'Login'}
+      </button>
     </form>
   );
 }
