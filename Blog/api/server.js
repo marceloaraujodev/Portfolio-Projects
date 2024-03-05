@@ -19,18 +19,20 @@ const { v4: uuidv4 } = require('uuid');
 // const serviceAccount = JSON.parse(process.env.KEYFIREBASE);
 const serviceAccount = require('./keyfirebase.json');
 
-
-
-// today cover: req.file.path, this is the connection to the url, in any post i will be getting the postmodel which has all the infor for the cover, where I can store and create the url! line 280
-
+// 1 today cover: req.file.path, this is the connection to the url, in any post i will be getting the postmodel which has all the infor for the cover, where I can store and create the url! line 280
+// 2 error on upload
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount), 
-  storageBucket: "gs://blogport-740b8.appspot.com"
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: 'gs://blogport-740b8.appspot.com',
 });
 
 const corsOptions = {
-  origin: ['https://summer-lab-1399.on.fleek.co', 'http://localhost:3000', 'http://localhost:4000'],
+  origin: [
+    'https://summer-lab-1399.on.fleek.co',
+    'http://localhost:3000',
+    'http://localhost:4000',
+  ],
   methods: 'GET,POST,HEAD,PUT,PATCH,DELETE',
   allowedHeaders: [
     'Content-Type',
@@ -55,7 +57,7 @@ const bucket = admin.storage().bucket();
 // const uploadMiddleware = multer({ storage: storage });
 
 // // multer, config limits for the post size!
-const storage = multer.memoryStorage(); 
+const storage = multer.memoryStorage();
 const uploadMiddleware = multer({
   storage: storage,
   destination: path.join(__dirname, '../uploads'),
@@ -74,9 +76,11 @@ app.use('/uploads', express.static(__dirname + '/uploads')); // serving all file
 // const db = process.env.DATABASE.replace(
 //   '<PASSWORD>',
 //   process.env.DATABASE_PASSWORD
-// ); 
+// );
 // DB connection // process.env.DATABASE
-mongoose.connect(process.env.DATABASE).then(() => console.log('Connected to Database'));
+mongoose
+  .connect(process.env.DATABASE)
+  .then(() => console.log('Connected to Database'));
 // start server
 const PORT = 4000;
 const server = app.listen(PORT, () => {
@@ -85,26 +89,26 @@ const server = app.listen(PORT, () => {
 
 // Gets all posts // Turn on in production / its not need it locally
 // app.get('/', async (req, res) => {
-  //   try {
-  //     const [files] = await bucket.getFiles();
-  //     const fileData = files.map((file) => {
-  //       return {
-  //         name: file.name,
-  //         url: `https://storage.googleapis.com/${bucket.name}/${file.name}`,
-  //       };
-  //     });
-  //     res.status('200').json({
-  //       status: 'success',
-  //       message: 'ok',
-  //       files: fileData,
-  //     });
-  //   } catch (error) {
-  //     console.error('Error retrieving photos:', error);
-  //     res.status(500).json({
-  //       status: 'error',
-  //       message: 'Internal server error',
-  //     });
-  //   }
+//   try {
+//     const [files] = await bucket.getFiles();
+//     const fileData = files.map((file) => {
+//       return {
+//         name: file.name,
+//         url: `https://storage.googleapis.com/${bucket.name}/${file.name}`,
+//       };
+//     });
+//     res.status('200').json({
+//       status: 'success',
+//       message: 'ok',
+//       files: fileData,
+//     });
+//   } catch (error) {
+//     console.error('Error retrieving photos:', error);
+//     res.status(500).json({
+//       status: 'error',
+//       message: 'Internal server error',
+//     });
+//   }
 // });
 
 app.get(`/checkout-session/:postId`, async (req, res) => {
@@ -218,51 +222,51 @@ app.post('/logout', (req, res) => {
 });
 
 // uploads image to firebase bucket
-async function bucketUpload(req){
+async function bucketUpload(req) {
   const uniqueId = uuidv4();
-  const ext = req.file.originalname.split('.').pop()
+  const ext = req.file.originalname.split('.').pop();
   const newName = uniqueId + '.' + ext;
-  console.log(newName)
-  console.log(req.file)
+  console.log(newName);
+  console.log(req.file);
 
-  if(!req.file) {
+  if (!req.file) {
     return res.status(400).json({
       status: 'fail',
-      message: 'No file uploaded'
+      message: 'No file uploaded',
     });
   }
   const metadata = {
     contentType: req.file.mimetype,
-    cacheControl: "public, max-age=31536000"
+    cacheControl: 'public, max-age=31536000',
   };
 
   const blob = bucket.file(newName);
   const blobStream = blob.createWriteStream({
     metadata: metadata,
-    gzip: true
+    gzip: true,
   });
 
-  return new Promise ((resolve, reject) => {
-    blobStream.on("error", err => {
+  return new Promise((resolve, reject) => {
+    blobStream.on('error', (err) => {
       // return res.status(500).json({error: "Unable to upload image."});
-      reject("Unable to upload image.");
+      reject('Unable to upload image.');
     });
-    
+
     blobStream.on('finish', () => {
-      const imageUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+      const imagePath = blob.name;
+      const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${process.env.FIREBASE_PROJECTID}.appspot.com/o/${imagePath}?alt=media`;
       // console.log('imgurl', imageUrl)
       resolve(imageUrl);
       // return res.status(201).json({ imageUrl});
     });
-  
-    blobStream.end(req.file.buffer);
-  })
 
+    blobStream.end(req.file.buffer);
+  });
 }
 
 // create post
 app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
-  console.log('this is req.file', req.file)
+  console.log('this is req.file', req.file);
   if (!req.cookies.token) {
     return res.status(404).json({ message: 'No token found' });
   }
@@ -273,65 +277,64 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     }
     const { title, summary, content, price } = req.body;
     try {
+      const imageUrl = await bucketUpload(req);
+      // console.log('image url:', imageUrl)
       await PostModel.create({
         title,
         summary,
         content,
-        cover: req.file.path, 
+        cover: imageUrl,
         price,
         author: info.id,
       });
-      const imageUrl = await bucketUpload(req)
-      // console.log('image url:', imageUrl)
-    
+
       res.status(200).json({
         status: 'success',
         message: 'token verified confirmed',
-        url: imageUrl
+        url: imageUrl,
       });
-      
     } catch (error) {
       console.error('Error uploading image:', error);
       res.status(500).json({ error: 'Unable to upload image.' });
     }
   });
-  // upload files 
+
 });
 
 // Edit Post
 app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
   let newPath = null;
+
   if (req.file) {
-    const { originalname, path } = req.file;
-    const nameParts = originalname.split('.');
-    const ext = nameParts[nameParts.length - 1];
-    newPath = path + '.' + ext;
-    fs.renameSync(path, newPath);
+    newPath = await bucketUpload(req);
   }
-  const { token } = req.cookies;
-  jwt.verify(token, process.env.SECRET, async (err, info) => {
-    if (err) throw err;
-    const { title, summary, content, id, price } = req.body;
-    const dbPost = await PostModel.findById(id);
-    const author = JSON.stringify(dbPost.author) === JSON.stringify(info.id);
-    if (!author) {
-      return res.status(400).json('You are not the author');
-    }
-    const updatedPost = await PostModel.findByIdAndUpdate(
-      id,
-      {
-        title,
-        summary,
-        content,
-        cover: newPath ? newPath : dbPost.cover,
-        price,
-      },
-      {
-        new: true,
+
+    console.log('this is the new url:', newPath)
+    const { token } = req.cookies;
+    jwt.verify(token, process.env.SECRET, async (err, info) => {
+      if (err) throw err;
+      const { title, summary, content, id, price } = req.body;
+      const dbPost = await PostModel.findById(id);
+      const author = JSON.stringify(dbPost.author) === JSON.stringify(info.id);
+      if (!author) {
+        return res.status(400).json('You are not the author');
       }
-    );
-    res.json(updatedPost);
-  });
+      const updatedPost = await PostModel.findByIdAndUpdate(
+        id,
+        {
+          title,
+          summary,
+          content,
+          cover: newPath ? newPath : dbPost.cover,
+          price,
+        },
+        {
+          new: true,
+        }
+      );
+      res.status(200).json(updatedPost);
+    });
+
 });
 
 app.get('/post', async (req, res) => {
@@ -362,35 +365,35 @@ app.delete('/post/:id', async (req, res) => {
 });
 
 app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
-  console.log('this is req.file:---------------', req.file)
-  if(!req.file) {
+  console.log('this is req.file:---------------', req.file);
+  if (!req.file) {
     return res.status(400).json({
       status: 'fail',
-      message: 'No file uploaded'
+      message: 'No file uploaded',
     });
   }
   const metadata = {
     contentType: req.file.mimetype,
-    cacheControl: "public, max-age=31536000"
+    cacheControl: 'public, max-age=31536000',
   };
 
   const blob = bucket.file(req.file.originalname);
   const blobStream = blob.createWriteStream({
     metadata: metadata,
-    gzip: true
+    gzip: true,
   });
 
-  blobStream.on("error", err => {
-    return res.status(500).json({error: "Unable to upload image."});
+  blobStream.on('error', (err) => {
+    return res.status(500).json({ error: 'Unable to upload image.' });
   });
-  
+
   blobStream.on('finish', () => {
     const imageUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-    return res.status(201).json({ imageUrl});
+    return res.status(201).json({ imageUrl });
   });
 
   blobStream.end(req.file.buffer);
-})
+});
 
 server.on('close', () => {
   console.log('Server shutting down');
@@ -398,73 +401,70 @@ server.on('close', () => {
 
 //Test
 // // console.log(req.file)
-  // // const { originalname, path } = req.file;
-  // // const nameParts = originalname.split('.');
-  // // const ext = nameParts[nameParts.length - 1];
-  // // const uniqueFilename = uuidv4() + '.' + ext;
-  // console.log('------------------ look ')
-  // const projectId = process.env.PROJECTID;
-  // const keyFilename = process.env.KEYFILENAME;
-  // // console.log('uniqueFilename --------', uniqueFilename);
-  // // console.log('projectid --------', projectId);
-  // // console.log('keyfilename --------', keyFilename);
-  // // console.log('buffer --------', req.file.buffer);
+// // const { originalname, path } = req.file;
+// // const nameParts = originalname.split('.');
+// // const ext = nameParts[nameParts.length - 1];
+// // const uniqueFilename = uuidv4() + '.' + ext;
+// console.log('------------------ look ')
+// const projectId = process.env.PROJECTID;
+// const keyFilename = process.env.KEYFILENAME;
+// // console.log('uniqueFilename --------', uniqueFilename);
+// // console.log('projectid --------', projectId);
+// // console.log('keyfilename --------', keyFilename);
+// // console.log('buffer --------', req.file.buffer);
 
-  // // const metadata = { contentType: 'image/' + ext}
-  // const storage = new Storage({ projectId, keyFilename });
-  // const bucket = storage.bucket(process.env.BUCKET_NAME);
-  
-  // // // checks buckets
-  // storage.getBuckets().then(x => console.log('Google Buckets:', x))
-  // console.log('Bucket variable', bucket)
+// // const metadata = { contentType: 'image/' + ext}
+// const storage = new Storage({ projectId, keyFilename });
+// const bucket = storage.bucket(process.env.BUCKET_NAME);
 
-  // // await bucket.upload(req.file.buffer, {
-  // //         destination: `uploads/${uniqueFilename}`, 
-  // //         metadata: metadata,
-  // //       });
-        
-  // //       console.log('File uploaded successfully to Google Cloud Storage.');
-  // //       const publicUrl = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/uploads/${uniqueFilename}`;
-  // //       console.log('Public URL:', publicUrl);
+// // // checks buckets
+// storage.getBuckets().then(x => console.log('Google Buckets:', x))
+// console.log('Bucket variable', bucket)
 
+// // await bucket.upload(req.file.buffer, {
+// //         destination: `uploads/${uniqueFilename}`,
+// //         metadata: metadata,
+// //       });
 
+// //       console.log('File uploaded successfully to Google Cloud Storage.');
+// //       const publicUrl = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/uploads/${uniqueFilename}`;
+// //       console.log('Public URL:', publicUrl);
 
+// const fileUploadOptions = {
+//   destination: `uploads/` + req.file.originalname,
+//   metadata: {
+//     contentType: req.file.mimetype,
+//   },
+// };
+// console.log(req.file)
+// const { originalname, path } = req.file;
+// const nameParts = originalname.split('.');
+// const ext = nameParts[nameParts.length - 1];
+// let newFileName = null;
+// newFileName = path + '.' + ext;
+// fs.renameSync(path, newFileName);
+// console.log('this is Orinianl name:', originalname)
+// console.log('this is path:', path)
+// console.log('REQ.file:', req.file)
 
-    // const fileUploadOptions = {
-    //   destination: `uploads/` + req.file.originalname,
-    //   metadata: {
-    //     contentType: req.file.mimetype,
-    //   },
-    // };
-    // console.log(req.file)
-    // const { originalname, path } = req.file;
-    // const nameParts = originalname.split('.');
-    // const ext = nameParts[nameParts.length - 1];
-    // let newFileName = null;
-    // newFileName = path + '.' + ext;
-    // fs.renameSync(path, newFileName);
-        // console.log('this is Orinianl name:', originalname)
-    // console.log('this is path:', path)
-    // console.log('REQ.file:', req.file)
-  
-    // // console.log('file upload options', fileUploadOptions)
-    // const projectId = process.env.PROJECTID;
-    // const keyFilename = process.env.KEYFILENAME;
-    // // console.log('projectid, keyfilename', projectId, keyFilename);
-  
-    // const storage = new Storage({ projectId, keyFilename });
-    // const upload = await storage
-    // .bucket(process.env.BUCKET_NAME)
-    // .upload(req.file.path + '.' + ext);
-    // console.log(upload)
-    // return upload
-        // async function listBuckets() {
-    //   const [buckets] = await storage.getBuckets();
-    
-    //   console.log('Buckets:');
-    //   buckets.forEach(bucket => {
-    //     console.log(bucket.name);
-    //   });
-    // }
-    
-    // listBuckets().catch(console.error);
+// // console.log('file upload options', fileUploadOptions)
+// const projectId = process.env.PROJECTID;
+// const keyFilename = process.env.KEYFILENAME;
+// // console.log('projectid, keyfilename', projectId, keyFilename);
+
+// const storage = new Storage({ projectId, keyFilename });
+// const upload = await storage
+// .bucket(process.env.BUCKET_NAME)
+// .upload(req.file.path + '.' + ext);
+// console.log(upload)
+// return upload
+// async function listBuckets() {
+//   const [buckets] = await storage.getBuckets();
+
+//   console.log('Buckets:');
+//   buckets.forEach(bucket => {
+//     console.log(bucket.name);
+//   });
+// }
+
+// listBuckets().catch(console.error);
