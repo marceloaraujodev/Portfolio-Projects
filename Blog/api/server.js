@@ -15,7 +15,7 @@ const admin = require('firebase-admin');
 const { Storage } = require('@google-cloud/storage');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
-const serviceAccount = require('keyfirebase');
+const serviceAccount = require('/keyfirebase');
 console.log('this is Service Account:', serviceAccount)
 
 admin.initializeApp({
