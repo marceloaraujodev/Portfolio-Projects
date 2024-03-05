@@ -16,11 +16,9 @@ const admin = require('firebase-admin');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 const { v4: uuidv4 } = require('uuid');
-// const serviceAccount = JSON.parse(process.env.KEYFIREBASE);
-const serviceAccount = require('./keyfirebase.json');
+const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // pro
+// const serviceAccount = require('./keyfirebase.json'); // dev
 
-// 1 today cover: req.file.path, this is the connection to the url, in any post i will be getting the postmodel which has all the infor for the cover, where I can store and create the url! line 280
-// 2 error on upload
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -45,16 +43,6 @@ const corsOptions = {
 };
 
 const bucket = admin.storage().bucket();
-
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, './uploads'); // Specify the directory where you want to store uploaded files
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, file.originalname);
-//   }
-// });
-// const uploadMiddleware = multer({ storage: storage });
 
 // // multer, config limits for the post size!
 const storage = multer.memoryStorage();
