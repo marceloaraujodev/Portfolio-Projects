@@ -13,9 +13,15 @@ const fs = require('fs');
 const path = require('path');
 const admin = require('firebase-admin');
 const { Storage } = require('@google-cloud/storage');
-const { v4: uuidv4 } = require('uuid');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
+const serviceAccount = require(process.env.KEYFILENAME_FIREBASE);
+
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: "gs://blogport-740b8.appspot.com"
+});
 
 const corsOptions = {
   origin: ['https://summer-lab-1399.on.fleek.co', 'http://localhost:3000', 'http://localhost:4000'],
@@ -30,8 +36,12 @@ const corsOptions = {
   credentials: true,
 };
 
+const bucket = admin.storage().bucket();
+const storage = multer.memoryStorage(); 
+
 // multer, config limits for the post size!
 const uploadMiddleware = multer({
+  storage: storage,
   destination: path.join(__dirname, '../uploads'),
   limits: {
     fieldSize: 1024 * 1024 * 10, // 10MB limit for field size
@@ -43,11 +53,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one
-// app.use(function(req, res, next) {
-//   res.header('Access-Control-Allow-Origin', '*'); // Allow all origins (adjust as needed)
-//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Allowed methods
-//   next();
-// });
+
 //// WILL HAVE TO TURN ON DURING LOCAL TESTING
 // const db = process.env.DATABASE.replace(
 //   '<PASSWORD>',
@@ -236,39 +242,34 @@ async function bucketUpload(req){
   }
 }
 app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
-
-
-  // console.log(req.file)
-  // const { originalname, path } = req.file;
-  // const nameParts = originalname.split('.');
-  // const ext = nameParts[nameParts.length - 1];
-  // const uniqueFilename = uuidv4() + '.' + ext;
-  console.log('------------------ look ')
-  const projectId = process.env.PROJECTID;
-  const keyFilename = process.env.KEYFILENAME;
-  // console.log('uniqueFilename --------', uniqueFilename);
-  // console.log('projectid --------', projectId);
-  // console.log('keyfilename --------', keyFilename);
-  // console.log('buffer --------', req.file.buffer);
-
-  // const metadata = { contentType: 'image/' + ext}
-  const storage = new Storage({ projectId, keyFilename });
-  const bucket = storage.bucket(process.env.BUCKET_NAME);
   
-  // // checks buckets
-  storage.getBuckets().then(x => console.log('Google Buckets:', x))
-  console.log('Bucket variable', bucket)
+  if(!req.file) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'No file uploaded'
+    });
+  }
+  const metadata = {
+    contentType: req.file.mimetype,
+    cacheControl: "public, max-age=31536000"
+  };
 
-  // await bucket.upload(req.file.buffer, {
-  //         destination: `uploads/${uniqueFilename}`, 
-  //         metadata: metadata,
-  //       });
-        
-  //       console.log('File uploaded successfully to Google Cloud Storage.');
-  //       const publicUrl = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/uploads/${uniqueFilename}`;
-  //       console.log('Public URL:', publicUrl);
+  const blob = bucket.file(req.file.originalname);
+  const blobStream = blob.createWriteStream({
+    metadata: metadata,
+    gzip: true
+  });
 
-  res.status(200).json('ok');
+  blobStream.on("error", err => {
+    return res.status(500).json({error: "Unable to upload image."});
+  });
+  
+  blobStream.on('finish', () => {
+    const imageUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+    return res.status(201).json({ imageUrl});
+  });
+
+  blobStream.end(req.file.buffer);
 })
 
 // create post
@@ -367,6 +368,41 @@ app.delete('/post/:id', async (req, res) => {
 server.on('close', () => {
   console.log('Server shutting down');
 });
+
+//Test
+// // console.log(req.file)
+  // // const { originalname, path } = req.file;
+  // // const nameParts = originalname.split('.');
+  // // const ext = nameParts[nameParts.length - 1];
+  // // const uniqueFilename = uuidv4() + '.' + ext;
+  // console.log('------------------ look ')
+  // const projectId = process.env.PROJECTID;
+  // const keyFilename = process.env.KEYFILENAME;
+  // // console.log('uniqueFilename --------', uniqueFilename);
+  // // console.log('projectid --------', projectId);
+  // // console.log('keyfilename --------', keyFilename);
+  // // console.log('buffer --------', req.file.buffer);
+
+  // // const metadata = { contentType: 'image/' + ext}
+  // const storage = new Storage({ projectId, keyFilename });
+  // const bucket = storage.bucket(process.env.BUCKET_NAME);
+  
+  // // // checks buckets
+  // storage.getBuckets().then(x => console.log('Google Buckets:', x))
+  // console.log('Bucket variable', bucket)
+
+  // // await bucket.upload(req.file.buffer, {
+  // //         destination: `uploads/${uniqueFilename}`, 
+  // //         metadata: metadata,
+  // //       });
+        
+  // //       console.log('File uploaded successfully to Google Cloud Storage.');
+  // //       const publicUrl = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/uploads/${uniqueFilename}`;
+  // //       console.log('Public URL:', publicUrl);
+
+
+
+
     // const fileUploadOptions = {
     //   destination: `uploads/` + req.file.originalname,
     //   metadata: {

@@ -11,6 +11,7 @@ lerna-debug.log*
 serviceAccountKey.json
 key.json
 key2.json
+keyfirebase.json
 .env
 config.env
 Portfolio-Projects/Blog/api/key2.json
