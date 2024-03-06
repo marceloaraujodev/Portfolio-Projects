@@ -18,7 +18,7 @@ export default function LoginPage() {
         'https://blog-rzyw.onrender.com/login',
         {
           method: 'POST',
-          body: JSON.stringify({ username, password }),
+          body: JSON.stringify(credentials),
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
         }
