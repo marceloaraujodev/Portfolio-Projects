@@ -30,6 +30,7 @@ const corsOptions = {
     'https://summer-lab-1399.on.fleek.co',
     'http://localhost:3000',
     'http://localhost:4000',
+    'https://itblog.onrender.com'
   ],
   methods: 'GET,POST,HEAD,PUT,PATCH,DELETE',
   allowedHeaders: [
