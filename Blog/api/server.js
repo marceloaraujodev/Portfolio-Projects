@@ -76,28 +76,32 @@ const server = app.listen(PORT, () => {
 });
 
 // Gets all posts // Turn on in production / its not need it locally
-// app.get('/', async (req, res) => {
-//   try {
-//     const [files] = await bucket.getFiles();
-//     const fileData = files.map((file) => {
-//       return {
-//         name: file.name,
-//         url: `https://storage.googleapis.com/${bucket.name}/${file.name}`,
-//       };
-//     });
-//     res.status('200').json({
-//       status: 'success',
-//       message: 'ok',
-//       files: fileData,
-//     });
-//   } catch (error) {
-//     console.error('Error retrieving photos:', error);
-//     res.status(500).json({
-//       status: 'error',
-//       message: 'Internal server error',
-//     });
-//   }
+  // app.get('/', async (req, res) => {
+  //   try {
+  //     const [files] = await bucket.getFiles();
+  //     const fileData = files.map((file) => {
+  //       return {
+  //         name: file.name,
+  //         url: `https://storage.googleapis.com/${bucket.name}/${file.name}`,
+  //       };
+  //     });
+  //     res.status('200').json({
+  //       status: 'success',
+  //       message: 'ok',
+  //       files: fileData,
+  //     });
+  //   } catch (error) {
+  //     console.error('Error retrieving photos:', error);
+  //     res.status(500).json({
+  //       status: 'error',
+  //       message: 'Internal server error',
+  //     });
+  //   }
 // });
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'Blog/api', 'index.html'));
+});
 
 app.get(`/checkout-session/:postId`, async (req, res) => {
   try {
