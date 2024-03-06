@@ -59,8 +59,9 @@ app.use(morgan('dev')); // logger
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
-// app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one
+app.use('/public', express.static(__dirname + '/public'));
+// app.use(express.static(path.join(__dirname, 'client/build')));
 //// WILL HAVE TO TURN ON DURING LOCAL TESTING
 // const db = process.env.DATABASE.replace(
 //   '<PASSWORD>',
