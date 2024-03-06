@@ -1,6 +1,8 @@
 import React, { useContext, useState } from 'react';
+import { useMutation } from 'react-query';
 import { Navigate } from 'react-router-dom';
 import { UserContext } from '../components/UserContext';
+
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
@@ -8,32 +10,54 @@ export default function LoginPage() {
   const [redirect, setRedirect] = useState(false);
   const { setUserInfo } = useContext(UserContext);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [error, setError] = useState(null);
+
+  const loginMutation = useMutation(
+    async (credentials) => {
+      const response = await fetch(
+        // 'http://localhost:4000/login',  // pro
+        'https://blog-rzyw.onrender.com/login',
+        {
+          method: 'POST',
+          body: JSON.stringify(credentials),
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+        }
+      );
+      if(!response.ok){
+        throw new Error('Login failed');
+      }
+      return await response.json();
+    },
+    {
+      onSuccess: (data) => {
+        setUserInfo(data);
+        setRedirect(true)
+      }
+    },
+    {
+      onError: (error) => {
+        setError(error.message);
+        setIsLoggingIn(false);
+      },
+    },
+  );
+  
 
   async function login(event) {
     event.preventDefault();
+    setError(null);
     setIsLoggingIn(true);
 
-    const response = await fetch(
-      // 'http://localhost:4000/login',  // pro
-      'https://blog-rzyw.onrender.com/login',
-      {
-        method: 'POST',
-        body: JSON.stringify({ username, password }),
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-      }
-    );
-
-    if (response.ok) {
-      response.json().then((userInfo) => {
-        setUserInfo(userInfo);
-        setRedirect(true);
-      });
-    } else {
-      setIsLoggingIn(true);
-      alert('Wrong username or password');
+    try {
+      await loginMutation({username, password})
+    } catch (error) {
+      setError(error.message);
+      setIsLoggingIn(false);
     }
   }
+
+
   if (redirect) {
     return <Navigate to={'/'} />;
   }
@@ -59,6 +83,29 @@ export default function LoginPage() {
       <button disabled={isLoggingIn}>
       {isLoggingIn ? 'Logging in...' : 'Login'}
       </button>
+      {error && <p>{error}</p>}
     </form>
   );
 }
+
+
+// const response = await fetch(
+//   // 'http://localhost:4000/login',  // pro
+//   'https://blog-rzyw.onrender.com/login',
+//   {
+//     method: 'POST',
+//     body: JSON.stringify({ username, password }),
+//     headers: { 'Content-Type': 'application/json' },
+//     credentials: 'include',
+//   }
+// );
+
+// if (response.ok) {
+//   response.json().then((userInfo) => {
+//     setUserInfo(userInfo);
+//     setRedirect(true);
+//   });
+// } else {
+//   setIsLoggingIn(true);
+//   alert('Wrong username or password');
+// }
