@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { useQuery, useMutation } from 'react-query';
+import { useMutation } from 'react-query';
 import { Navigate } from 'react-router-dom';
 import { UserContext } from '../components/UserContext';
 
@@ -82,6 +82,7 @@ export default function LoginPage() {
       <button disabled={isLoggingIn}>
       {isLoggingIn ? 'Logging in...' : 'Login'}
       </button>
+      {error && <p>{error}</p>}
     </form>
   );
 }
