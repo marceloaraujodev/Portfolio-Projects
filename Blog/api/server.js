@@ -60,7 +60,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one
-app.use('/public', express.static(__dirname + '/public'));
+app.use(express.static(__dirname + 'build'));
 
 //// WILL HAVE TO TURN ON DURING LOCAL TESTING
 // const db = process.env.DATABASE.replace(
@@ -78,9 +78,9 @@ const server = app.listen(PORT, () => {
 });
 
 
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '/public', 'index.html'));
-// });
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '/build', 'index.html'));
+});
 
 app.get(`/checkout-session/:postId`, async (req, res) => {
   try {
@@ -369,73 +369,3 @@ app.post('/test', uploadMiddleware.single('file'), async (req, res) => {
 server.on('close', () => {
   console.log('Server shutting down');
 });
-
-//Test
-// // console.log(req.file)
-// // const { originalname, path } = req.file;
-// // const nameParts = originalname.split('.');
-// // const ext = nameParts[nameParts.length - 1];
-// // const uniqueFilename = uuidv4() + '.' + ext;
-// console.log('------------------ look ')
-// const projectId = process.env.PROJECTID;
-// const keyFilename = process.env.KEYFILENAME;
-// // console.log('uniqueFilename --------', uniqueFilename);
-// // console.log('projectid --------', projectId);
-// // console.log('keyfilename --------', keyFilename);
-// // console.log('buffer --------', req.file.buffer);
-
-// // const metadata = { contentType: 'image/' + ext}
-// const storage = new Storage({ projectId, keyFilename });
-// const bucket = storage.bucket(process.env.BUCKET_NAME);
-
-// // // checks buckets
-// storage.getBuckets().then(x => console.log('Google Buckets:', x))
-// console.log('Bucket variable', bucket)
-
-// // await bucket.upload(req.file.buffer, {
-// //         destination: `uploads/${uniqueFilename}`,
-// //         metadata: metadata,
-// //       });
-
-// //       console.log('File uploaded successfully to Google Cloud Storage.');
-// //       const publicUrl = `https://storage.googleapis.com/${process.env.BUCKET_NAME}/uploads/${uniqueFilename}`;
-// //       console.log('Public URL:', publicUrl);
-
-// const fileUploadOptions = {
-//   destination: `uploads/` + req.file.originalname,
-//   metadata: {
-//     contentType: req.file.mimetype,
-//   },
-// };
-// console.log(req.file)
-// const { originalname, path } = req.file;
-// const nameParts = originalname.split('.');
-// const ext = nameParts[nameParts.length - 1];
-// let newFileName = null;
-// newFileName = path + '.' + ext;
-// fs.renameSync(path, newFileName);
-// console.log('this is Orinianl name:', originalname)
-// console.log('this is path:', path)
-// console.log('REQ.file:', req.file)
-
-// // console.log('file upload options', fileUploadOptions)
-// const projectId = process.env.PROJECTID;
-// const keyFilename = process.env.KEYFILENAME;
-// // console.log('projectid, keyfilename', projectId, keyFilename);
-
-// const storage = new Storage({ projectId, keyFilename });
-// const upload = await storage
-// .bucket(process.env.BUCKET_NAME)
-// .upload(req.file.path + '.' + ext);
-// console.log(upload)
-// return upload
-// async function listBuckets() {
-//   const [buckets] = await storage.getBuckets();
-
-//   console.log('Buckets:');
-//   buckets.forEach(bucket => {
-//     console.log(bucket.name);
-//   });
-// }
-
-// listBuckets().catch(console.error);
