@@ -60,7 +60,6 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one
-app.use(express.static(__dirname + '/build'));
 
 //// WILL HAVE TO TURN ON DURING LOCAL TESTING
 // const db = process.env.DATABASE.replace(
@@ -79,7 +78,7 @@ const server = app.listen(PORT, () => {
 
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '/build', 'index.html'));
+  res.redirect('https://itblog.onrender.com/' + req.originalUrl)
 });
 
 app.get(`/checkout-session/:postId`, async (req, res) => {
