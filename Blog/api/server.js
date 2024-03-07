@@ -31,7 +31,7 @@ const corsOptions = {
     // 'http://localhost:3000',
     // 'http://localhost:4000',
     'https://itblog.onrender.com',
-    'https://blog-rzyw.onrender.com',
+    'https://itblog.onrender.com/post'
 
   ],
   methods: 'GET,POST,HEAD,PUT,PATCH,DELETE,OPTIONS',
@@ -80,7 +80,6 @@ const server = app.listen(PORT, () => {
 
 
 app.get('*', (req, res) => {
-  console.log('https://itblog.onrender.com' + req.originalUrl)
   res.redirect('https://itblog.onrender.com' + req.originalUrl)
 });
 
