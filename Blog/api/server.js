@@ -16,14 +16,9 @@ const admin = require('firebase-admin');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 const { v4: uuidv4 } = require('uuid');
-const httpProxy = require('http-proxy');
 const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // pro
 // const serviceAccount = require('./keyfirebase.json'); // dev
 
-const proxy = httpProxy.createProxyServer({
-  target: 'https://itblog.onrender.com', // Replace with your frontend URL
-  changeOrigin: true
-});
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -58,7 +53,7 @@ const uploadMiddleware = multer({
   storage: storage,
   destination: path.join(__dirname, '../uploads'),
   limits: {
-    fieldSize: 1024 * 1024 * 10, // 10MB limit for field size  ;
+    fieldSize: 1024 * 1024 * 10, // 10MB limit for field size
   },
 });
 const app = express();
@@ -68,10 +63,11 @@ app.use(express.json());
 app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one
 
-app.use('*', (req, res) => {
-  proxy.web(req, res);
-})
-
+//// WILL HAVE TO TURN ON DURING LOCAL TESTING
+// const db = process.env.DATABASE.replace(
+//   '<PASSWORD>',
+//   process.env.DATABASE_PASSWORD
+// );
 // DB connection // process.env.DATABASE
 mongoose
   .connect(process.env.DATABASE)
