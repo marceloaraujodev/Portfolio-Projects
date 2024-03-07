@@ -80,8 +80,8 @@ const server = app.listen(PORT, () => {
 
 
 app.get('*', (req, res) => {
-  console.log('https://itblog.onrender.com/' + req.originalUrl)
-  res.redirect('https://itblog.onrender.com/' + req.originalUrl)
+  console.log('https://itblog.onrender.com' + req.originalUrl)
+  res.redirect('https://itblog.onrender.com' + req.originalUrl)
 });
 
 app.get(`/checkout-session/:postId`, async (req, res) => {
