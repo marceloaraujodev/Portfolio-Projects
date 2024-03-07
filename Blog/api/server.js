@@ -17,7 +17,7 @@ dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 const { v4: uuidv4 } = require('uuid');
 const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // pro
-// const serviceAccount = require('./keyfirebase.json'); // dev
+// const serviceAccount = require('./keyfirebase.json'); // dev;
 
 
 admin.initializeApp({
@@ -28,7 +28,7 @@ admin.initializeApp({
 const corsOptions = {
   origin: [
     'https://summer-lab-1399.on.fleek.co',
-    'http://localhost:3000',
+    'http://localhost:3000', 
     'http://localhost:4000',
     'https://itblog.onrender.com',
     'https://itblog.onrender.com/login'
