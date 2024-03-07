@@ -28,9 +28,9 @@ admin.initializeApp({
 const corsOptions = {
   origin: [
     'https://summer-lab-1399.on.fleek.co',
-    'http://localhost:3000',
-    'http://localhost:4000',
-    'https://itblog.onrender.com/'
+    // 'http://localhost:3000',
+    // 'http://localhost:4000',
+    'https://itblog.onrender.com'
   ],
   methods: 'GET,POST,HEAD,PUT,PATCH,DELETE',
   allowedHeaders: [
@@ -77,27 +77,27 @@ const server = app.listen(PORT, () => {
 });
 
 // Gets all posts // Turn on in production / its not need it locally
-  // app.get('/', async (req, res) => {
-  //   try {
-  //     const [files] = await bucket.getFiles();
-  //     const fileData = files.map((file) => {
-  //       return {
-  //         name: file.name,
-  //         url: `https://storage.googleapis.com/${bucket.name}/${file.name}`,
-  //       };
-  //     });
-  //     res.status('200').json({
-  //       status: 'success',
-  //       message: 'ok',
-  //       files: fileData,
-  //     });
-  //   } catch (error) {
-  //     console.error('Error retrieving photos:', error);
-  //     res.status(500).json({
-  //       status: 'error',
-  //       message: 'Internal server error',
-  //     });
-  //   }
+// app.get('/', async (req, res) => {
+//   try {
+//     const [files] = await bucket.getFiles();
+//     const fileData = files.map((file) => {
+//       return {
+//         name: file.name,
+//         url: `https://storage.googleapis.com/${bucket.name}/${file.name}`,
+//       };
+//     });
+//     res.status('200').json({
+//       status: 'success',
+//       message: 'ok',
+//       files: fileData,
+//     });
+//   } catch (error) {
+//     console.error('Error retrieving photos:', error);
+//     res.status(500).json({
+//       status: 'error',
+//       message: 'Internal server error',
+//     });
+//   }
 // });
 
 app.get(`/checkout-session/:postId`, async (req, res) => {
