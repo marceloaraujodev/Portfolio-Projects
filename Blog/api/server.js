@@ -31,7 +31,8 @@ const corsOptions = {
     // 'http://localhost:3000',
     // 'http://localhost:4000',
     'https://itblog.onrender.com',
-    'https://itblog.onrender.com',
+    'https://blog-rzyw.onrender.com',
+
   ],
   methods: 'GET,POST,HEAD,PUT,PATCH,DELETE,OPTIONS',
   allowedHeaders: [
