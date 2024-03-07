@@ -31,6 +31,7 @@ const corsOptions = {
     // 'http://localhost:3000',
     // 'http://localhost:4000',
     'https://itblog.onrender.com',
+    'https://itblog.onrender.com/login'
 
   ],
   methods: 'GET,POST,HEAD,PUT,PATCH,DELETE,OPTIONS',
@@ -77,6 +78,7 @@ const server = app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
 
+// the route has to come first
 app.get('/post', async (req, res) => {
   res.json(
     await PostModel.find()
