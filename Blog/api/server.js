@@ -88,11 +88,6 @@ app.get('/post', async (req, res) => {
   );
 });
 
-
-app.get('*', (req, res) => {
-  res.redirect('https://itblog.onrender.com' + req.originalUrl)
-});
-
 app.get(`/checkout-session/:postId`, async (req, res) => {
   try {
     const { postId } = req.params;
