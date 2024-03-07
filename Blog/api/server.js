@@ -31,7 +31,6 @@ const corsOptions = {
     // 'http://localhost:3000',
     // 'http://localhost:4000',
     'https://itblog.onrender.com',
-    'https://itblog.onrender.com/post'
 
   ],
   methods: 'GET,POST,HEAD,PUT,PATCH,DELETE,OPTIONS',
@@ -76,6 +75,15 @@ mongoose
 const PORT = 4000;
 const server = app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
+});
+
+app.get('/post', async (req, res) => {
+  res.json(
+    await PostModel.find()
+      .populate('author', ['username'])
+      .sort({ createdAt: -1 })
+      .limit(20)
+  );
 });
 
 
@@ -307,15 +315,6 @@ app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
       res.status(200).json(updatedPost);
     });
 
-});
-
-app.get('/post', async (req, res) => {
-  res.json(
-    await PostModel.find()
-      .populate('author', ['username'])
-      .sort({ createdAt: -1 })
-      .limit(20)
-  );
 });
 
 app.get('/post/:id', async (req, res) => {
