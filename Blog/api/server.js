@@ -28,8 +28,8 @@ admin.initializeApp({
 const corsOptions = {
   origin: [
     'https://summer-lab-1399.on.fleek.co',
-    // 'http://localhost:3000',
-    // 'http://localhost:4000',
+    'http://localhost:3000',
+    'http://localhost:4000',
     'https://itblog.onrender.com',
     'https://itblog.onrender.com/login'
 
