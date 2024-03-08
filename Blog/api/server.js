@@ -59,8 +59,6 @@ const uploadMiddleware = multer({
 });
 const app = express();
 
-
-
 //pug
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
@@ -87,14 +85,14 @@ const server = app.listen(PORT, () => {
 });
 
 app.get('/login', (req, res) => {
-  res.render('login') // returns pug file
+  // res.render('login') // returns pug file
+  res.json('ok')
 })
 
 app.get('/register', (req, res) => {
   res.render('register', { registerUser: { email: '', username: '', password: '' } });
 })
 
-// the route has to come first
 app.get('/post', async (req, res) => {
   res.json(
     await PostModel.find()
