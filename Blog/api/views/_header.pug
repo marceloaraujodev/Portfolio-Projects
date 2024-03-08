@@ -1,0 +1,12 @@
+header 
+  a.logo(href='/') IT FASHION BLOG 
+  nav
+    if username
+      a(href='/create') +Create New Post
+      a(onClick='logout') Logout 
+    
+    else 
+      a(href='/login') Login 
+      a(href="/register") Register 
+
+hr.divider

@@ -19,6 +19,10 @@ const { v4: uuidv4 } = require('uuid');
 const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // pro
 // const serviceAccount = require('./keyfirebase.json'); // dev
 
+//pug
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
