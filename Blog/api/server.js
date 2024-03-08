@@ -16,8 +16,8 @@ const admin = require('firebase-admin');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 const { v4: uuidv4 } = require('uuid');
-const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // pro
-// const serviceAccount = require('./keyfirebase.json'); // dev
+// const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // pro
+const serviceAccount = require('./keyfirebase.json'); // dev
 
 
 admin.initializeApp({
@@ -63,12 +63,16 @@ const app = express();
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
+
+
 app.use(morgan('dev')); // logger
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser()); // cookie parser
 app.use('/uploads', express.static(__dirname + '/uploads')); // serving all files from one
 app.use(express.static(path.join(__dirname, 'public')));
+
+
 //// WILL HAVE TO TURN ON DURING LOCAL TESTING
 // const db = process.env.DATABASE.replace(
 //   '<PASSWORD>',
@@ -85,8 +89,7 @@ const server = app.listen(PORT, () => {
 });
 
 app.get('/login', (req, res) => {
-  // res.render('login') // returns pug file
-  res.json('ok')
+  res.status(200).render('login') // returns pug file
 })
 
 app.get('/register', (req, res) => {
