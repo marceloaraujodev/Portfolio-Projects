@@ -88,7 +88,7 @@ const server = app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
 
-app.get('/login1', (req, res) => {
+app.get('/login', (req, res) => {
   res.status(200).render('login') // returns pug file
 })
 
