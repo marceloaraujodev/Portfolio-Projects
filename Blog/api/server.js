@@ -16,8 +16,8 @@ const admin = require('firebase-admin');
 dotenv.config({ path: './config.env' });
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 const { v4: uuidv4 } = require('uuid');
-// const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // pro
-const serviceAccount = require('./keyfirebase.json'); // dev
+const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // pro
+// const serviceAccount = require('./keyfirebase.json'); // dev
 
 
 admin.initializeApp({
