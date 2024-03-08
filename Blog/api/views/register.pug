@@ -1,0 +1,9 @@
+extends base 
+
+block content 
+  form(register, onSubmit="handleSubmit(event)", className="register")
+    h1 Register
+    input(type="text", placeholder="Email", name="email", value=registerUser.email, onChange="handleChange(event)")
+    input(type="text", placeholder="Username", name="username", value=registerUser.username, onChange="handleChange(event)")
+    input(type="text", placeholder="Password", name="password", value=registerUser.password, onChange="handleChange(event)")
+    button(type="submit") Register

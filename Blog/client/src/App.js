@@ -18,7 +18,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<IndexPage />} />
-        <Route path={'/login'} exact element={<LoginPage />} />
+        <Route path={'/login'} element={<LoginPage />} />
         <Route path={'/register'} element={<RegisterPage />} />
         <Route path={'/create'} element={<CreatePostPage />} />
         <Route path={'/post/:id'} element={<PostPage />} />
