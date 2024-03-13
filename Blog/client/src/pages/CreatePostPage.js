@@ -97,23 +97,3 @@ export default function CreatePost() {
   );
 }
 
-// get url for the other pages
-
-// Receive URL in Frontend:
-
-// In your frontend code (assuming you're using AJAX or Fetch API), handle the response from the backend API call to the bucketUpload function. This response will contain the publicUrl that you can then use to access the uploaded file:
-
-// JavaScript
-// // Assuming you're using Fetch API
-// fetch('/post', {
-//   // ... request options ...
-// })
-// .then(response => response.json())
-// .then(data => {
-//   if (data.status === 'success') {
-//     const imageUrl = data.imageUrl; // Access the URL from the response
-//     // Use the imageUrl to display the image or perform other actions
-//   } else {
-//     // Handle errors from the backend
-//   }
-// });
