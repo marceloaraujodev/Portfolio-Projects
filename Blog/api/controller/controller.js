@@ -100,8 +100,6 @@ exports.register = async (req, res) => {
 }
 
 exports.login = async (req, res) => {
-  const picFiles = await bucket.getFiles();
-  console.log(picFiles)
 
   const { username, password } = req.body;
   try {
@@ -114,6 +112,7 @@ exports.login = async (req, res) => {
         jwt.sign(
           { username, id: user.id },
           process.env.SECRET,
+          {expiresIn: '1d'},
           (err, token) => {
             if (err) throw err;
             res
