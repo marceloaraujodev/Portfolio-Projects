@@ -10,6 +10,7 @@ export default function Header() {
   const {userInfo, setUserInfo} = useContext(UserContext);
   const navigate = useNavigate();
 
+
   useEffect(() => {
     const fetchData = async () => {
     if(!userInfo){
@@ -41,6 +42,24 @@ export default function Header() {
     navigate('/');
   }
   const username = userInfo?.username;
+  console.log(username)
+
+// Checks if cookie exist to keep user logged in in manual refresh 
+  useEffect(() => {
+    const checkCookies = async () => {
+      const response = await fetch(
+        // 'http://localhost:4000/profile', 
+        'https://blog-rzyw.onrender.com/profile',
+      {
+        credentials: 'include'
+      })
+      if(response.ok){
+        const userData = await response.json();
+        setUserInfo(userData)
+      }
+    };
+    checkCookies();
+  }, [setUserInfo])
 
   return (
     <>

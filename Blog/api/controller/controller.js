@@ -6,14 +6,16 @@ const admin = require('firebase-admin');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const path = require('path');
-const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // pro          
-// const serviceAccount = require('../keyfirebase.json'); // dev 
+const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // pro
+// const serviceAccount = require('../keyfirebase.json'); // dev
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   storageBucket: 'gs://blogport-740b8.appspot.com',
 });
+
+
 
 // // multer, config limits for the post size!
 const storage = multer.memoryStorage();
@@ -73,12 +75,16 @@ async function bucketUpload(req) {
 
 
 exports.getPosts = async (req, res) => {
-  res.json(
-    await PostModel.find()
-      .populate('author', ['username'])
-      .sort({ createdAt: -1 })
-      .limit(20)
-  );
+  try {
+      const posts = await PostModel.find()
+        .populate('author', ['username'])
+        .sort({ createdAt: -1 })
+        .limit(20)
+    res.json(posts)
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+  
 };
 
 exports.register = async (req, res) => {
@@ -107,28 +113,29 @@ exports.login = async (req, res) => {
     if (!user) {
       return res.status(400).json('User not found');
     }
+
+    // creates a token based on username secret and sets expiration
+    const token =  jwt.sign(
+      { username, id: user.id }, process.env.SECRET, { expiresIn: '1d'}
+    );
+
+    // compares users password with db password of the user and if so sets cookie token
     bcrypt.compare(password, user.password, function (err, result) {
       if (result) {
-        jwt.sign(
-          { username, id: user.id },
-          process.env.SECRET,
-          {expiresIn: '1d'},
-          (err, token) => {
-            if (err) throw err;
-            res
-              .cookie('token', token, {
-                sameSite: 'None',
-                secure: true,
-                httpOnly: true
-              })
-              .json({
-                status: 'success',
-                id: user.id,
-                username,
-              });
-          }
-        );
+       
         console.log('Logged IN');
+        res.status(200).cookie(
+          'token', 
+          token, {
+            sameSite: 'None',
+            secure: true,
+            httpOnly: true
+            }
+        ).json({
+          message: 'Login successfully',
+          id: user.id,
+          username,
+        })
       } else {
         res.status(400).json('access denied');
       }
@@ -371,3 +378,42 @@ exports.deletePost = async (req, res) => {
     console.log(error);
   }
 };
+
+
+
+// // login backup 
+
+// const { username, password } = req.body;
+// try {
+//   const user = await UserModel.findOne({ username });
+//   if (!user) {
+//     return res.status(400).json('User not found');
+//   }
+//   bcrypt.compare(password, user.password, function (err, result) {
+//     if (result) {
+//       jwt.sign(
+//         { username, id: user.id },
+//         process.env.SECRET,
+//         (err, token) => {
+//           if (err) throw err;
+//           res
+//             .cookie('token', token, {
+//               sameSite: 'None',
+//               secure: true,
+//             })
+//             .json({
+//               status: 'success',
+//               id: user.id,
+//               username,
+//             });
+//         }
+//       );
+//       console.log('Logged IN');
+//     } else {
+//       res.status(400).json('access denied');
+//     }
+//   });
+// } catch (error) {
+//   console.log(error);
+//   res.status(500).json('Internal server error');
+// }
