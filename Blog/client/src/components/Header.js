@@ -56,6 +56,8 @@ export default function Header() {
       if(response.ok){
         const userData = await response.json();
         setUserInfo(userData)
+      }else{
+        setUserInfo(null);
       }
     };
     checkCookies();
