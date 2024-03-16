@@ -45,23 +45,24 @@ export default function Header() {
   console.log(username)
 
 // Checks if cookie exist to keep user logged in in manual refresh 
-  useEffect(() => {
-    const checkCookies = async () => {
-      const response = await fetch(
-        // 'http://localhost:4000/profile', 
-        'https://blog-rzyw.onrender.com/profile',
-      {
-        credentials: 'include'
-      })
-      if(response.ok){
-        const userData = await response.json();
-        setUserInfo(userData)
-      }else{
-        setUserInfo(null);
-      }
-    };
-    checkCookies();
-  }, [setUserInfo])
+  // useEffect(() => {
+  //   const checkCookies = async () => {
+  //     const response = await fetch(
+  //       // 'http://localhost:4000/profile', 
+  //       'https://blog-rzyw.onrender.com/profile',
+  //     {
+  //       credentials: 'include'
+  //     })
+  //     if(response.ok){
+  //       const userData = await response.json();
+  //       setUserInfo(userData)
+
+  //     }else{
+  //       setUserInfo(null);
+  //     }
+  //   };
+  //   checkCookies();
+  // }, [setUserInfo])
 
   return (
     <>
