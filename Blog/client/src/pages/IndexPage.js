@@ -10,7 +10,9 @@ export default function IndexPage() {
       const fetchData = async () => {
         const response = await fetch(
           // 'http://localhost:4000/post' // prod
-          'https://blog-rzyw.onrender.com/post'
+          'https://blog-rzyw.onrender.com/post', {
+            credentials: 'include',
+          }
           );
         const data = await response.json();
         setPost(data);
