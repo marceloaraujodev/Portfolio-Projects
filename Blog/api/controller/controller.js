@@ -6,8 +6,8 @@ const admin = require('firebase-admin');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const path = require('path');
-const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // pro
-// const serviceAccount = require('../keyfirebase.json'); // dev
+const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // pro          
+// const serviceAccount = require('../keyfirebase.json'); // dev 
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 
 admin.initializeApp({
@@ -120,6 +120,7 @@ exports.login = async (req, res) => {
               .cookie('token', token, {
                 sameSite: 'None',
                 secure: true,
+                httpOnly: true
               })
               .json({
                 status: 'success',
