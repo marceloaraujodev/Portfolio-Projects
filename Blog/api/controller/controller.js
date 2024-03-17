@@ -6,8 +6,8 @@ const admin = require('firebase-admin');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const path = require('path');
-const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // pro
-// const serviceAccount = require('../keyfirebase.json'); // dev
+// const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // pro
+const serviceAccount = require('../keyfirebase.json'); // dev
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 
 admin.initializeApp({
@@ -187,13 +187,15 @@ exports.checkout = async (req, res) => {
 // displays if user is logged in shows +CreatePost if not shows Log in in the header
 exports.profile = (req, res) => {
   const { token } = req.cookies;
+
   if (!token) {
     res.json('Please log in');
+  }else{
+    jwt.verify(token, process.env.SECRET, (err, info) => {
+      if (err) throw err;
+      res.json(info);
+    });
   }
-  jwt.verify(token, process.env.SECRET, (err, info) => {
-    if (err) throw err;
-    res.json(info);
-  });
 }
 
 exports.logout = (req, res) => {

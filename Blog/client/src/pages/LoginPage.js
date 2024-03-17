@@ -29,7 +29,8 @@ export default function LoginPage() {
         setUserInfo(userInfo);
         setRedirect(true);
       });
-    } else {
+    } 
+    else {
       setIsLoggingIn(true);
       alert('Wrong username or password');
     }

@@ -4,8 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
 
 
-// this is a test
-
 export default function Header() {
   const {userInfo, setUserInfo} = useContext(UserContext);
   const navigate = useNavigate();
@@ -13,7 +11,6 @@ export default function Header() {
 
   useEffect(() => {
     const fetchData = async () => {
-    if(!userInfo){
         const response = await fetch(
           // 'http://localhost:4000/profile' // dev
           'https://blog-rzyw.onrender.com/profile'
@@ -21,8 +18,8 @@ export default function Header() {
           credentials: 'include',
         });
         const userData = await response.json();
+        console.log('userData', userData)
         setUserInfo(userData)
-      }
     }
     fetchData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -43,26 +40,6 @@ export default function Header() {
   }
   const username = userInfo?.username;
   console.log(username)
-
-// Checks if cookie exist to keep user logged in in manual refresh 
-  // useEffect(() => {
-  //   const checkCookies = async () => {
-  //     const response = await fetch(
-  //       // 'http://localhost:4000/profile', 
-  //       'https://blog-rzyw.onrender.com/profile',
-  //     {
-  //       credentials: 'include'
-  //     })
-  //     if(response.ok){
-  //       const userData = await response.json();
-  //       setUserInfo(userData)
-  //       console.log(userInfo)
-  //     }else{
-  //       setUserInfo(null);
-  //     }
-  //   };
-  //   checkCookies();
-  // }, [setUserInfo])
 
   return (
     <>
@@ -89,3 +66,5 @@ export default function Header() {
     </>
   );
 }
+
+
