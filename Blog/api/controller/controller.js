@@ -6,16 +6,14 @@ const admin = require('firebase-admin');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const path = require('path');
-const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // pro
-// const serviceAccount = require('../keyfirebase.json'); // dev
+const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // production
+// const serviceAccount = require('../keyfirebase.json'); // development
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   storageBucket: 'gs://blogport-740b8.appspot.com',
 });
-
-
 
 // // multer, config limits for the post size!
 const storage = multer.memoryStorage();
@@ -28,9 +26,7 @@ const uploadMiddleware = multer({
   },
 });
 
-
 const bucket = admin.storage().bucket();
-
 
 // uploads image to firebase bucket
 async function bucketUpload(req) {
@@ -73,13 +69,14 @@ async function bucketUpload(req) {
   });
 }
 
-
-exports.getPosts = async (req, res) => {
+// gets index pages
+exports.getPosts = async (req, res) => { 
   try {
+    console.log('here')
       const posts = await PostModel.find()
         .populate('author', ['username'])
         .sort({ createdAt: -1 })
-        .limit(20)
+        .limit(20);
     res.json(posts)
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
@@ -203,6 +200,7 @@ exports.logout = (req, res) => {
 }
 
 exports.post = async (req, res) => {
+  
   try {
     uploadMiddleware.single('file')(req, res, async (err) => {
       if (err instanceof multer.MulterError) {
