@@ -6,8 +6,8 @@ const admin = require('firebase-admin');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const path = require('path');
-const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // production
-// const serviceAccount = require('../keyfirebase.json'); // development
+// const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // production
+const serviceAccount = require('../keyfirebase.json'); // development
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 
 admin.initializeApp({
@@ -72,11 +72,10 @@ async function bucketUpload(req) {
 // gets index pages
 exports.getPosts = async (req, res) => { 
   try {
-    console.log('here')
       const posts = await PostModel.find()
         .populate('author', ['username'])
         .sort({ createdAt: -1 })
-        .limit(20);
+        .limit(5);
     res.json(posts)
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
