@@ -6,8 +6,8 @@ const admin = require('firebase-admin');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const path = require('path');
-// const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // production
-const serviceAccount = require('../keyfirebase.json'); // development
+const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // production
+// const serviceAccount = require('../keyfirebase.json'); // development
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 
 admin.initializeApp({
