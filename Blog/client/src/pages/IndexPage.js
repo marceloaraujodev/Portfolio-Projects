@@ -9,14 +9,12 @@ export default function IndexPage() {
 
       const fetchData = async () => {
         try {
-          console.time("fetchData");
           const response = await fetch(
             // 'http://localhost:4000/post' // prod
             'https://blog-rzyw.onrender.com/post'
             );
           const data = await response.json();
           setPost(data);
-          console.timeEnd("fetchData");
         } catch (error) {
           console.log(error)
         }
