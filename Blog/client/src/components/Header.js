@@ -18,7 +18,6 @@ export default function Header() {
           credentials: 'include',
         });
         const userData = await response.json();
-        console.log('userData', userData)
         setUserInfo(userData)
     }
     fetchData();
@@ -39,7 +38,6 @@ export default function Header() {
     navigate('/');
   }
   const username = userInfo?.username;
-  console.log(username)
 
   return (
     <>

@@ -6,19 +6,21 @@ export default function IndexPage() {
   const [posts, setPost] = useState([]);
   
   useEffect(() => {
-    try {
+
       const fetchData = async () => {
-        const response = await fetch(
-          // 'http://localhost:4000/post' // prod
-          'https://blog-rzyw.onrender.com/post'
-          );
-        const data = await response.json();
-        setPost(data);
+        try {
+          const response = await fetch(
+            // 'http://localhost:4000/post' // prod
+            'https://blog-rzyw.onrender.com/post'
+            );
+          const data = await response.json();
+          setPost(data);
+        } catch (error) {
+          console.log(error)
+        }
       };
       fetchData();
-    } catch (error) {
-      console.log(error)
-    }
+
   }, []);
 
   return (
