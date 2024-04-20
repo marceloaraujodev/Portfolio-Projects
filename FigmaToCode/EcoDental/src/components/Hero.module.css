@@ -1,0 +1,52 @@
+.heroContainer{
+  position: relative;
+  top: 92px;
+}
+.heroContent{
+  position: absolute;
+  width: 689px;
+  height: 220px;
+  left: 135px;
+  top: 135px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.heroTitle{
+  font-size:52px;
+  line-height: 78px;
+  font-weight: bold;
+}
+.heroSubTitle{
+  height: 30px;
+  font-size: 20px;
+  /* margin-top: 8px; */
+  padding-top: 8px;
+}
+
+.heroBtn{
+  width: 220px;
+  height: 48px;
+  background-color: #405741;
+  color: white;
+  border-radius: 5px;
+  font-weight: 600;
+  border: none;
+  margin-top: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.iconBtn{
+  background: transparent;
+  background-color: transparent;
+  margin: 0 8px;
+}
+
+p {
+  margin: 0;
+}
+.circleBtnContainer{
+  display: flex;
+;
+}
