@@ -1,0 +1,14 @@
+.container{
+  padding-top: 84px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 84px;
+}
+.contentContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+
+}

@@ -1,6 +1,10 @@
-import Header from './components/Header.jsx'
-import './App.css'
-import Hero from './components/Hero.jsx'
+import Header from './components/Header.jsx';
+import Hero from './components/Hero.jsx';
+import BannerThin from './components/BannerThin.jsx';
+import Banner from './components/Banner.jsx';
+import TrendingProducts from './components/TrendingProducts.jsx';
+import PromotionalBanner from './components/PromotionalBanner.jsx';
+import './App.css';
 
 function App() {
 
@@ -9,6 +13,11 @@ function App() {
     <>
     <Header />
     <Hero />
+    <BannerThin />
+    <Banner />
+    <TrendingProducts />
+    <PromotionalBanner />
+
     </>
   )
 }

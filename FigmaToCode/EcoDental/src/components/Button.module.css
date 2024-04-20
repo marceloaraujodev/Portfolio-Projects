@@ -1,0 +1,10 @@
+.btnBuyNow{
+  border: none;
+  width: 156px;
+  height: 44px;
+  border-radius: 6px;
+  background-color: #405741;
+  color: white;
+  font-weight: 500;
+  font-size: 1rem;
+}

@@ -1,0 +1,86 @@
+.container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 84px;
+}
+.contentContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+}
+.banner{
+  background-image: url('/Banner-1.png');
+  display: flex;
+  width: 584.5px;
+  height: 273px;
+  padding: 8px 15px;
+  position: relative;
+}
+
+.bannerBlockLeft{
+  display: flex;
+  flex-direction: column;
+  width: 333px;
+}
+.bannerBlockLeft h1{
+  color: white;
+  margin: 16px 0;
+  font-weight: 600;
+}
+.bannerBlockLeft p{
+  color: white;
+  margin-bottom: 25px;
+}
+.btnBuyNow{
+  border: none;
+  width: 156px;
+  height: 44px;
+  border-radius: 8px;
+  background-color: #9ACB6B;
+  color: white;
+  font-weight: 500;
+  font-size: 1rem;
+}
+.bannerBlockRight{
+  position: relative;
+  /* display: flex; */
+
+}
+.bottleBanner{
+  position: absolute;
+  right: 0;
+  z-index: 200;
+}
+.bottleHightlight{
+  position: absolute;
+  right: 0;
+}
+
+
+.banner2{
+  background-image: url('/public/Banner-2.png');
+  display: flex;
+  width: 584.5px;
+  height: 273px;
+  padding: 8px 15px;
+  position: relative;
+}
+
+.bannerBlockLeft.color h1{
+  color: black;
+}
+.bannerBlockLeft.color p{
+  color: black;
+}
+.bannerBlockLeft.color button{
+  background-color: #405741;
+}
+.toothBrushBanner{
+  position: absolute;
+  right: 0;
+  z-index: 200;
+  border-radius: 16px;
+}

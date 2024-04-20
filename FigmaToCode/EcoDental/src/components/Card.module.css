@@ -1,0 +1,44 @@
+.card{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #DCDFE4;
+  border-radius: 8px; 
+}
+.cardContainerInner{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  max-width: 246px;
+  margin: 8px;
+  gap: 24px;
+}
+.cardImg{
+  object-fit: cover;
+  max-width: 246px;
+}
+.cardTitle{
+  color: #121216;
+  font-size: 14px;
+  font-weight: 600;
+}
+.cardPrice{
+  color: #121216;
+  font-weight: 600;
+  text-align: left;
+}
+.cardPriceDiscount{
+  color: #8590A2;
+  margin-left: 10px;
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+.cardBtn{
+  background-color: #405741;
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+  height: 44px;
+  border: none;
+}

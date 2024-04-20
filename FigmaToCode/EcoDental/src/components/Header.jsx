@@ -56,7 +56,3 @@ export default function Header() {
   );
 }
 
-{
-  /* <img src="/profile-icon.png" alt="profile-icon" />
-<img src="/cart-icon.png" alt="cart-icon" /> */
-}
