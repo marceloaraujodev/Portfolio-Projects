@@ -62,3 +62,20 @@ position: relative;
   margin: 0 16px;
   top: 5px;
 }
+
+@media screen and (max-width: 600px){
+  .headerContainer {
+    width: 100%;
+    padding: 0;
+  }
+  .headerContainer img{
+    height: 50px;
+    margin-left: 10px;
+  }
+  .navCenterBox{
+    display: none;
+  }
+  .navRightBox{
+    display: none;
+  }
+}

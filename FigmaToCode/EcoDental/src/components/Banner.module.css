@@ -3,6 +3,7 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 84px;
+  width: 100%;
 }
 .contentContainer{
   display: flex;
@@ -10,6 +11,7 @@
   align-items: center;
   gap: 16px;
   position: relative;
+  flex-wrap: wrap;
 }
 .banner{
   background-image: url('/Banner-1.png');
@@ -61,7 +63,7 @@
 
 
 .banner2{
-  background-image: url('/public/Banner-2.png');
+  background-image: url('/Banner-2.png');
   display: flex;
   width: 584.5px;
   height: 273px;
@@ -83,4 +85,56 @@
   right: 0;
   z-index: 200;
   border-radius: 16px;
+}
+
+@media screen and (max-width: 600px){
+  .contentContainer{
+    flex-wrap: wrap;
+  }
+  .banner{
+    width: 350px;
+    background-size: 350px;
+    background-repeat: no-repeat;
+    height: 170px;
+  }
+
+  .bannerBlockLeft{
+    width: 200px;
+  }
+  .bannerBlockLeft h1{
+    color: white;
+    margin: 10px 0;
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
+  .bannerBlockLeft p{
+    font-size: 12px;
+    margin-bottom: 18px;
+  }
+  .btnBuyNow{
+    width: 106px;
+    height: 34px;
+    font-size: .8rem;
+  }
+  .bottleBanner{
+    height: 150px;
+  }
+  .bottleHightlight{
+    position: absolute;
+    right: 0px;
+    height: 150px;
+  }
+  
+
+  .banner2{
+    width: 350px;
+    background-size: 350px;
+    background-repeat: no-repeat;
+    height: 170px;
+  }
+  
+  .toothBrushBanner{
+    height: 150px;
+  
+  }
 }

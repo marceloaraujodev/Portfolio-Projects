@@ -6,8 +6,6 @@
   margin-bottom: 84px;
 }
 .content{
-  width: 1187px;
-  height: 598px;
   margin: 20px 0;
 }
 .textContent{
@@ -27,49 +25,81 @@
   position: relative;
 }
 .next{
+  position: absolute;
   font-size: 20px;
   color: black;
+  height: 20px;
+  width: 20px;
+  right:20px;
+  top: 50%;
+  transform: translateY(-50%);
 }
-
-.card{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #DCDFE4;
-  border-radius: 8px; 
+.prev{
+  position: absolute;
+  font-size: 20px;
+  color: black;
+  height: 20px;
+  width: 20px;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
 }
-.cardContainerInner{
+.cardContainer{
   display: flex;
-  justify-content: center;
-  flex-direction: column;
-  max-width: 246px;
-
-  margin: 8px;
+  flex-wrap: nowrap;
   gap: 24px;
+  position: relative;
 }
-.cardImg{
-  object-fit: cover;
-  max-width: 246px;
+.prev{
+  position: absolute;
+  left: -40px;
+  display: none;
 }
-.cardTitle{
-  color: #121216;
-  font-size: 14px;
-  font-weight: 600;
+.next{
+  position: absolute;
+  right: -40px;
+  display: none;
 }
-.cardPrice{
-  color: #121216;
-  font-weight: 600;
-  text-align: left;
-}
-.cardPriceDiscount{
-  color: #8590A2;
-}
-.cardBtn{
-  background-color: #405741;
-  color: white;
-  font-weight: 600;
-  border-radius: 8px;
-  height: 44px;
-  border: none;
+
+@media screen and (max-width: 600px){
+  .container{
+    margin-bottom: 54px;
+    width: 100%;
+  }
+  .content{
+
+  }
+  .textContent{
+    margin-bottom: 20px;
+  }
+  .productContent{
+    position: relative; 
+  
+    /* border: 1px solid red; */
+  }
+  .hiddenContainer{
+    /* border: 1px solid red; */
+    width: 264px;
+    overflow: hidden;
+  }
+  .prev{
+    position: absolute;
+    left: -20px;
+    display: block;
+  }
+  .next{
+    position: absolute;
+    right: -20px;
+    display: block;
+  }
+
+  .cardContainer{
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 288px;
+    transform: translateX(-200%);
+  }
+
 }

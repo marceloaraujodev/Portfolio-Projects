@@ -13,7 +13,10 @@ export default function PromotionalBanner() {
               with every swish.
             </p>
 
-          <Button text="Shop now" className={c.test} />
+          <Button 
+            text="Shop now" 
+            arrowForward='/arrow_forward.png'
+          />
         </div>
       </div>
     </div>

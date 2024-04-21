@@ -1,14 +1,26 @@
 .container{
-  padding-top: 84px;
+  padding-top: 54px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 84px;
+  margin-bottom: 54px;
 }
 .contentContainer{
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 16px;
+  padding: 5px 0;
+  flex-wrap: wrap;
+}
 
+@media screen and (max-width: 600px){
+  .contentContainer{
+    gap: 5px;
+    flex-wrap: wrap;
+    margin: 0 10px;
+  }
+  .contentContainer img{
+    height: 90px;
+  }
 }

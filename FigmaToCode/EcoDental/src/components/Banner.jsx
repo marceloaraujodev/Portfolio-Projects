@@ -34,13 +34,9 @@ export default function Banner() {
 
           <div className={c.bannerBlockright}>
             <img src="/toothbrush.png" alt="bottle" className={c.toothBrushBanner} />
-            {/* <img
-              src="/Highlight.png"
-              alt="bottle"
-              className={c.bottleHightlight}
-            /> */}
           </div>
         </div>
+
       </div>
     </div>
   );

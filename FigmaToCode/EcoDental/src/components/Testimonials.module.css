@@ -1,0 +1,53 @@
+.container{
+  background-color: #E9F8EF;
+  margin-bottom: 84px;
+}
+.content{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 93px;
+}
+.textContent{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 80px;
+}
+.textContent h1{
+  color: #091E42;
+  font-size: 44px;
+  font-weight: 600;
+}
+.textContent p{
+  color: #172B4D;
+}
+.cardTestimonialsContainer{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+
+.carousel{
+  margin-top: 60px;
+  padding-bottom: 93px;
+
+}
+
+.bar{
+  padding: 4px 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: #40574148;
+  margin-right: 8px;
+}
+.bar:hover{
+  background-color: #405741;
+}
