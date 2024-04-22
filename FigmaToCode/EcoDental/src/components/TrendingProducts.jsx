@@ -6,8 +6,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import c from './TrendingProducts.module.css';
 
 export default function TrendingProducts() {
-
-
   const [products, setProducts] = useState([]);
   const [reviewsCurrentIndex, setReviewsCurrentIndex] = useState(0);
   const [smallScreen, setSmallScreen] = useState(window.innerWidth < 600);
@@ -16,7 +14,6 @@ export default function TrendingProducts() {
   const containerWidth = 288;
 
   useEffect(() => {
-
     window.addEventListener('resize', handleResize);
 
     // Cleanup function to remove event listener
@@ -33,7 +30,6 @@ export default function TrendingProducts() {
   const handleResize = () => {
     setSmallScreen(window.innerWidth < 600);
   };
-
 
   function handleLefClick() {
     if (smallScreen) {
@@ -55,55 +51,55 @@ export default function TrendingProducts() {
     }
   }
 
-
   return (
     <>
       <div className={c.container}>
         <div className={c.content}>
-
           <div className={c.textContent}>
             <h1>Trending Products</h1>
             <p>Top Picks for Sustainable Dental Care</p>
           </div>
 
           <div className={c.productContent}>
-          
-          <span className={c.prev}><i className="bi bi-chevron-left" onClick={handleLefClick}></i></span>
-          <span className={c.next}><i className="bi bi-chevron-right" onClick={handleRigtClick}></i></span>
-          <div className={c.hiddenContainer}>
-          <div className={c.cardContainer}>
-            <Card 
-              img='/bottle1.png'
-              title='Sensitivity Relief Vanilla & Peppermint Natural Mouthwash' 
-              price='$100'
-              discountPrice='$150'
-              btnText='Add to Cart'
-            />
-            <Card 
-              img='/product2.png'
-              title='Natural Teeth Whitening Toothpaste - Tea tree & Charcoal' 
-              price='$100'
-              discountPrice='$150'
-              btnText='Add to Cart'
-            />
-            <Card 
-              img='/product3.png'
-              title='Natural Teeth Whitening Toothpaste - Tea tree & Charcoal' 
-              price='$100'
-              discountPrice='$150'
-              btnText='Add to Cart'
-            />
-            <Card 
-              img='/product4.png'
-              title='Sensitivity Relief Vanilla & Peppermint Natural Mouthwash' 
-              price='$100'
-              discountPrice='$150'
-              btnText='Add to Cart'
-            />
-            </div>
+            <span className={c.prev}>
+              <i className="bi bi-chevron-left" onClick={handleLefClick}></i>
+            </span>
+            <span className={c.next}>
+              <i className="bi bi-chevron-right" onClick={handleRigtClick}></i>
+            </span>
+            <div className={c.hiddenContainer}>
+              <div className={c.cardContainer}>
+                <Card
+                  img="/bottle1.png"
+                  title="Sensitivity Relief Vanilla & Peppermint Natural Mouthwash"
+                  price="$100"
+                  discountPrice="$150"
+                  btnText="Add to Cart"
+                />
+                <Card
+                  img="/product2.png"
+                  title="Natural Teeth Whitening Toothpaste - Tea tree & Charcoal"
+                  price="$100"
+                  discountPrice="$150"
+                  btnText="Add to Cart"
+                />
+                <Card
+                  img="/product3.png"
+                  title="Natural Teeth Whitening Toothpaste - Tea tree & Charcoal"
+                  price="$100"
+                  discountPrice="$150"
+                  btnText="Add to Cart"
+                />
+                <Card
+                  img="/product4.png"
+                  title="Sensitivity Relief Vanilla & Peppermint Natural Mouthwash"
+                  price="$100"
+                  discountPrice="$150"
+                  btnText="Add to Cart"
+                />
+              </div>
             </div>
           </div>
-
         </div>
       </div>
     </>

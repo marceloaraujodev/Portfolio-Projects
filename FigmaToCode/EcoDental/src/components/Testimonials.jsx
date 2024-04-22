@@ -10,34 +10,34 @@ export default function Testimonials() {
           <p>Hear what our customers say</p>
         </div>
 
-        <div className={c.cardTestimonialsContainer}>
-          <CardTestimonials 
-            text='Quite different!! You can feel the difference between
+        <div className={c.hidden}>
+          <div className={c.cardTestimonialsContainer}>
+            <CardTestimonials
+              text="Quite different!! You can feel the difference between
                 chemical-based and natural toothpaste. I felt better after using
-                Tea tree & Charcoal tooth paste.'
-            img='/customer1.png'
-            customerImg='/customer1.png'
-            name='Courtney Henry'
-          />
-          <CardTestimonials 
-            text='Quite different!! You can feel the difference between
+                Tea tree & Charcoal tooth paste."
+              img="/customer1.png"
+              customerImg="/customer1.png"
+              name="Courtney Henry"
+            />
+            <CardTestimonials
+              text="Quite different!! You can feel the difference between
                 chemical-based and natural toothpaste. I felt better after using
-                Tea tree & Charcoal tooth paste.'
-            img='/customer1.png'
-            customerImg='/customer2.png'
-            name='Ronald Richards'
-          />
-          <CardTestimonials 
-            text='Quite different!! You can feel the difference between
+                Tea tree & Charcoal tooth paste."
+              img="/customer1.png"
+              customerImg="/customer2.png"
+              name="Ronald Richards"
+            />
+            <CardTestimonials
+              text="Quite different!! You can feel the difference between
                 chemical-based and natural toothpaste. I felt better after using
-                Tea tree & Charcoal tooth paste.'
-            img='/customer1.png'
-            customerImg='/customer3.png'
-            name='Jenny Wilson'
-          />
-
+                Tea tree & Charcoal tooth paste."
+              img="/customer1.png"
+              customerImg="/customer3.png"
+              name="Jenny Wilson"
+            />
+          </div>
         </div>
-
         <div className={c.carousel}>
           <button className={c.bar}></button>
           <button className={c.bar}></button>

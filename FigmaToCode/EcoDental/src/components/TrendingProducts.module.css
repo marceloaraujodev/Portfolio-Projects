@@ -3,7 +3,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 84px;
+  margin-bottom: 44px;
 }
 .content{
   margin: 20px 0;
@@ -18,6 +18,7 @@
 .textContent h1{
   font-weight: 600;
 }
+
 .productContent{
   display: flex;
   justify-content: center;
@@ -63,19 +64,20 @@
 
 @media screen and (max-width: 600px){
   .container{
-    margin-bottom: 54px;
+    margin-bottom: 44px;
     width: 100%;
-  }
-  .content{
-
   }
   .textContent{
     margin-bottom: 20px;
   }
   .productContent{
     position: relative; 
-  
-    /* border: 1px solid red; */
+  }
+  .textContent h1{
+    font-size: 2rem;
+  }
+  .textContent p{
+    font-size: 12px;
   }
   .hiddenContainer{
     /* border: 1px solid red; */

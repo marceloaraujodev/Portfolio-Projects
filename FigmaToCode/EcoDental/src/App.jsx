@@ -20,9 +20,9 @@ function App() {
     <BannerThin />
     <Banner />
     <TrendingProducts />
-    {/* <PromotionalBanner />
+    <PromotionalBanner />
     <Testimonials />
-    <Footer /> */}
+    {/* <Footer /> */}
     </>
   )
 }

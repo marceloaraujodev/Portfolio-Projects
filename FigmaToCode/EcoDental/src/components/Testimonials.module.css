@@ -30,7 +30,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   gap: 16px;
 }
 
@@ -50,4 +50,42 @@
 }
 .bar:hover{
   background-color: #405741;
+}
+
+@media screen and (max-width: 600px){
+  .container{
+    margin-bottom: 44;
+  }
+  .content{
+    padding-top: 40px;
+
+  }
+  .textContent{
+    margin-bottom: 40px;
+  }
+  .textContent h1{
+    font-size: 2rem;
+    font-weight: 600;
+  }
+  .textContent p{
+    font-size: 13px;
+  }
+  .hidden{
+    /* padding-left: 16px; */
+    width: 100%;
+    overflow: hidden;
+    height: 350px;
+    margin: 0 auto;
+  }
+  .cardTestimonialsContainer{
+    /* transform: translateX(-100%); */
+    /* background-color: blue; */
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0 auto;
+    /* border: 1px solid red; */
+    overflow: hidden;
+    width: 334px;
+  }
 }
