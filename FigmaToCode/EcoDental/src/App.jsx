@@ -22,7 +22,7 @@ function App() {
     <TrendingProducts />
     <PromotionalBanner />
     <Testimonials />
-    {/* <Footer /> */}
+    <Footer />
     </>
   )
 }

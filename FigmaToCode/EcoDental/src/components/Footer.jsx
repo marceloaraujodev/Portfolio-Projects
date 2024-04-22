@@ -5,6 +5,7 @@ export default function Footer() {
   return (
     <footer className={c.container}>
       <div className={c.containerInner}>
+      
         <div className={c.blockLeft}>
           <img src="/footerlogo.png" alt="logo" />
           <p>

@@ -100,6 +100,7 @@ export default function TrendingProducts() {
               </div>
             </div>
           </div>
+          
         </div>
       </div>
     </>
