@@ -1,0 +1,131 @@
+.container {
+  display: flex;
+  position: relative;
+}
+
+.highContainer {
+  margin-top: 140px;
+  display: flex;
+  align-items: center;
+  background-color: #1a1a1a;
+  width: 329px;
+  height: 36px;
+  font-size: 12px;
+  border-radius: 200px;
+  letter-spacing: 0.5px;
+  margin-bottom: 17px;
+}
+.new {
+  background-color: #25ab75;
+  height: 26px;
+  width: 46px;
+  border-radius: 200px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 15px;
+  margin-left: 5px;
+}
+
+.bigFont {
+  /* padding-left: 41px; */
+  padding-top: 14px;
+  padding-right: 16px;
+  padding-bottom: 30px;
+  font-size: 200px;
+  font-weight: 600;
+  line-height: 170px;
+  letter-spacing: -2px;
+  text-align: left;
+  width: 871px;
+  height: 384px;
+  margin-bottom: 42px;
+
+}
+.subtitle {
+  text-align: left;
+  max-width: 600px;
+  height: 58px;
+  color: #ffffff;
+  opacity: 50%;
+  margin-bottom: 50px;
+}
+.btnContainer {
+  text-align: left;
+}
+.btnContainer button {
+  margin-right: 30px;
+}
+
+.blockRight {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  margin-top: 265px;
+  /* margin-right: 79px; */
+  width: 100%;
+  position: relative;
+
+}
+
+.timeCaloriesContainer {
+  /* height: 223px;
+  width: 166px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 22px;
+}
+.box {
+  width: 166px;
+  height: 105px;
+  background-color: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+
+}
+.valuesContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+.timeValue {
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 40px;
+  letter-spacing: 1px;
+  color: #ffe642;
+}
+.calValue{
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 40px;
+  letter-spacing: 1px;
+  color: #FB1351;
+  text-align: left;
+}
+.timeText {
+  font-size: 13px;
+  letter-spacing: 1px;
+  line-height: 13px;
+  text-align: left;
+}
+.calText{
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 1px;
+  text-align: left;
+}
+.imgContainer{
+  position: absolute;
+  top: -130px;
+  right: -100px;
+
+}

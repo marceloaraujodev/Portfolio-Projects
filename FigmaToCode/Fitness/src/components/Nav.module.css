@@ -1,0 +1,15 @@
+.container{
+  margin-top: 39px;
+  padding-top: 21px;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+}
+.navUl{
+  list-style-type: none;
+  display: flex;
+  gap: 50px;
+}
+.navUl li{
+  font-size: 12px;
+}
