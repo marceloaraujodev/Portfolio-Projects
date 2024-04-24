@@ -3,6 +3,7 @@ import Nav from './components/Nav';
 import Hero from './components/Hero';
 import PopularExercises from './components/PopularExercises';
 import Banner from './components/Banner';
+import BottomContent from './components/BottomContent';
 import './App.css';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
       <Hero />
       <PopularExercises />
       <Banner />
+      <BottomContent />
     </>
   );
 }

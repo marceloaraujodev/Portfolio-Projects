@@ -1,10 +1,12 @@
 .container{
-  margin-bottom: 105px;
+  margin-bottom: 157px;
   position: relative;
 }
 
 .blockLeft{
   position: relative;
+  display: flex;
+  justify-content: space-between;
 }
 .textTitle{
   width: 523px;
@@ -26,7 +28,6 @@
   z-index: -1;
 }
 .bottomSquareContainer{
-  margin-top: 153px ;
   display: flex;
   height: 899px;
 }
@@ -63,16 +64,33 @@
   margin-top: 5px;
 }
 
-
 .bigSquare{
-  width: 1100px;
+  width: 950px;
   height: 733px;
   /* opacity: 10%; */
   color: #727272;
   background-color: #1a1a1a;
-  top: 90px;
+  top: -60px;
   right: -70px;
   z-index: -2;
   position: absolute
 
+}
+.rightText{
+  width: 558px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+.rightText p{
+  margin-bottom: 50px;
+  font-size: 25px;
+  opacity: 70%;
+  letter-spacing: 0.5px;
+  line-height: 50px;
+  z-index: 10;
+}
+.btn{
+  z-index: 400;
 }

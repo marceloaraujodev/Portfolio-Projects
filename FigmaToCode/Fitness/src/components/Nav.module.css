@@ -12,4 +12,5 @@
 }
 .navUl li{
   font-size: 12px;
+  cursor: pointer;
 }

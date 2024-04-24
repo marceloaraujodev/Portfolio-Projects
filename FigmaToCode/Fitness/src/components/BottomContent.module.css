@@ -1,0 +1,38 @@
+.container{
+  margin-bottom: 143px;
+}
+.contentBlock{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+}
+.number{
+  font-size: 25px;
+  line-height: 35px;
+  font-weight: 500;
+  opacity: 34%;
+}
+.middle{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.title{
+  font-size: 50px;
+  line-height: 70px;
+  letter-spacing: 0.83px;
+  margin-bottom: 10px;
+  margin-top: 50.5px;
+}
+.videoNumbers{
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  line-height: 23px;
+  opacity: 50%;
+  margin-bottom: 49.5px;
+}
+.arrow{
+  color: white;
+  font-size: 20px;
+}
