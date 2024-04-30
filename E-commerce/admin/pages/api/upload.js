@@ -45,7 +45,7 @@ export default async function handle(req, res){
 
     
     return res.json({links})
-};
+}
 
 export const config = {
     api: {
