@@ -15,7 +15,7 @@ export default async function handle(req, res){
                 resolve({fields, files});
             });
         });
-        console.log('length:', files)
+        // console.log('length:', files)
         
         const client = new S3Client({
             region: 'us-east-2',
@@ -30,10 +30,10 @@ export default async function handle(req, res){
         // need mime types so we can read the type of file that will be added
         for (const file of files.file){
             const ext = file.originalFilename.split('.').pop();
-            console.log({ext, file})
+            // console.log({ext, file})
             const newFilename = Date.now() + '.' + ext;
             console.log(newFilename)
-            client.send(new PutObjectCommand({
+           await client.send(new PutObjectCommand({
                 Bucket: bucketName,
                 Key: newFilename,
                 Body: fs.readFileSync(file.path),
