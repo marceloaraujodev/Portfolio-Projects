@@ -1,8 +1,8 @@
 import Layout from '@/components/Layout';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { image } from 'qr-image';
+// import { image } from 'qr-image';
 
 export default function ProductForm({
   _id,
@@ -16,7 +16,13 @@ export default function ProductForm({
   const [price, setPrice] = useState(currentPrice || '');
   const [goToProducts, setGoToProducts] = useState(false);
   const [images, setImages] = useState(existingImages || []);
-  const router = useRouter();
+  const [productImg, setProductImg] = useState();
+  const router = useRouter(); 
+
+  useEffect(() => {
+    setProductImg(images)
+    console.log('PRODUCTIMG:', productImg)
+  }, [images]); // Specify images as a dependency
 
   const productData = { title, description, price, images };
 
@@ -42,24 +48,18 @@ export default function ProductForm({
     const files = e.target?.files;
 
     if(files.length > 0){
-      console.log('if enter')
+      // console.log('if enter')
       const data = new FormData();
         for (const file of files){
           data.append('file', file)
         }
         const res = await axios.post('/api/upload', data);
+        setImages(oldImages => [...oldImages, ...res.data.links]);
 
-        setImages(oldImages => {
-          return [...oldImages, ...res.data.links]
-        })
-        console.log(res.data);
     }
   }
 
-  !!images?.length && images.map(link => {
-    console.log('this is LINK:', link) 
-    console.log('THIS IS IMG TAG:')
-  })
+
 
   return (
     <form onSubmit={saveProduct}>
@@ -72,11 +72,12 @@ export default function ProductForm({
         onChange={(e) => setTitle(e.target.value)}
       />
       <label>Photos</label>
+
       <div className="mb-2 flex flex-wrap gap-2">
-      {!!images?.length && images.map((link) => (
-        
-        <div key={link} className='h-24'>
-          <img src={link} alt='product image' className='rounded-lg' />
+      {!!images?.length && images.map(link => (
+        <div key={link} className='h-24 w-24'>
+        {console.log('Rendering image:', link, !!images?.length)}
+         <img src={link} alt='product img'/>
         </div>
       ))}
 

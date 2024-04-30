@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^2.3.2",
+    "@aws-sdk/client-s3": "^3.565.0",
     "axios": "^1.6.7",
     "dotenv": "^16.4.1",
     "eslint": "8.56.0",
@@ -19,6 +20,7 @@
     "multiparty": "^4.2.3",
     "next": "14.1.0",
     "next-auth": "^4.24.5",
+    "qr-image": "^3.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
