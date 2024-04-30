@@ -9,16 +9,16 @@ export default function ProductForm({
   title: currentTitle,
   description: currentDescription,
   price: currentPrice,
-  images,
+  images: existingImages,
 }) {
   const [title, setTitle] = useState(currentTitle || '');
   const [description, setDescription] = useState(currentDescription || '');
   const [price, setPrice] = useState(currentPrice || '');
   const [goToProducts, setGoToProducts] = useState(false);
-  // const [images, setImages] = useState();
+  const [images, setImages] = useState(existingImages || []);
   const router = useRouter();
 
-  const productData = { title, description, price };
+  const productData = { title, description, price, images };
 
   async function saveProduct(e) {
     e.preventDefault();
@@ -39,24 +39,27 @@ export default function ProductForm({
 
   async function uploadImages(e){
     e.preventDefault();
-    console.log('up')
     const files = e.target?.files;
-    console.log(files)
-    console.log(files.length)
+
     if(files.length > 0){
       console.log('if enter')
       const data = new FormData();
-      console.log(data)
         for (const file of files){
           data.append('file', file)
         }
-        const res = await fetch('/api/upload', {
-          method: 'POST',
-          body: data,
+        const res = await axios.post('/api/upload', data);
+
+        setImages(oldImages => {
+          return [...oldImages, ...res.data.links]
         })
-        console.log(res);
+        console.log(res.data);
     }
   }
+
+  !!images?.length && images.map(link => {
+    console.log('this is LINK:', link) 
+    console.log('THIS IS IMG TAG:')
+  })
 
   return (
     <form onSubmit={saveProduct}>
@@ -69,8 +72,15 @@ export default function ProductForm({
         onChange={(e) => setTitle(e.target.value)}
       />
       <label>Photos</label>
-      <div className="mb-2">
-        <label className="w-24 h-24 border text-center flex items-center justify-center flex-col text-sm gap-1 text-gray-500 bg-gray-200 cursor-pointer">
+      <div className="mb-2 flex flex-wrap gap-2">
+      {!!images?.length && images.map((link) => (
+        
+        <div key={link} className='h-24'>
+          <img src={link} alt='product image' className='rounded-lg' />
+        </div>
+      ))}
+
+        <label className=" w-24 h-24 border text-center flex items-center justify-center flex-col text-sm gap-1 text-gray-500 bg-gray-200 cursor-pointer rounded-lg">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -94,7 +104,7 @@ export default function ProductForm({
       <textarea
         placeholder="description"
         value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        onChange={(e) => setDescription(e.target.value)} 
       ></textarea>
       <label>Price</label>
       <input
