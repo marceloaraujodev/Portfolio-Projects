@@ -19,16 +19,18 @@ export default function ProductForm({
   const [goToProducts, setGoToProducts] = useState(false);
   const [images, setImages] = useState(existingImages || []);
   const [isUploading, setIsUploading] = useState(false);
+  // const [items, setItems] = useState(images)
   
   const router = useRouter(); 
 
-  useEffect(() => {
-    images.map(src => {
-      const link = src
-      console.log(src)
-      return src
-    })
-  }, [images]); // Specify images as a dependency
+  //// not sure if this is being used 
+    // useEffect(() => {
+    //   images.map(src => {
+    //     const link = src
+    //     console.log(src)
+    //     return src
+    //   })
+  // }, [images]); // Specify images as a dependency
 
   const productData = { title, description, price, images };
 
@@ -78,17 +80,20 @@ export default function ProductForm({
       <label>Photos</label>
 
       <div className="mb-2 flex flex-wrap gap-2">
-      
-      {images.length > 0 && images.map(link => (
-        <div key={link} className='h-24 w-24 flex items-center justify-center '>
-         <img src={link} alt='product img' className='rounded-lg' />
-        </div>
-      ))}
-      {isUploading && (
-        <div className='h-24 text-center flex items-center justify-center '>
-          <Spinner />
-        </div>
-      )}
+      <Reorder.Group axis="x" values={images} onReorder={setImages} className='flex'>
+        {images.length > 0 && images.map(link => (
+          <Reorder.Item key={link} value={link} as='div'>
+            <div key={link} className='h-24 w-24 flex items-center justify-center' onMouseDown={e => e.preventDefault()}>
+              <img src={link} alt='product img' className='rounded-lg' />
+            </div>
+          </Reorder.Item>
+        ))}
+        {isUploading && (
+          <div className='h-24 text-center flex items-center justify-center '>
+            <Spinner />
+          </div>
+        )}
+      </Reorder.Group>
 
         <label className=" w-24 h-24 border text-center flex items-center justify-center flex-col text-sm gap-1 text-gray-500 bg-gray-200 cursor-pointer rounded-lg">
           <svg
