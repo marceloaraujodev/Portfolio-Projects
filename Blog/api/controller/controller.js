@@ -12,8 +12,8 @@ const {
   PutObjectCommand,
 } = require('@aws-sdk/client-s3');
 const fs = require('fs');
-// const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // production
-const serviceAccount = require('../keyfirebase.json'); // development
+const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // production
+// const serviceAccount = require('../keyfirebase.json'); // development
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 
 admin.initializeApp({
