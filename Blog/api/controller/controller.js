@@ -88,7 +88,7 @@ exports.getPosts = async (req, res) => {
 
     const posts = await PostModel.find()
       .populate('author', ['username'])
-      // .sort({ createdAt: -1 })
+      .sort({ createdAt: -1 })
       // .limit(5);
     res.json(posts);
   } catch (error) {
@@ -209,6 +209,7 @@ exports.logout = (req, res) => {
   res.cookie('token', '').json('logged out');
 };
 
+// Creates Post
 exports.post = async (req, res) => {
   try {
     uploadMiddleware.single('file')(req, res, async (err) => {

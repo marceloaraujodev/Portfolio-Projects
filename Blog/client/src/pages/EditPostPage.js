@@ -9,20 +9,18 @@ export default function EditPostPage() {
   const [content, setContent] = useState('');
   const [files, setFiles] = useState('');
   const [price, setPrice] = useState('');
-  const [cover, setCover] = useState('');
   const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        // `http://localhost:4000/post/${id}` // development
-        'https://blog-rzyw.onrender.com/post/' + id // production
+        `http://localhost:4000/post/${id}` // development
+        // 'https://blog-rzyw.onrender.com/post/' + id // production
       );
       const postData = await response.json();
       setTitle(postData.title);
       setContent(postData.content);
       setSummary(postData.summary);
-      setCover(postData.cover);
       if(postData.price) {
         setPrice(postData.price);
       }
@@ -44,8 +42,8 @@ export default function EditPostPage() {
     }
 
     const response = await fetch(
-      // `http://localhost:4000/post/` // dev
-      'https://blog-rzyw.onrender.com/post'
+      `http://localhost:4000/post/` // dev
+      // 'https://blog-rzyw.onrender.com/post'
     , {
       method: 'PUT',
       body: postEditedData,
