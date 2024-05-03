@@ -85,10 +85,11 @@ async function bucketUpload(req) {
 // gets index pages
 exports.getPosts = async (req, res) => {
   try {
+
     const posts = await PostModel.find()
       .populate('author', ['username'])
-      .sort({ createdAt: -1 })
-      .limit(5);
+      // .sort({ createdAt: -1 })
+      // .limit(5);
     res.json(posts);
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
@@ -392,112 +393,3 @@ exports.deletePost = async (req, res) => {
     console.log(error);
   }
 };
-
-// // s3 bucket
-// const bucketName = 'myecommercebucket-555';
-// const awsClient = new S3Client({
-//   region: 'us-east-2',
-//   credentials: {
-//       accessKeyId: process.env.AWS_ACCESS_KEY,
-//       secretAccessKey: process.env.AWS_SECRET_KEY,
-//   },
-// });
-
-// awsClient.send(new PutObjectCommand({
-//   Bucket: bucketName,
-//   Key: newName,
-//   Body: fs.readFileSync(req.file.path),
-//   ACL: 'public-read',
-//   ContentType: req.file.mimetype
-// })).then(data => {
-//   console.log('thie is data from amazon:', data)
-// }).catch(error => {
-//   console.log(error)
-// })
-
-// console.log('this is AWS Client:', awsClient)
-
-
-
-
-
-
-
-
-
-
-
-// remover abaixo
-
-
-
-
-  // const metadata = {
-  //   contentType: req.file.mimetype,
-  //   cacheControl: 'public, max-age=31536000',
-  // };
-
-  // const blob = bucket.file(newName);
-  // const blobStream = blob.createWriteStream({
-  //   metadata: metadata,
-  //   gzip: true,
-  // });
-
-  // return new Promise((resolve, reject) => {
-  //   blobStream.on('error', (err) => {
-  //     // return res.status(500).json({error: "Unable to upload image."});
-  //     reject('Unable to upload image.');
-  //   });
-
-  //   blobStream.on('finish', () => {
-  //     const imagePath = blob.name;
-  //     const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${process.env.FIREBASE_PROJECTID}.appspot.com/o/${imagePath}?alt=media`;
-  //     // console.log('imgurl', imageUrl)
-  //     resolve(imageUrl);
-  //     // return res.status(201).json({ imageUrl});
-  //   });
-
-  //   blobStream.end(req.file.buffer);
-  // });
-
-
-
-
-
-
-// // login backup
-
-// const { username, password } = req.body;
-// try {
-//   const user = await UserModel.findOne({ username });
-//   if (!user) {
-//     return res.status(400).json('User not found');
-//   }
-//   bcrypt.compare(password, user.password, function (err, result) {
-//     if (result) {
-//       jwt.sign(
-//         { username, id: user.id },
-//         process.env.SECRET,
-//         (err, token) => {
-//           if (err) throw err;
-//           res
-//             .cookie('token', token, {
-//               sameSite: 'None',
-//               secure: true,
-//             })
-//             .json({
-//               status: 'success',
-//               id: user.id,
-//               username,
-//             });
-//         }
-//       );
-//       console.log('Logged IN');
-//     } else {
-//       res.status(400).json('access denied');
-//     }
-//   });
-// } catch (error) {
-//   console.log(error);
-//   res.status(500).json('Internal server error');
-// }

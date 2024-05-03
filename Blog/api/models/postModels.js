@@ -26,6 +26,9 @@ const PostSchema = new mongoose.Schema(
   }
 );
 
+// creates the index in descending order, helps optimize 
+PostSchema.index({ createdAt: -1 })
+
 const PostModel = mongoose.model('Post', PostSchema);
 
 module.exports = PostModel;
