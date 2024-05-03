@@ -1,5 +1,4 @@
 import { mongooseConnect } from "@/lib/mongoose";
-import categories from "../categories";
 import { Category } from "@/models/Categories";
 
 export default async function handle(req, res) {
@@ -11,13 +10,36 @@ export default async function handle(req, res) {
   }
 
   if(method === 'POST'){
-    const {name, parentCategory} = req.body;
-    console.log(parentCategory)
+    const {categoryName, parentCategory} = req.body;
+    console.log(req.body)
+    
+    const parentCategoryId = parentCategory || null;
 
     const categoryDoc = await Category.create({ 
-      name, 
-      parent: parentCategory
+      name: categoryName, 
+      parent: parentCategoryId
     })
     res.json(categoryDoc)
+  }
+
+  if(method === 'PUT'){
+    const {categoryName, parentCategory, _id} = req.body;
+    console.log(req.body)
+
+
+    const categoryDoc = await Category.updateOne({_id},{ 
+      name: categoryName, 
+      parent: parentCategory,
+    })
+    res.json(categoryDoc)
+  }
+
+  if(method === 'DELETE'){
+    // categories?_id=' + category._id
+    const {_id} = req.query;
+    console.log(_id)
+    await Category.deleteOne({_id})
+
+    res.status(200).json('success')
   }
 }

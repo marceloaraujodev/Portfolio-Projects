@@ -19,7 +19,18 @@ export default function ProductForm({
   const [goToProducts, setGoToProducts] = useState(false);
   const [images, setImages] = useState(existingImages || []);
   const [isUploading, setIsUploading] = useState(false);
-  // const [items, setItems] = useState(images)
+  // gets all categories 
+  const [categories, setCategories] = useState([]);
+  //sets one category
+  const [category, setCategory] = useState('')
+ 
+  useEffect(() => {
+    axios.get('/api/categories')
+    .then(res => {
+      setCategories(res.data)
+    })
+    .catch(err => console.log(err))
+  }, [])
   
   const router = useRouter(); 
 
@@ -77,6 +88,14 @@ export default function ProductForm({
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
+      <label>Category</label>
+      <select value={category} onChange={e => setCategory(e.target.value)}>
+        <option value=''>Uncategorized</option>
+        {categories.length > 0 && categories.map(category => 
+          <option value={category._id}>{category.name}</option>
+        )}
+      </select>
+
       <label>Photos</label>
 
       <div className="mb-2 flex flex-wrap gap-2">

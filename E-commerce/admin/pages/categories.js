@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Layout from '@/components/Layout';
+import { withSwal } from 'react-sweetalert2';
 
-export default function categories() {
+export default withSwal(({swal}, ref) => (
+  <Categories swal={swal} />
+))
+
+function Categories({swal}) {
   const [editededCategory, seteditedCategory] = useState(null)
   const [categoryName, setCategoryName] = useState('');
   const [categories, setCategories] = useState([]);
@@ -20,14 +25,42 @@ export default function categories() {
 
   async function saveCategory(e) {
     e.preventDefault();
-    console.log(categoryName);
-    await axios.post('/api/categories', { name: categoryName, parentCategory });
+    const data = {categoryName, parentCategory}
+    console.log(data)
+    
+    if(editededCategory){
+      data._id = editededCategory._id
+      await axios.put('/api/categories', data)
+      seteditedCategory(null)
+    }else{
+      await axios.post('/api/categories', data);
+    }
     setCategoryName('');
     fetchCategories();
   }
 
   function editCategory(category){
-    seteditedCategory(category)
+    seteditedCategory(category);
+    setCategoryName(category.name);
+    setParentCategory(category.parent?._id)
+  }
+
+  function deleteCategory(category){
+    swal.fire({
+      title: 'Are you sure?',
+      text: `Do you want to delete ${category.name} categories?`,
+      showCancelButton: true,
+      cancelButtonTittle: 'Cancel',
+      confirmButtonText: 'Yes!',
+      confirmButtonColor: '#d55',
+      
+    }).then(async result => {
+        console.log({result})
+        if(result.isConfirmed){
+          await axios.delete('/api/categories?_id=' + category._id)
+          fetchCategories();
+        }
+    })
   }
 
   return (
@@ -96,7 +129,10 @@ export default function categories() {
                     </svg>
                     Edit
                   </button>
-                  <button className="btn-primary flex items-center gap-1">
+                  <button 
+                    className="btn-primary flex items-center gap-1"
+                    onClick={() => deleteCategory(category)}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -122,3 +158,4 @@ export default function categories() {
     </Layout>
   );
 }
+
