@@ -6,8 +6,14 @@ const admin = require('firebase-admin');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const path = require('path');
-const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // production
-// const serviceAccount = require('../keyfirebase.json'); // development
+const {
+  S3Client,
+  ListBucketsCommand,
+  PutObjectCommand,
+} = require('@aws-sdk/client-s3');
+const fs = require('fs');
+// const serviceAccount = JSON.parse(process.env.KEYFIREBASE); // production
+const serviceAccount = require('../keyfirebase.json'); // development
 const stripe = require('stripe')(process.env.STIPE_SECRET_KEY);
 
 admin.initializeApp({
@@ -26,13 +32,20 @@ const uploadMiddleware = multer({
   },
 });
 
-const bucket = admin.storage().bucket();
+// s3 bucket
+const bucketName = 'myecommercebucket-555';
+
+
 
 // uploads image to firebase bucket
 async function bucketUpload(req) {
+  console.log('enter bucketUpload');
+
   const uniqueId = uuidv4();
   const ext = req.file.originalname.split('.').pop();
   const newName = uniqueId + '.' + ext;
+
+  console.log(newName); // 3273c527-1443-4680-916e-1cb85be6b3a2.jpg
 
   if (!req.file) {
     return res.status(400).json({
@@ -40,47 +53,46 @@ async function bucketUpload(req) {
       message: 'No file uploaded',
     });
   }
-  const metadata = {
-    contentType: req.file.mimetype,
-    cacheControl: 'public, max-age=31536000',
-  };
 
-  const blob = bucket.file(newName);
-  const blobStream = blob.createWriteStream({
-    metadata: metadata,
-    gzip: true,
+  const awsClient = new S3Client({
+    region: 'us-east-2',
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY,
+      secretAccessKey: process.env.AWS_SECRET_KEY,
+    },
   });
 
-  return new Promise((resolve, reject) => {
-    blobStream.on('error', (err) => {
-      // return res.status(500).json({error: "Unable to upload image."});
-      reject('Unable to upload image.');
-    });
+  // console.log('this is req.file:', req.file);
+  console.log('this is awsClient', awsClient);
 
-    blobStream.on('finish', () => {
-      const imagePath = blob.name;
-      const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${process.env.FIREBASE_PROJECTID}.appspot.com/o/${imagePath}?alt=media`;
-      // console.log('imgurl', imageUrl)
-      resolve(imageUrl);
-      // return res.status(201).json({ imageUrl});
-    });
+  await awsClient
+    .send(
+      new PutObjectCommand({
+        Bucket: bucketName,
+        Key: newName,
+        Body: req.file.buffer,
+        ACL: 'public-read',
+        ContentType: req.file.mimetype,
+      })
+    )
+    const imageUrl = `https://${bucketName}.s3.us-east-2.amazonaws.com/${newName}`
 
-    blobStream.end(req.file.buffer);
-  });
+    console.log('this is imageUrl', imageUrl)
+    return imageUrl
+
 }
 
 // gets index pages
-exports.getPosts = async (req, res) => { 
+exports.getPosts = async (req, res) => {
   try {
-      const posts = await PostModel.find()
-        .populate('author', ['username'])
-        .sort({ createdAt: -1 })
-        .limit(5);
-    res.json(posts)
+    const posts = await PostModel.find()
+      .populate('author', ['username'])
+      .sort({ createdAt: -1 })
+      .limit(5);
+    res.json(posts);
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
-  
 };
 
 exports.register = async (req, res) => {
@@ -99,10 +111,9 @@ exports.register = async (req, res) => {
       error,
     });
   }
-}
+};
 
 exports.login = async (req, res) => {
-
   const { username, password } = req.body;
   try {
     const user = await UserModel.findOne({ username });
@@ -111,27 +122,26 @@ exports.login = async (req, res) => {
     }
 
     // creates a token based on username secret and sets expiration
-    const token =  jwt.sign(
-      { username, id: user.id }, process.env.SECRET, { expiresIn: '1d'}
-    );
+    const token = jwt.sign({ username, id: user.id }, process.env.SECRET, {
+      expiresIn: '1d',
+    });
 
     // compares users password with db password of the user and if so sets cookie token
     bcrypt.compare(password, user.password, function (err, result) {
       if (result) {
-       
         console.log('Logged IN');
-        res.status(200).cookie(
-          'token', 
-          token, {
+        res
+          .status(200)
+          .cookie('token', token, {
             sameSite: 'None',
             secure: true,
-            httpOnly: true
-            }
-        ).json({
-          message: 'Login successfully',
-          id: user.id,
-          username,
-        })
+            httpOnly: true,
+          })
+          .json({
+            message: 'Login successfully',
+            id: user.id,
+            username,
+          });
       } else {
         res.status(400).json('access denied');
       }
@@ -140,7 +150,7 @@ exports.login = async (req, res) => {
     console.log(error);
     res.status(500).json('Internal server error');
   }
-}
+};
 
 exports.checkout = async (req, res) => {
   try {
@@ -178,7 +188,7 @@ exports.checkout = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 // displays if user is logged in shows +CreatePost if not shows Log in in the header
 exports.profile = (req, res) => {
@@ -186,25 +196,26 @@ exports.profile = (req, res) => {
 
   if (!token) {
     res.json('Please log in');
-  }else{
+  } else {
     jwt.verify(token, process.env.SECRET, (err, info) => {
       if (err) throw err;
       res.json(info);
     });
   }
-}
+};
 
 exports.logout = (req, res) => {
   res.cookie('token', '').json('logged out');
-}
+};
 
 exports.post = async (req, res) => {
-  
   try {
     uploadMiddleware.single('file')(req, res, async (err) => {
       if (err instanceof multer.MulterError) {
         // A Multer error occurred when uploading.
-        return res.status(400).json({ message: 'Multer error: ' + err.message });
+        return res
+          .status(400)
+          .json({ message: 'Multer error: ' + err.message });
       } else if (err) {
         // An unknown error occurred when uploading.
         return res.status(500).json({ error: 'Unknown error: ' + err.message });
@@ -217,11 +228,14 @@ exports.post = async (req, res) => {
       jwt.verify(req.cookies.token, process.env.SECRET, async (err, info) => {
         if (err) {
           console.log('JWT verification failed:', err);
-          return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+          return res
+            .status(401)
+            .json({ message: 'Unauthorized: Invalid token' });
         }
         const { title, summary, content, price } = req.body;
         try {
           const imageUrl = await bucketUpload(req);
+          console.log('this is imageUrl from post function', imageUrl)
           await PostModel.create({
             title,
             summary,
@@ -250,77 +264,78 @@ exports.post = async (req, res) => {
 
 // edit post
 exports.editPost = async (req, res) => {
-
   try {
     uploadMiddleware.single('file')(req, res, async (err) => {
       if (err instanceof multer.MulterError) {
         // A Multer error occurred when uploading.
-        return res.status(400).json({ message: 'Multer error: ' + err.message });
+        return res
+          .status(400)
+          .json({ message: 'Multer error: ' + err.message });
       } else if (err) {
         // An unknown error occurred when uploading.
         return res.status(500).json({ error: 'Unknown error: ' + err.message });
       }
 
       let newPath = null;
-    
+
       //// Add file check
       // if (req.file) {
       //   newPath = await bucketUpload(req);
       // }
-    
-        const { token } = req.cookies;
-        jwt.verify(token, process.env.SECRET, async (err, info) => {
-          if (err) {
-            console.error('JWT verification failed:', err)
-            return res.status(401).json({message:' Unauthorized: Invalid token'})
+
+      const { token } = req.cookies;
+      jwt.verify(token, process.env.SECRET, async (err, info) => {
+        if (err) {
+          console.error('JWT verification failed:', err);
+          return res
+            .status(401)
+            .json({ message: ' Unauthorized: Invalid token' });
+        }
+
+        const { title, summary, content, id, price } = req.body;
+        const dbPost = await PostModel.findById(id);
+        const author =
+          JSON.stringify(dbPost.author) === JSON.stringify(info.id);
+        if (!author) {
+          return res.status(400).json('You are not the author');
+        }
+
+        if (req.file) {
+          const newPath = await bucketUpload(req);
+        }
+
+        const updatedPost = await PostModel.findByIdAndUpdate(
+          id,
+          {
+            title,
+            summary,
+            content,
+            cover: newPath ? newPath : dbPost.cover,
+            price,
+          },
+          {
+            new: true,
           }
-
-          const { title, summary, content, id, price } = req.body;
-          const dbPost = await PostModel.findById(id);
-          const author = JSON.stringify(dbPost.author) === JSON.stringify(info.id);
-          if (!author) {
-            return res.status(400).json('You are not the author');
-          }
-
-          if(req.file){
-            const newPath = await bucketUpload(req)
-          }
-
-          const updatedPost = await PostModel.findByIdAndUpdate(
-            id,
-            {
-              title,
-              summary,
-              content,
-              cover: newPath ? newPath : dbPost.cover,
-              price,
-            },
-            {
-              new: true,
-            }
-          );
-          res.status(200).json(updatedPost);
-        });
-
-    })
+        );
+        res.status(200).json(updatedPost);
+      });
+    });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
+};
 
-
-}
-
-exports.postId =  async (req, res) => {
+exports.postId = async (req, res) => {
   const { id } = req.params;
   const post = await PostModel.findById(id).populate('author', ['username']);
   res.json(post);
-}
+};
 
 exports.deletePost = async (req, res) => {
   try {
     // const { cover: coverUrl } = await PostModel.findByIdAndDelete(req.params.id);
-     await PostModel.findByIdAndDelete(req.params.id);
+    await PostModel.findByIdAndDelete(req.params.id);
 
     /* delete cover photo in google bucket
       get the cover which has the url const { cover: coverUrl } = await PostModel
@@ -378,9 +393,79 @@ exports.deletePost = async (req, res) => {
   }
 };
 
+// // s3 bucket
+// const bucketName = 'myecommercebucket-555';
+// const awsClient = new S3Client({
+//   region: 'us-east-2',
+//   credentials: {
+//       accessKeyId: process.env.AWS_ACCESS_KEY,
+//       secretAccessKey: process.env.AWS_SECRET_KEY,
+//   },
+// });
+
+// awsClient.send(new PutObjectCommand({
+//   Bucket: bucketName,
+//   Key: newName,
+//   Body: fs.readFileSync(req.file.path),
+//   ACL: 'public-read',
+//   ContentType: req.file.mimetype
+// })).then(data => {
+//   console.log('thie is data from amazon:', data)
+// }).catch(error => {
+//   console.log(error)
+// })
+
+// console.log('this is AWS Client:', awsClient)
 
 
-// // login backup 
+
+
+
+
+
+
+
+
+
+// remover abaixo
+
+
+
+
+  // const metadata = {
+  //   contentType: req.file.mimetype,
+  //   cacheControl: 'public, max-age=31536000',
+  // };
+
+  // const blob = bucket.file(newName);
+  // const blobStream = blob.createWriteStream({
+  //   metadata: metadata,
+  //   gzip: true,
+  // });
+
+  // return new Promise((resolve, reject) => {
+  //   blobStream.on('error', (err) => {
+  //     // return res.status(500).json({error: "Unable to upload image."});
+  //     reject('Unable to upload image.');
+  //   });
+
+  //   blobStream.on('finish', () => {
+  //     const imagePath = blob.name;
+  //     const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${process.env.FIREBASE_PROJECTID}.appspot.com/o/${imagePath}?alt=media`;
+  //     // console.log('imgurl', imageUrl)
+  //     resolve(imageUrl);
+  //     // return res.status(201).json({ imageUrl});
+  //   });
+
+  //   blobStream.end(req.file.buffer);
+  // });
+
+
+
+
+
+
+// // login backup
 
 // const { username, password } = req.body;
 // try {

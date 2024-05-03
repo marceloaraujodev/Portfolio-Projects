@@ -73,6 +73,7 @@ div.post {
   margin-bottom: 30px;
   margin-top: 35px;
 }
+
 div.post div.image {
   width: 80%;
 }
@@ -201,7 +202,13 @@ footer a{
 
 }
 
-
+.texts{
+  width: 100%;
+  text-align: center;
+}
+.info{
+  text-align: center;
+}
 
 @media screen and (max-width: 768px){
   div.post {
@@ -222,5 +229,14 @@ footer a{
     justify-content: center;
     gap: 15px;
     margin-top: 15px;
+  }
+  div.post{
+    grid-template-columns: 1fr 1fr;
+  }
+  div.post p.info {
+    display: block;
+  }
+  p.info a{
+    margin-right: 10px;
   }
 }

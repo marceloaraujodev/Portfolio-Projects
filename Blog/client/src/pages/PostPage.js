@@ -141,8 +141,7 @@ export default function PostPage() {
       
         <img
           src={// picture inside the post
-            // `http://localhost:4000/${postInfo.cover}`
-            `${postInfo.cover}` 
+            `${postInfo.cover}` // production 
           }
           alt="post"
         />

@@ -33,9 +33,8 @@ export default function CreatePost() {
         }
         
       );
-      const resdata = await response.json();
-      console.log(resdata.url);
-      // const url = resdata.url;
+      await response.json();
+
 
       if (response.ok) {
 
