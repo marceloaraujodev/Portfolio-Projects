@@ -10,7 +10,8 @@ router.get('/post', controller.getPosts);
 
 router.get('/checkout-session/:postId', controller.checkout);
 router.get('/profile', controller.profile);
-// gets a specific post
+
+// gets a specific post / gets the post for the editing too
 router.get('/post/:id', controller.postId);
 
 // Register user

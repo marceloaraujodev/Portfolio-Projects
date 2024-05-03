@@ -9,6 +9,7 @@ export default function EditPostPage() {
   const [content, setContent] = useState('');
   const [files, setFiles] = useState('');
   const [price, setPrice] = useState('');
+  const [cover, setCover] = useState('');
   const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
@@ -21,6 +22,7 @@ export default function EditPostPage() {
       setTitle(postData.title);
       setContent(postData.content);
       setSummary(postData.summary);
+      setCover(postData.cover);
       if(postData.price) {
         setPrice(postData.price);
       }

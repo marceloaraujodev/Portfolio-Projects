@@ -263,7 +263,7 @@ exports.post = async (req, res) => {
   }
 };
 
-// edit post
+// edit/delete individual posts routes below
 exports.editPost = async (req, res) => {
   try {
     uploadMiddleware.single('file')(req, res, async (err) => {
