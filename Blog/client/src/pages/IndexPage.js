@@ -4,9 +4,10 @@ import Post from '../components/Post';
 
 export default function IndexPage() {
   const [posts, setPost] = useState([]);
+  const [loading, setLoading] = useState(false);
+  
   
   useEffect(() => {
-
       const fetchData = async () => {
         try {
           const response = await fetch(
@@ -15,13 +16,23 @@ export default function IndexPage() {
             );
           const data = await response.json();
           setPost(data);
+          setLoading(true)
         } catch (error) {
           console.log(error)
+          setLoading(false);
         }
       };
       fetchData();
 
+      if(!loading){
+        setTimeout(() => {
+          fetchData()
+        }, 3000);
+      }
+      setLoading(false)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
 
   return (
     <>
