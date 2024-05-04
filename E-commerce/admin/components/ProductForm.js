@@ -6,12 +6,14 @@ import Spinner from './Spinner';
 import { Reorder } from 'framer-motion';
 // import { image } from 'qr-image';
 
+
 export default function ProductForm({
   _id,
   title: currentTitle,
   description: currentDescription,
   price: currentPrice,
   images: existingImages,
+  category: assignedCategory
 }) {
   const [title, setTitle] = useState(currentTitle || '');
   const [description, setDescription] = useState(currentDescription || '');
@@ -22,7 +24,7 @@ export default function ProductForm({
   // gets all categories 
   const [categories, setCategories] = useState([]);
   //sets one category
-  const [category, setCategory] = useState('')
+  const [category, setCategory] = useState(assignedCategory)
  
   useEffect(() => {
     axios.get('/api/categories')
@@ -34,19 +36,11 @@ export default function ProductForm({
   
   const router = useRouter(); 
 
-  //// not sure if this is being used 
-    // useEffect(() => {
-    //   images.map(src => {
-    //     const link = src
-    //     console.log(src)
-    //     return src
-    //   })
-  // }, [images]); // Specify images as a dependency
-
-  const productData = { title, description, price, images };
+  const productData = { title, description, price, images, category };
 
   async function saveProduct(e) {
     e.preventDefault();
+
 
     if (_id) {
       // update product
@@ -86,16 +80,15 @@ export default function ProductForm({
         placeholder="product name"
         className="newproduct"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+        onChange={(e) => setTitle(e.target.value)}      />
       <label>Category</label>
       <select value={category} onChange={e => setCategory(e.target.value)}>
         <option value=''>Uncategorized</option>
         {categories.length > 0 && categories.map(category => 
-          <option value={category._id}>{category.name}</option>
+          <option key={category._id} value={category._id}>{category.name}</option>
         )}
       </select>
-
+      
       <label>Photos</label>
 
       <div className="mb-2 flex flex-wrap gap-2">

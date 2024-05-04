@@ -13,12 +13,21 @@ const ProductSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  images: {
-    type: [String],
-  },
+  images: [
+    {type: String}
+  ],
+  category: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Category'
+  }
 });
 
 const Product =
   mongoose.models.Product || mongoose.model('Product', ProductSchema);
 
 export default Product;
+
+// // imges was like this and working change to array of objs if breaks change it
+// {
+//   type: [String],
+// }

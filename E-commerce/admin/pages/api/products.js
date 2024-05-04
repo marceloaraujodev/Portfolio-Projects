@@ -15,26 +15,31 @@ export default async function handle(req, res) {
     }
   }
 
+  // creates product
   if (method === 'POST') {
-    const { title, description, price, images } = req.body;
+    const { title, description, price, images, category } = req.body;
     const newProduct = await Product.create({
       title,
       description,
       price,
-      images
+      images,
+      category
     });
     res.json(newProduct); 
   }
 
+  // updates product
   if(method === 'PUT'){
-    const { title, description, price, _id, images } = req.body;
-    await Product.findOneAndUpdate({_id},{
+    const { title, description, price, _id, images, category } = req.body;
+    const data = await Product.findOneAndUpdate({_id},{
       title,
       description,
       price,
       _id,
-      images
+      images,
+      category
     });
+    // console.log(data)
     res.json(true); 
   }
 
