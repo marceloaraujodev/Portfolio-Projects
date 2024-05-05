@@ -10,6 +10,8 @@ export default function Nav() {
         <li>PRICES</li>
         <li>LOGIN</li>
       </ul>
+
+      <div className={c.smallMenuContainer}><i className={`bi bi-list ${c.smallMenu}`}></i></div>
     </div>
   )
 }

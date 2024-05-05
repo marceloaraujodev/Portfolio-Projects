@@ -29,10 +29,11 @@ export default function Hero() {
               <span className={c.timeText}>TIME</span>
             </div>
           </div>
+
           <div className={c.box}>
-          <div className={c.valuesContainer}>
-            <span className={c.calValue}>165</span>
-            <span className={c.calText}>EST CALORIES</span>
+            <div className={c.valuesContainer}>
+              <span className={c.calValue}>165</span>
+              <span className={c.calText}>EST CALORIES</span>
             </div>
             <div className={c.imgContainer}>
               <img src="/woman.png" alt="woman exercise" />

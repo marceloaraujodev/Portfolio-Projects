@@ -14,3 +14,22 @@
   font-size: 12px;
   cursor: pointer;
 }
+.smallMenuContainer{
+  display: none;
+}
+
+@media screen and (max-width: 600px){
+  .container{
+    margin-top: 0px;
+    padding-top: 21px;
+    margin-left: 10px;
+    align-items: center;
+  }
+  .navUl{
+    display: none;
+  }
+  .smallMenu{
+    margin-right: 10px;
+    font-size: 23px;
+  }
+}
