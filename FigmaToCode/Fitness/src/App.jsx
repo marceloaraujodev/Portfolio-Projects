@@ -12,8 +12,8 @@ function App() {
       <Nav />
       <Hero />
       <PopularExercises />
-      {/* <Banner />
-      <BottomContent /> */}
+      <Banner />
+      <BottomContent />
     </>
   );
 }

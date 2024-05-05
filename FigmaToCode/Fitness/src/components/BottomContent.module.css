@@ -36,3 +36,35 @@
   color: white;
   font-size: 20px;
 }
+
+@media screen and (max-width: 600px){
+  .container{
+    margin-bottom: 0px;
+  }
+  .number{
+    padding: 0 10px;
+  }
+  .middle{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    padding: 0 10px;
+  }
+  .title{
+    font-size: 30px;
+    line-height: 45px;
+    letter-spacing: 0.3px;
+    text-align: left;
+  }
+  .videoNumbers{
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    line-height: 23px;
+    opacity: 50%;
+    margin-bottom: 49.5px;
+  }
+  .arrow{
+    padding: 0 10px;
+  }
+}

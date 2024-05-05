@@ -44,6 +44,7 @@ export default function PopularExercises() {
           </div>
           <div className={c.estCal}>250 est calories</div>
         </div>
+
         <div className={c.gridItem}>
           <img src="/lifting.png" alt="lifting" className={c.img} />
           <div className={c.titleTime}>
@@ -52,6 +53,7 @@ export default function PopularExercises() {
           </div>
           <div className={c.estCal}>250 est calories</div>
         </div>
+
         <div className={c.gridItem}>
           <img src="/pushup.png" alt="pushup" className={c.img} />
           <div className={c.titleTime}>
@@ -60,6 +62,7 @@ export default function PopularExercises() {
           </div>
           <div className={c.estCal}>250 est calories</div>
         </div>
+
       </div>
     </div>
   );

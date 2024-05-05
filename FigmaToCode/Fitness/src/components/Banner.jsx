@@ -29,10 +29,6 @@ export default function Banner() {
 
         
         <div className={c.bigSquare}></div>
-
-
-
-      
       
       </div>
 
@@ -49,12 +45,15 @@ export default function Banner() {
           <p className={c.trainerName}>Karen Summer</p>
           <p className={c.trainer}>Trainer</p>
         </div>
+
         <div className={c.bottomSquare3}>
           <img src="/jonathan.png" alt="jonathan" />
           <p className={c.trainerName}>Jonathan Wise</p>
           <p className={c.trainer}>Trainer</p>
         </div>
+
       </div>
+
     </div>
   );
 }

@@ -74,7 +74,6 @@
   right: -70px;
   z-index: -2;
   position: absolute
-
 }
 .rightText{
   width: 558px;
@@ -96,5 +95,70 @@
 }
 
 @media screen and (max-width: 600px){
-  
+  .container{
+    margin: 60px 0;
+  }
+  .textTitle{
+    width: 290px;
+    font-size: 55px;
+    line-height: 65px;
+    letter-spacing: 1px;
+    padding-left: 10px;
+    height: 100%;
+    padding: 0 10px;
+    margin-bottom: 40px;
+  }
+  .yellow{
+    width: 130px;
+    height: auto;
+    position: absolute;
+    z-index: -1;
+    object-fit: cover;
+    left: 13%;
+    bottom: 7%;
+  }
+  .rightText{
+    display: flex;
+    align-items: center;
+    display: none;
+  }
+  .rightText p{
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+  }
+  .btn{
+    height:45px;
+    width: 145px;
+    font-size: 0.9rem;
+    font-weight: 400;
+    border-radius: 5px;
+  }
+  .bottomSquareContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    gap: 50px;
+  }
+  .bottomSquare{
+    top: 0;
+    padding-top: 50px;
+  }
+  .samantha{
+    position: static;
+  }
+  .bottomSquare3 img{
+    width: 321px;
+  }
+  .bigSquare{
+    width: 600px;
+    height:330px;
+    /* opacity: 10%; */
+    color: #727272;
+    background-color: #1a1a1a;
+    top: -20px;
+    right: 0px;
+    z-index: -2;
+    position: absolute
+  }
 }
