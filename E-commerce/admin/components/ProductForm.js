@@ -130,42 +130,43 @@ export default function ProductForm({
 
       {propertiesToFill.length > 0 &&
         propertiesToFill.map((propEl, index) => (
-          <div key={`${propEl._id}-${index}`} className="flex gap-1">
-            <div >{propEl.name}</div>
-            <select 
-              value={productProperties[propEl.name]}
-              onChange={(e) => {
-                setProductProp(propEl.name, e.target.value);
-              }}
-            >
-              <option value=''>Choose one</option>
-              {propEl.values.map((val) => (
-                <option 
-                  key={`${propEl._id}-${val}`} 
-                  value={val}
-                  onChange={(e) => {
-                    setProductProp(propEl.name, e.target.value);
-                  }}
-                >{val}</option>
-              ))}
-            </select>
+          <div key={`${propEl._id}-${index}`} className="">
+            <label >{propEl.name[0].toUpperCase()+propEl.name.substring(1)}</label>
+            <div >
+              <select 
+                value={productProperties[propEl.name]}
+                onChange={(e) => {
+                  setProductProp(propEl.name, e.target.value);
+                }}   >
+                <option value=''>Choose one</option>
+                {propEl.values.map((val) => (
+                  <option 
+                    key={`${propEl._id}-${val}`} 
+                    value={val}
+                    onChange={(e) => {
+                      setProductProp(propEl.name, e.target.value);
+                    }}
+                  >{val}</option>
+                ))}
+              </select>  
+            </div>
           </div>
         ))}
 
       <label>Photos</label>
 
-      <div className="mb-2 flex flex-wrap gap-2">
+      <div className="mb-2 flex flex-wrap gap-2 py-2 px-1">
         <Reorder.Group
           axis="x"
           values={images}
           onReorder={setImages}
-          className="flex"
+          className="flex flex-wrap gap-1"
         >
           {images.length > 0 &&
             images.map((link, index) => (
               <Reorder.Item key={`${link}-${index}`} value={link} as="div">
                 <div
-                  className="h-24 w-24 flex items-center justify-center"
+                  className="h-24 bg-white p-4 shadow-sm rounded-md border border-gray-200"
                   onMouseDown={(e) => e.preventDefault()}
                 >
                   <img src={link} alt="product img" className="rounded-lg" />
@@ -179,7 +180,7 @@ export default function ProductForm({
           )}
         </Reorder.Group>
 
-        <label className=" w-24 h-24 border text-center flex items-center justify-center flex-col text-sm gap-1 text-gray-500 bg-gray-200 cursor-pointer rounded-lg">
+        <label className=" w-24 h-24 border border-gray-200 shadow-sm text-center flex items-center justify-center flex-col text-sm gap-1 text-primary bg-white cursor-pointer rounded-md">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

@@ -154,7 +154,7 @@ function Categories({ swal }) {
           <label className="block">Properties</label>
           <button
             type="button"
-            className="btn-secondary text-sm mb-4"
+            className="btn-default text-sm mb-4"
             onClick={addProperty}
           >
             Add new property
@@ -178,7 +178,7 @@ function Categories({ swal }) {
                   placeholder="values, comma separeted"
                     />
                 <button
-                      className="btn-default flex items-center"
+                      className="btn-red flex items-center"
                       type='button'
                       onClick={(e) => {
                         removeProperty(index)
@@ -242,7 +242,7 @@ function Categories({ swal }) {
                 <td className="flex justify-center">
                   <div className="flex gap-1">
                     <button
-                      className="btn-secondary flex items-center gap-1"
+                      className="btn-default flex items-center gap-1"
                       onClick={() => editCategory(category)}
                     >
                       <svg
@@ -262,7 +262,7 @@ function Categories({ swal }) {
                       Edit
                     </button>
                     <button
-                      className="btn-secondary flex items-center gap-1"
+                      className="btn-red flex items-center gap-1"
                       onClick={() => deleteCategory(category)}
                       >
                         <svg
