@@ -8,7 +8,10 @@ const CategorySchema = new Schema({
   parent: {
     type: mongoose.Types.ObjectId,
     ref: 'Category',
-  }
+  },
+  properties: [
+    {type: Object}
+  ]
 });
 
 // if it already exist use it, else crerate one

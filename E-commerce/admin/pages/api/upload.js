@@ -1,5 +1,7 @@
 import multiparty from 'multiparty';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { mongooseConnect } from '@/lib/mongoose';
+import {isAdminRequest} from '@/pages/api/auth/[...nextauth]';
 import fs from 'fs';
 import mime from 'mime-types';
 
@@ -7,6 +9,10 @@ const bucketName = 'myecommercebucket-555'
 
 export default async function handle(req, res){
     try {
+        await mongooseConnect();
+        // makes the admin panel secure
+        await isAdminRequest(req, res);
+        
         const form = new multiparty.Form();
     
         const {fields, files} = await new Promise((resolve, reject) => {

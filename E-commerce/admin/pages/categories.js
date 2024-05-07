@@ -24,7 +24,14 @@ function Categories({ swal }) {
 
   async function saveCategory(e) {
     e.preventDefault();
-    const data = { categoryName, parentCategory };
+    const data = { 
+      categoryName, 
+      parentCategory, 
+      properties: properties.map(propertyEl => ({
+        name: propertyEl.name, 
+        values: propertyEl.values.split(',') // turns values into Array!
+      }))
+    };
     console.log(data);
 
     if (editededCategory) {
@@ -35,6 +42,8 @@ function Categories({ swal }) {
       await axios.post('/api/categories', data);
     }
     setCategoryName('');
+    setParentCategory('');
+    setProperties([]);
     fetchCategories();
   }
 
@@ -42,6 +51,14 @@ function Categories({ swal }) {
     seteditedCategory(category);
     setCategoryName(category.name);
     setParentCategory(category.parent?._id);
+    setProperties(
+      /* destructure the name and values properties from each el. 
+       Because when editing, the values is a [] and values displayed is as strings. so [blue, red], 'green'. join will get blue, red, and join to green , blue, red, green and on resave will turn the new properties into array again [blue, red, green] */
+      category.properties.map(({name, values}) => (
+        {name, values: values.join(',')}
+      ))
+      
+    )
   }
 
   function deleteCategory(category) {
@@ -93,6 +110,14 @@ function Categories({ swal }) {
     });
   }
 
+  function removeProperty(index){
+    setProperties(prev => {
+      // propertyEl is not use, its only recieved so we can access its index
+      const newProperties = [...prev].filter((propertyEl, pIndex) => pIndex !== index);
+      return newProperties
+    })
+  }
+
   return (
     <Layout>
       <h1>categories</h1>
@@ -129,16 +154,17 @@ function Categories({ swal }) {
           <label className="block">Properties</label>
           <button
             type="button"
-            className="btn-default text-sm mb-4"
+            className="btn-secondary text-sm mb-4"
             onClick={addProperty}
           >
             Add new property
           </button>
           {properties.length > 0 &&
             properties.map((property, index) => (
-              <div key={index} className="flex gap-1">
+              <div key={index} className="flex gap-1 mb-2">
                 <input
                   type="text"
+                  className='mb-0'
                   value={property.name}
                   onChange={e => handlePropertyNameChange(index, property, e.target.value)}
                   placeholder="property name (ex. color)"
@@ -146,20 +172,60 @@ function Categories({ swal }) {
 
                 <input
                   type="text"
+                  className='mb-0'
                   value={property.values}
                   onChange={e => handlePropertyValuesChange(index, property, e.target.value)}
                   placeholder="values, comma separeted"
-                />
+                    />
+                <button
+                      className="btn-default flex items-center"
+                      type='button'
+                      onClick={(e) => {
+                        removeProperty(index)
+                      }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-4 h-4"
+                        >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                        />
+                      </svg>
+                      Remove
+                </button>
               </div>
             ))}
         </div>
 
-        <button type="submit" className="btn-primary">
-          Save
-        </button>
+        <div className="flex gap-1">
+          <button type="submit" className="btn-primary">
+            Save
+          </button>
+
+          {editededCategory && (
+            <button type="button" className="btn-default" onClick={() => {
+                seteditedCategory(null)
+                setCategoryName('')
+                setParentCategory('')
+                setProperties([])
+              }}>
+              Cancel
+            </button>
+          )}
+        </div>
+
       </form>
 
-      <table className="basic mt-4">
+      {!editededCategory && 
+        (
+          <table className="basic mt-4">
         <thead>
           <tr>
             <td>Category Name</td>
@@ -176,7 +242,7 @@ function Categories({ swal }) {
                 <td className="flex justify-center">
                   <div className="flex gap-1">
                     <button
-                      className="btn-primary flex items-center gap-1"
+                      className="btn-secondary flex items-center gap-1"
                       onClick={() => editCategory(category)}
                     >
                       <svg
@@ -196,17 +262,17 @@ function Categories({ swal }) {
                       Edit
                     </button>
                     <button
-                      className="btn-primary flex items-center gap-1"
+                      className="btn-secondary flex items-center gap-1"
                       onClick={() => deleteCategory(category)}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-4 h-4"
                       >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-4 h-4"
+                        >
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -221,6 +287,9 @@ function Categories({ swal }) {
             ))}
         </tbody>
       </table>
+        )
+      }      
+
     </Layout>
   );
 }
