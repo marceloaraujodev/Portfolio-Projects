@@ -1,6 +1,3 @@
-// Product.js
-
-import categories from '@/pages/categories';
 import mongoose from 'mongoose';
 
 const ProductSchema = new mongoose.Schema({
@@ -20,10 +17,8 @@ const ProductSchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: 'Category'
   },
-  properties: {type: Object}, 
-},
-{timestamps: true}
-);
+  properties: {type: Object}
+});
 
 const Product =
   mongoose.models.Product || mongoose.model('Product', ProductSchema);

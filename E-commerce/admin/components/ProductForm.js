@@ -131,14 +131,14 @@ export default function ProductForm({
       {propertiesToFill.length > 0 &&
         propertiesToFill.map((propEl, index) => (
           <div key={`${propEl._id}-${index}`} className="">
-            <label >{propEl.name[0].toUpperCase()+propEl.name.substring(1)}</label>
+            <label >{propEl.name[0].toUpperCase() + propEl.name.substring(1)}</label>
             <div >
               <select 
                 value={productProperties[propEl.name]}
                 onChange={(e) => {
                   setProductProp(propEl.name, e.target.value);
                 }}   >
-                <option value=''>Choose one</option>
+                {/* <option value=''>Choose one</option> */}
                 {propEl.values.map((val) => (
                   <option 
                     key={`${propEl._id}-${val}`} 

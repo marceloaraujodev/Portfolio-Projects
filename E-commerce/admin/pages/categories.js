@@ -24,6 +24,14 @@ function Categories({ swal }) {
 
   async function saveCategory(e) {
     e.preventDefault();
+
+    const emptyProperty = properties.filter(property => property.name === '' || property.values === '');
+
+    if(emptyProperty.length > 0){
+      alert('Please fill property name and values or delete the property if not using it');
+      return
+    }
+
     const data = { 
       categoryName, 
       parentCategory, 
@@ -32,7 +40,7 @@ function Categories({ swal }) {
         values: propertyEl.values.split(',') // turns values into Array!
       }))
     };
-    console.log(data);
+    // console.log(data);
 
     if (editededCategory) {
       data._id = editededCategory._id;
