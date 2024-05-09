@@ -1,4 +1,5 @@
 import styled, {css} from "styled-components"
+import { primary } from "@/lib/colors";
 // import css from "styled-jsx/css";
 
 export const StyleButton = css`
@@ -10,27 +11,53 @@ export const StyleButton = css`
   display: inline-flex;
   align-items: center;
   text-decoration: none;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
   svg{
     height: 18px;
     margin-right: 5px;
   }
-  ${props => props.white && !props.outline && css`
+  ${props => props.block && css`
+    display: block;
+    width: 100%;
+  `}
+  ${props => props.$white && !props.outline && css`
     background-color: white;
     color: black;
   ` }
-  ${props => props.white && props.outline && css`
+  ${props => props.$white && props.outline && css`
     background-color: transparent;
     color: white;
     border: 1px solid white;
   ` }
-  ${props => props.primary && css`
-    background-color: ;
-    background-color: #5542f6;
-    border: 1px solid #5542f6;
+  ${props => props.$black && !props.outline && css`
+    background-color: black;
+    color: white;
+  ` }
+  ${props => props.$black && props.outline && css`
+    background-color: transparent;
+    color: white;
+    border: 1px solid black;
+  ` }
+  ${props => props.$primary && !props.outline && css`
+    background-color: ${primary};
+    border: 1px solid ${primary};
+  `}
+  ${props => props.$primary && props.outline && css`
+    background-color: transparent;
+    border: 1px solid ${primary};
+    color: ${primary};
   `}
   ${props => props.size === 'l' && css`
    font-size: 1.2rem;
    padding: 10px 20px;
+   svg{
+    height: 20px;
+   }
+  `}
+  ${props => props.size === 's' && css`
+   font-size: 0.9rem;
+   padding: 5px 10px;
    svg{
     height: 20px;
    }
