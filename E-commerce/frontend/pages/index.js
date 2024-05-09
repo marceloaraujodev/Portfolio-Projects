@@ -7,7 +7,7 @@ import NewProducts from "@/components/NewProducts";
 
 
 export default function HomePage({featuredProduct, newProducts}) {
-  console.log('this is new p', newProducts)
+  // console.log('this is new p', newProducts)
   return (
     <>
      <div>

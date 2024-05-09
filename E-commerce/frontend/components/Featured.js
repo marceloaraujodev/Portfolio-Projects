@@ -57,7 +57,7 @@ export default function Featured({product}) {
                 <ButtonLink href={'/product/' + product._id} outline={1} white={1} >
                   Read More
                 </ButtonLink>
-                <Button primary="true" >
+                <Button  $primary={1}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
