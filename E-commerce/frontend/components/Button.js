@@ -5,7 +5,7 @@ import { primary } from "@/lib/colors";
 export const StyleButton = css`
   border: 0;
   border-radius: 3px;
-  color: white;
+  color: black;
   padding: 10px 15px;
   cursor: pointer;
   display: inline-flex;
@@ -17,29 +17,29 @@ export const StyleButton = css`
     height: 18px;
     margin-right: 5px;
   }
-  ${props => props.block && css`
+  ${props => props.$block && css`
     display: block;
     width: 100%;
   `}
-  ${props => props.$white && !props.outline && css`
+  ${props => props.$white && !props.$outline && css`
     background-color: white;
     color: black;
   ` }
-  ${props => props.$white && props.outline && css`
+  ${props => props.$white && props.$outline && css`
     background-color: transparent;
     color: white;
     border: 1px solid white;
   ` }
-  ${props => props.$black && !props.outline && css`
+  ${props => props.$black && !props.$outline && css`
     background-color: black;
     color: white;
   ` }
-  ${props => props.$black && props.outline && css`
+  ${props => props.$black && props.$outline && css`
     background-color: transparent;
-    color: white;
+    color: black;
     border: 1px solid black;
   ` }
-  ${props => props.$primary && !props.outline && css`
+  ${props => props.$primary && !props.$outline && css`
     background-color: ${primary};
     border: 1px solid ${primary};
   `}

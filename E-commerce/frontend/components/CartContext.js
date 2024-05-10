@@ -10,6 +10,10 @@ export default function CartContextProvider({children}) {
     if(cartProducts?.length > 0){
       ls?.setItem('cart', JSON.stringify(cartProducts))
     }
+    if(cartProducts?.length === 0){
+      // removes the localstorage memory if cart is empty else it would be display item
+      localStorage.removeItem('cart')
+    }
   }, [cartProducts])
 
 
@@ -22,11 +26,20 @@ export default function CartContextProvider({children}) {
   function addProduct(productId){
     setCartProducts(prev => [...prev, productId])
   }
-  
+
+  function removeProduct (productId){
+    setCartProducts(prev => {
+      const pos = prev.indexOf(productId);
+      if(pos !== -1){
+        return prev.filter((value, index) => index !== pos);
+      }
+      return prev;
+    })
+  }
 
   return (
     <CartContext.Provider 
-      value={{cartProducts, setCartProducts, addProduct}}
+      value={{cartProducts, setCartProducts, addProduct, removeProduct}}
     >{children}</CartContext.Provider>
   )
 }
