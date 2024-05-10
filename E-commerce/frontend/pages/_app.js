@@ -4,12 +4,17 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
 
+  *{
+    box-sizing: border-box;
+  }
+
   body{
     padding: 0;
     margin: 0;
     font-weight: 400;
     font-family: "Poppins" , sans-serif;
     background-color: #eee;
+    
   }
 `;
 

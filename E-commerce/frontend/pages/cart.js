@@ -2,15 +2,22 @@ import Button from '@/components/Button';
 import { CartContext } from '@/components/CartContext';
 import Center from '@/components/Center';
 import Header from '@/components/Header';
+import Input from '@/components/Input';
 import Table from '@/components/Table';
 import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useRouter } from 'next/router';
 
 const ColumnsWrapper = styled.div`
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
   gap: 40px;
+  margin-top: 40px;
+`;
+const ColumnsWrapperSuccess = styled.div`
+  display: flex;
+  justify-content: center;
   margin-top: 40px;
 `;
 
@@ -45,9 +52,25 @@ const QuantityLabel = styled.span`
   padding: 0 3px;
 `;
 
+const CityHolder = styled.div`
+  display: flex;
+  gap: 5px;
+`;
+
 export default function cartPage() {
-  const { cartProducts, addProduct, removeProduct, setCartProducts} = useContext(CartContext);
+  const { cartProducts, addProduct, removeProduct, clearCart} =
+    useContext(CartContext);
   const [products, setProducts] = useState([]);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [streetAddress, setStreetAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [zipcode, setZipcode] = useState('');
+  const [country, setCountry] = useState('');
+
+  const router = useRouter();
+  // checks the url for success so it can clear cart
+  const {success} = router.query;
 
   useEffect(() => {
     if (cartProducts.length > 0) {
@@ -55,28 +78,63 @@ export default function cartPage() {
         setProducts(response.data);
         // console.log(response.data);
       });
-    }else{
+    } else {
       // clears cart after last item is deleted
       setProducts([]);
     }
   }, [cartProducts]);
 
-  function addOneMoreProduct(id) { 
-    addProduct(id)
+  useEffect(() => {
+    if(success){
+      clearCart()
+    }
+  }, [])
+
+  function addOneMoreProduct(id) {
+    addProduct(id);
   }
 
-  function oneLessProduct(id){
-    removeProduct(id)
-  };
+  function oneLessProduct(id) {
+    removeProduct(id);
+  }
+
+  
 
   let total = 0;
   // console.log('this cart product', cartProducts)
-  for(const productId of cartProducts){
-    // console.log(productId)
+  for (const productId of cartProducts) {
     //// if no price add 0 as default
-    const price = products.find(p => p._id === productId)?.price || 0;
-    total += price
+    const price = products.find((p) => p._id === productId)?.price || 0;
+    total += price;
   }
+
+  async function goToCheckout(){
+    const response = await axios.post('/api/checkout', {
+      name, email, city, zipcode, streetAddress, country, cartProducts
+    });
+    if(response.data.url){
+      window.location = response.data.url
+    }
+  }
+
+  if(success){
+    return (
+      <>
+        <Header/>
+        <Center>
+        <ColumnsWrapperSuccess>
+          <Box>
+            <h1>Thanks for shopping with us.</h1>
+            <p>We will email you as soon as your order is shipped!</p>
+          </Box>
+          
+        </ColumnsWrapperSuccess>
+        </Center>
+      </>
+    )
+  }
+
+
 
   return (
     <>
@@ -105,14 +163,18 @@ export default function cartPage() {
                         {product.title}
                       </ProductInfoCell>
                       <td>
-                        <Button onClick={() => oneLessProduct(product._id) }>-</Button>
+                        <Button onClick={() => oneLessProduct(product._id)}>
+                          -
+                        </Button>
                         <QuantityLabel>
                           {
                             cartProducts.filter((id) => id === product._id)
                               .length
                           }
                         </QuantityLabel>
-                        <Button onClick={() => addOneMoreProduct(product._id)}>+</Button>
+                        <Button onClick={() => addOneMoreProduct(product._id)}>
+                          +
+                        </Button>
                       </td>
                       <td>
                         $
@@ -133,12 +195,55 @@ export default function cartPage() {
           {!!cartProducts?.length && (
             <Box>
               <h2>Order Information</h2>
-              <input type="text" placeholder="Address" />
-              <input type="text" placeholder="Address 2" />
-              <input type="number" placeholder="zip code" />
-              <Button $block $black={1}>
-                Checkout
-              </Button>
+
+                <Input
+                  type="text"
+                  placeholder="Name"
+                  value={name}
+                  name="name"
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <Input
+                  type="text"
+                  placeholder="Email"
+                  value={email}
+                  name="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <Input
+                  type="text"
+                  placeholder="Street Address"
+                  value={streetAddress}
+                  name="streetAddress"
+                  onChange={(e) => setStreetAddress(e.target.value)}
+                />
+                <CityHolder>
+                  <Input
+                    type="text"
+                    placeholder="City"
+                    value={city}
+                    name="city"
+                    onChange={(e) => setCity(e.target.value)}
+                  />
+                  <Input
+                    type="text"
+                    placeholder="zip code"
+                    value={zipcode}
+                    name="zipcode"
+                    onChange={(e) => setZipcode(e.target.value)}
+                  />
+                </CityHolder>
+                <Input
+                  type="text"
+                  placeholder="Country"
+                  value={country}
+                  name="country"
+                  onChange={(e) => setCountry(e.target.value)}
+                />
+                <Button $block $black onClick={goToCheckout}>
+                  Checkout
+                </Button>
+
             </Box>
           )}
         </ColumnsWrapper>
