@@ -58,7 +58,7 @@ const CityHolder = styled.div`
 `;
 
 export default function cartPage() {
-  const { cartProducts, addProduct, removeProduct, clearCart} =
+  const { cartProducts, addProduct, removeProduct, clearCart, setCartProducts} =
     useContext(CartContext);
   const [products, setProducts] = useState([]);
   const [name, setName] = useState('');
@@ -67,6 +67,7 @@ export default function cartPage() {
   const [city, setCity] = useState('');
   const [zipcode, setZipcode] = useState('');
   const [country, setCountry] = useState('');
+
 
   const router = useRouter();
   // checks the url for success so it can clear cart
@@ -87,6 +88,10 @@ export default function cartPage() {
   useEffect(() => {
     if(success){
       clearCart()
+      // after the cart is clear we clear the local storage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('cart', [])
+      }
     }
   }, [])
 
@@ -97,8 +102,6 @@ export default function cartPage() {
   function oneLessProduct(id) {
     removeProduct(id);
   }
-
-  
 
   let total = 0;
   // console.log('this cart product', cartProducts)
@@ -118,6 +121,8 @@ export default function cartPage() {
   }
 
   if(success){
+    // clearCart()
+    // setProducts([])
     return (
       <>
         <Header/>

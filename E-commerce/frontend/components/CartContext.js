@@ -38,12 +38,13 @@ export default function CartContextProvider({children}) {
   }
 
   function clearCart(){
+    // localStorage.removeItem('cart');
     setCartProducts([])
   }
 
   return (
     <CartContext.Provider 
-      value={{cartProducts, clearCart, addProduct, removeProduct}}
+      value={{cartProducts, clearCart, addProduct, removeProduct, setCartProducts}}
     >{children}</CartContext.Provider>
   )
 }
