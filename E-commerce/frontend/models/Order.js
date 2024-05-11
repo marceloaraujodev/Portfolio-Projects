@@ -9,7 +9,8 @@ const OrderSchema = new mongoose.Schema({
   country: String,
   zipcode: String,
   paid: Boolean,
-});
+}, { timestamps: true }
+);
 
 const Order = mongoose.models?.Order || mongoose.model('Order', OrderSchema);
 

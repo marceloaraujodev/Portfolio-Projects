@@ -38,7 +38,6 @@ export default function CartContextProvider({children}) {
   }
 
   function clearCart(){
-    // localStorage.removeItem('cart');
     setCartProducts([])
   }
 

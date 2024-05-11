@@ -58,7 +58,7 @@ const CityHolder = styled.div`
 `;
 
 export default function cartPage() {
-  const { cartProducts, addProduct, removeProduct, clearCart, setCartProducts} =
+  const { cartProducts, addProduct, removeProduct, clearCart} =
     useContext(CartContext);
   const [products, setProducts] = useState([]);
   const [name, setName] = useState('');
@@ -73,6 +73,7 @@ export default function cartPage() {
   // checks the url for success so it can clear cart
   const {success} = router.query;
 
+
   useEffect(() => {
     if (cartProducts.length > 0) {
       axios.post('/api/cart', { ids: cartProducts }).then((response) => {
@@ -85,15 +86,15 @@ export default function cartPage() {
     }
   }, [cartProducts]);
 
+  // Clears local storage cart after the purchase
   useEffect(() => {
     if(success){
       clearCart()
-      // after the cart is clear we clear the local storage
       if (typeof window !== 'undefined') {
         localStorage.setItem('cart', [])
       }
     }
-  }, [])
+  }, [success])
 
   function addOneMoreProduct(id) {
     addProduct(id);
@@ -104,7 +105,6 @@ export default function cartPage() {
   }
 
   let total = 0;
-  // console.log('this cart product', cartProducts)
   for (const productId of cartProducts) {
     //// if no price add 0 as default
     const price = products.find((p) => p._id === productId)?.price || 0;
@@ -115,14 +115,17 @@ export default function cartPage() {
     const response = await axios.post('/api/checkout', {
       name, email, city, zipcode, streetAddress, country, cartProducts
     });
+    // if sessions is created successfully it redirects user to stripe checkout
     if(response.data.url){
       window.location = response.data.url
     }
+
+    // // this line below is for testing to skip the fill out form from stipe remove for production
+    // router.push('http://localhost:3000/cart?success=1')
   }
 
   if(success){
-    // clearCart()
-    // setProducts([])
+
     return (
       <>
         <Header/>

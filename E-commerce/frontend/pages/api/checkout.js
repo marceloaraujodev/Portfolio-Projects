@@ -55,7 +55,7 @@ export default async function checkoutHandler(req, res) {
     }
   }
 
-  console.log(line_items)
+  // console.log(line_items)
   const orderDoc = await Order.create({
     line_items, name, email, city, zipcode, streetAddress, country, paid:false,
   })
@@ -67,7 +67,7 @@ export default async function checkoutHandler(req, res) {
     customer_email: email,
     success_url: process.env.STRIPE_SUCCESS_URL + '/cart?success=1',
     cancel_url: process.env.STRIPE_SUCCESS_URL + '/cart?canceled=1',
-    metadata: {orderId: orderDoc._id.toString()},
+    metadata: {orderId: orderDoc._id.toString(), test: 'ok'},
   });
 
   

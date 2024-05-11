@@ -27,16 +27,17 @@ export default function ordersPage() {
         <tbody>
           {orders.length > 0 && orders.map((order, index) => (
             <tr key={order._id}>
-              <td >{order.createdAt}</td>
-              <td>{order.name} {order.email}
-              {order.city} {order.zipcode}
+              <td >{(new Date(order.createdAt)).toLocaleString('en-US', { timeZone: 'UTC' })}</td>
+              <td>{order.name}<br /> {order.email}<br />
+              {order.streetAddress}<br />
+              {order.city} {order.zipcode}<br />
               {order.country}
-              {order.streetAddress}
               </td>
               <td>
               {order.line_items.map(l => (
                   <>
-                    {l.price_data?.product_data.name} x {l.quantity}
+                    {l.price_data?.product_data.name} x {l.quantity}<br />
+                    
                   </>
                 ))}
               </td>
