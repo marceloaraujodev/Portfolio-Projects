@@ -20,6 +20,7 @@ export default function ordersPage() {
         <thead>
           <tr>
             <th>Date</th>
+            <th>Paid</th>
             <th>Recipient</th>
             <th>Products</th>
           </tr>
@@ -28,6 +29,7 @@ export default function ordersPage() {
           {orders.length > 0 && orders.map((order, index) => (
             <tr key={order._id}>
               <td >{(new Date(order.createdAt)).toLocaleString('en-US', { timeZone: 'UTC' })}</td>
+              <td className={order.paid ? 'text-green-600' : 'text-red'}>{order.paid ? 'Paid' : 'Waiting Payment' }</td>
               <td>{order.name}<br /> {order.email}<br />
               {order.streetAddress}<br />
               {order.city} {order.zipcode}<br />
