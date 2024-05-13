@@ -15,10 +15,12 @@ export const StyleButton = css`
   font-family: "Poppins", sans-serif;
   svg{
     height: 18px;
-    margin-right: 5px;
+    margin-left: 8px;
   }
   ${props => props.$block && css`
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
   `}
   ${props => props.$white && !props.$outline && css`
@@ -42,6 +44,7 @@ export const StyleButton = css`
   ${props => props.$primary && !props.$outline && css`
     background-color: ${primary};
     border: 1px solid ${primary};
+    color: white;
   `}
   ${props => props.$primary && props.outline && css`
     background-color: transparent;

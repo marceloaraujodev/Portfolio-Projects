@@ -11,15 +11,17 @@ const ProductWrapper = styled.div`
 `;
 
 const WhiteBox = styled(Link)`
+  
   background-color: white;
   padding: 20px;
-  height: 120px;
+  height: 140px;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 10px;
   margin-bottom: 10px;
+  object-fit: cover;
   img {
     max-width: 100%;
     max-height: 120px;
@@ -40,20 +42,29 @@ const ProductInfoBox = styled.div`
 `;
 
 const PriceRow = styled.div`
-  display: flex;
+  display: block;
   justify-content: space-between;
   align-items: center;
   gap: 20px;
   margin-top: 2px;
+  @media screen and (min-width: 768){
+    display: flex;
+    gap: 5px;
+  }
 `;
 
 const Price = styled.div`
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: 500;
+  padding: 5px 0;
+  @media screen and (min-width: 768){
+    font-size: 1.5rem;
+  }
 `;
 
 const ButtonText = styled.span`
-  margin-right: 5px;
+  /* margin-right: 5px; */
+
 `;
 
 export default function ProductBox({ _id, price, title, description, images }) {
@@ -64,9 +75,7 @@ export default function ProductBox({ _id, price, title, description, images }) {
   return (
     <ProductWrapper>
       <WhiteBox href={url}>
-        <div>
-          <img src={images[0]} alt="" />
-        </div>
+          <img src={images?.[0]} alt="" />
       </WhiteBox>
       <Title href={url}>{title}</Title>
 
@@ -74,7 +83,7 @@ export default function ProductBox({ _id, price, title, description, images }) {
       <PriceRow>
         <Price>${price}</Price>
         <div>
-          <Button $black $outline size='s' onClick={() => addProduct(_id)}>
+          <Button $block $black $outline size='s' onClick={() => addProduct(_id)}>
             <ButtonText>Add to</ButtonText>
             <CartIcon />
           </Button>

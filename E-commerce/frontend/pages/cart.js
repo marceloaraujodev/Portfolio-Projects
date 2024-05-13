@@ -11,9 +11,13 @@ import { useRouter } from 'next/router';
 
 const ColumnsWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 40px;
+  grid-template-columns: 1fr;
+  gap: 20px;
   margin-top: 40px;
+  @media screen and (min-width: 768px){
+    gap: 40px;
+    grid-template-columns: 0.8fr 1.2fr;
+  }
 `;
 const ColumnsWrapperSuccess = styled.div`
   display: flex;
