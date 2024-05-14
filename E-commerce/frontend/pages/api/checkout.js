@@ -13,22 +13,7 @@ export default async function checkoutHandler(req, res) {
   const { name, email, city, zipcode, streetAddress, country, cartProducts } = req.body;
 
   await mongooseConnect();
-  /* productsIds and uniqueIds visual
-    productIds
-    [
-      '663bbdf58cf7d3a4cd34950a',
-      '663bbdf58cf7d3a4cd34950a',
-      '66353603084140c3e8936f14',
-      '663cc020f93ce78f7fca238f',
-      '663cc020f93ce78f7fca238f'
-    ]
-
-    uniqueIds
-    [
-      '663bbdf58cf7d3a4cd34950a',
-      '663cc020f93ce78f7fca238f',
-      '66353603084140c3e8936f14'
-    ] */
+ 
   const productsIds = cartProducts;
   const uniqueIds = [...new Set(productsIds)]
   const productsInfo = await Product.find({_id: uniqueIds});

@@ -18,7 +18,6 @@ const Title = styled.h1`
   font-size: 2rem;
   @media screen and (min-width: 768px){
     font-size: 3rem;
-    
   }
 `;
 
@@ -42,12 +41,13 @@ const ColumnsWrapper = styled.div`
     order: 2;
   }
   @media screen and (min-width: 768px){
-    grid-template-columns: 1.1fr 0.9fr;
+    grid-template-columns: 1fr 1fr;
     div:nth-child(1){
       order:0;
     }
     img {
-    max-width: 100%;
+      max-height: 300px;
+      max-width: 100%;
   }
   }
   
