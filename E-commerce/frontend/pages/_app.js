@@ -9,12 +9,14 @@ const GlobalStyles = createGlobalStyle`
   }
 
   body{
+    display: flex;
+    flex-direction: column;
+    ${'' /* min-height: 100vh; */}
     padding: 0;
     margin: 0;
     font-weight: 400;
     font-family: "Poppins" , sans-serif;
     background-color: #eee;
-    height: 100%;
   }
 `;
 

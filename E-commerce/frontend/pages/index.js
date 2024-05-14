@@ -5,28 +5,18 @@ import { mongooseConnect } from '@/lib/mongoose';
 import NewProducts from '@/components/NewProducts';
 import Footer from '@/components/Footer';
 import styled from 'styled-components';
-
-const Wrapper = styled.div`
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-`;
-
+import Content from '@/components/Content';
 
 export default function HomePage({ featuredProduct, newProducts }) {
   // console.log('this is new p', newProducts)
   return (
     <>
-      <div>
+      <Content>
         <Header />
-        <Wrapper>
-
-            <Featured product={featuredProduct} />
-            <NewProducts products={newProducts} />
-
-        </Wrapper>
+        <Featured product={featuredProduct} />
+        <NewProducts products={newProducts} />
         <Footer />
-      </div>
+      </Content>
     </>
   );
 }
