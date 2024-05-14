@@ -4,6 +4,7 @@ import { mongooseConnect } from '@/lib/mongoose';
 import {isAdminRequest} from '@/pages/api/auth/[...nextauth]';
 import fs from 'fs';
 import mime from 'mime-types';
+import awsClient from '../../lib/awsClient';
 
 const bucketName = 'myecommercebucket-555'
 
@@ -21,15 +22,7 @@ export default async function handle(req, res){
                 resolve({fields, files});
             });
         });
-        // console.log('length:', files)
-        
-        const client = new S3Client({
-            region: 'us-east-2',
-            credentials: {
-                accessKeyId: process.env.AWS_ACCESS_KEY,
-                secretAccessKey: process.env.AWS_SECRET_KEY,
-            },
-        });
+
         console.log('Connected to the S3 bucket successfully!');
     
         const links = [];
@@ -39,7 +32,7 @@ export default async function handle(req, res){
             // console.log({ext, file})
             const newFilename = Date.now() + '.' + ext;
             console.log(newFilename)
-           await client.send(new PutObjectCommand({
+           await awsClient.send(new PutObjectCommand({
                 Bucket: bucketName,
                 Key: newFilename,
                 Body: fs.readFileSync(file.path),

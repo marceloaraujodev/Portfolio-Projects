@@ -3,7 +3,9 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import Spinner from './Spinner';
-import { Reorder } from 'framer-motion';
+import { Reorder, useMotionValue } from 'framer-motion';
+
+
 // import { image } from 'qr-image';
 
 export default function ProductForm({
@@ -27,6 +29,7 @@ export default function ProductForm({
   const [category, setCategory] = useState(assignedCategory);
   const [productProperties, setProductProperties] = useState(assignedProperties || {});
   const [selectedImageIndex, setSelectedImageIndex] = useState([]);
+  const [imagesToDelete, setImagesToDelete] = useState([])
 
   useEffect(() => {
     axios
@@ -37,9 +40,6 @@ export default function ProductForm({
       .catch((err) => console.log(err));
   }, []);
 
-  // useEffect(() => {
-  //   console.log(selectedImageIndex.includes(0))
-  // }, [selectedImageIndex])
 
   const router = useRouter();
   const productData = {
@@ -112,24 +112,45 @@ export default function ProductForm({
   }
 
   function selectImg(index){
-    setSelectedImageIndex(prevInd => {
-      if(prevInd.includes(index)){
-        return prevInd.filter(item => item !== index)
+    toggleSelection(index, setSelectedImageIndex)
+  }
+  
+  function selectedImgToDelete(link){
+    toggleSelection(link, setImagesToDelete);
+  }
+
+  function toggleSelection (item, stateUpdater){
+    stateUpdater(prevState => {
+      if(prevState.includes(item)){
+        return prevState.filter(el => el !== item);
       }else{
-        return [...prevInd, index]
+        return [...prevState, item]
       }
     })
   }
-  
 
-  function deleteImg() {
-      setImages(
-        prevImages => prevImages
-        .filter((img, index) => !selectedImageIndex.includes(index))
-      )
+  async function deleteImg() {
+      setImagesToDelete(prevImages => prevImages
+        .filter((img) => !selectedImageIndex.includes(img)))
+
+        console.log(imagesToDelete)
+
+      const res = await axios.delete('/api/deleteImages', { data: { urls: imagesToDelete, productId: _id }})
+
+      console.log(res)
   };
 
+  // this function removes the photos that are b
+  function removeImgs(){
+    // for the interface, returs images that will stay.
+    setImages(
+      prevImages => prevImages
+      .filter((img, index) => !selectedImageIndex.includes(index))
+    )
+  }
 
+
+ 
 
   return (
     <form onSubmit={saveProduct}>
@@ -187,11 +208,16 @@ export default function ProductForm({
           onReorder={setImages}
           className="flex flex-wrap gap-1"
         >
+          
           {images.length > 0 &&
             images.map((link, index) => (
-              <Reorder.Item key={`${link}-${index}`} value={link} as="div" >
+              <Reorder.Item key={`${link}`} id={link} value={link} as="div" >
                 <div
-                  onClick={() => selectImg(index)}
+                // setImagesToDelete
+                  onClick={() => {
+                    selectImg(index, link)
+                    selectedImgToDelete(link)
+                  }}
                   className={`h-24 bg-white p-4 shadow-sm rounded-md border ${selectedImageIndex.includes(index) ? 'border-red-500' : 'border-gray-300'}` }
                   onMouseDown={(e) => e.preventDefault()}
                 >
@@ -241,7 +267,7 @@ export default function ProductForm({
                       />
                     </svg>
             Delete
-            <input type="text" className="hidden" onClick={deleteImg} />
+            <input type="text" className="hidden" onClick={() => deleteImg()} />
           </label>
             )}
       </div>
