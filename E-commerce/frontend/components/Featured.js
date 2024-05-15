@@ -68,7 +68,7 @@ const ButtonsWrapper = styled.div`
 `;
 
 const Banner = styled.div`
-  max-width: 100%;
+  max-width: 90%;
   /* height: 400px; */
   background-color: black;
   border-radius: 10px;
@@ -79,15 +79,25 @@ const Banner = styled.div`
   align-items: center;
   box-sizing: border-box;
   gap: 30px;
+  margin: 0 auto;
+  @media screen and (min-width: 768px){
+    max-width: 100%;
+  }
 `;
+
 const BoxLeft = styled.div`
   /* border: 1px solid white; */
-  padding: 20px 20px;
+  padding: 10px 20px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 20px;
+  gap: 10px;
   width: 300px;
+  margin-bottom: 30px;
+  @media screen and (min-width: 768px){
+    gap: 20px;
+    padding: 20px 20px;
+  }
 `;
 
 const DealText = styled.div`
@@ -171,7 +181,7 @@ export default function Featured({product}) {
             </BoxLeftTitle>
             <BoxLeftP>AMAZING DISCOUNTS AND DEALS</BoxLeftP>
             <BoxLeftDiv>From <BoxLeftPrice>$199.98</BoxLeftPrice></BoxLeftDiv>
-            <Button>SHOP NOW</Button>
+            <ButtonLink $white href={'/products'}>SHOP NOW</ButtonLink>
           </BoxLeft>
 
           <BoxRight>

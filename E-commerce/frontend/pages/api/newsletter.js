@@ -3,7 +3,7 @@ import Newsletter from "@/models/Newsletter";
 
 
 export default async function subscriptionHandler(req, res) {
-  // try {
+  try {
     await mongooseConnect();
     console.log('connected to db')
     const {email} = req.body;
@@ -14,10 +14,10 @@ export default async function subscriptionHandler(req, res) {
     // console.log('create success')
     res.json('ok', {doc})
     
-  // } catch (error) {
-    // console.error('Error:', error.message);
-    // res.status(500).json({ error: 'Internal Server Error' });
-  // }
+  } catch (error) {
+    console.error('Error:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 }
 
 

@@ -78,7 +78,7 @@ export default function Header() {
     <StyleHeader>
       <Center>
         <Wrapper>
-          <Logo href={'/'}>Ecommerce</Logo>
+          <Logo href={'/'}>NextjsShop</Logo>
           <StyledNav $mobileMenu={mobileMenu}>
             <NavLink href={'/'}>Home</NavLink>
             <NavLink href={'/products'}>Products</NavLink>
