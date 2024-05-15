@@ -5,18 +5,16 @@ import { mongooseConnect } from '@/lib/mongoose';
 import NewProducts from '@/components/NewProducts';
 import Footer from '@/components/Footer';
 import styled from 'styled-components';
-import Content from '@/components/Content';
+import Layout from '@/components/Layout';
 
 export default function HomePage({ featuredProduct, newProducts }) {
   // console.log('this is new p', newProducts)
   return (
     <>
-      <Content>
-        <Header />
+      <Layout>
         <Featured product={featuredProduct} />
         <NewProducts products={newProducts} />
-        <Footer />
-      </Content>
+      </Layout>
     </>
   );
 }

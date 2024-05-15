@@ -1,10 +1,13 @@
-import styled from 'styled-components';
+"use client"
+import styled, {keyframes} from 'styled-components';
 import Center from './Center';
 import Button from './Button';
 import ButtonLink from './ButtonLink';
 import CartIcon from './icons/CartIcon';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { CartContext } from './CartContext';
+
+
 
 const Bg = styled.div`
   background-color: #222;
@@ -64,8 +67,92 @@ const ButtonsWrapper = styled.div`
   margin-top: 25px;
 `;
 
+const Banner = styled.div`
+  max-width: 100%;
+  /* height: 400px; */
+  background-color: black;
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 30px 50px;
+  align-items: center;
+  box-sizing: border-box;
+  gap: 30px;
+`;
+const BoxLeft = styled.div`
+  /* border: 1px solid white; */
+  padding: 20px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  width: 300px;
+`;
+
+const DealText = styled.div`
+  background-color: #a00;
+  border: none;
+  border-radius: 6px;
+  padding: 3px 12px;
+  line-height: 1.1;
+  color: white;
+  display: inline-block;
+  text-align: center;
+  font-size: 0.9rem;
+`;
+
+const BoxLeftTitle = styled.p`
+  font-size: 2rem;
+  line-height: 2.4rem;
+  font-weight: 600;
+  margin-bottom: 0;
+`;
+
+const BoxLeftP = styled.p`
+  margin-bottom: 0;
+`;
+
+const BoxLeftDiv = styled.div`
+  /* height: 100px; */
+  display: flex;
+  align-items: center;
+
+`;
+
+const rotateAnimation = keyframes`
+0%, 100%{
+  transform: rotate(-5deg);
+}
+50%{
+  transform: rotate(5deg);
+}
+`;
+
+const BoxLeftPrice = styled.span`
+  margin-left: 5px;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: yellow;
+  transform: rotate(-5deg);
+  /* transition: 3s ease; */
+  animation: ${rotateAnimation} 1s linear infinite;
+`;
+
+const BoxRight = styled.div`
+  /* border: 1px solid white; */
+  display: flex;
+  justify-content: center;
+  width: 350px;
+  img{
+    /* padding: 30px 0; */
+    max-height: 350px;
+    width: 100%;
+  }
+`;
 
 export default function Featured({product}) {
+
 
   const {addProduct} = useContext(CartContext);
 
@@ -76,7 +163,22 @@ export default function Featured({product}) {
   return (
     <Bg>
       <Center>
-        <ColumnsWrapper>
+        <Banner>
+          <BoxLeft>
+            <DealText>WEEK DEAL</DealText> 
+            <BoxLeftTitle>All New <br />
+              For A Better You
+            </BoxLeftTitle>
+            <BoxLeftP>AMAZING DISCOUNTS AND DEALS</BoxLeftP>
+            <BoxLeftDiv>From <BoxLeftPrice>$199.98</BoxLeftPrice></BoxLeftDiv>
+            <Button>SHOP NOW</Button>
+          </BoxLeft>
+
+          <BoxRight>
+            <img src='/slide1-watches.png' alt='' />
+          </BoxRight>
+        </Banner>
+        {/* <ColumnsWrapper>
           <Column>
             <div>
               <Title>{product.title}</Title>
@@ -97,7 +199,7 @@ export default function Featured({product}) {
           <Column>
             <img src="https://helios-i.mashable.com/imagery/reviews/03y8gbj1mqCuexgXxFJ5vyX/hero-image.fill.size_1248x702.v1623391330.jpg"></img>
           </Column>
-        </ColumnsWrapper>
+        </ColumnsWrapper> */}
       </Center>
     </Bg>
   );

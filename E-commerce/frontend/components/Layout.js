@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import Footer from "./Footer";
+import Header from "./Header";
 
 const Vertical = styled.div`
   display: flex;
@@ -7,10 +9,12 @@ const Vertical = styled.div`
 `;
 
 
-export default function Content({children}) {
+export default function Layout({children}) {
   return (
     <Vertical>
+      <Header />
         {children}
+      <Footer />
     </Vertical>
   )
 }
