@@ -10,13 +10,18 @@ import Button from '@/components/Button';
 import CartIcon from '@/components/icons/CartIcon';
 import { useContext } from 'react';
 import { CartContext } from '@/components/CartContext';
+import Layout from '@/components/Layout';
 
+const PageWrapper = styled.div`
+  /* min-height: 500px; */
+`;
 
 const ColWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: 40px;
-  margin-top: 40px;
+  margin: 80px 0;
+
   @media screen and (min-width: 768px){
     grid-template-columns: 0.8fr 1.2fr;
   }
@@ -39,8 +44,9 @@ export default function ProductPage({ product }) {
   const {addProduct} = useContext(CartContext);
   return (
     <>
-    
+      <Layout>
       <Center>
+      <PageWrapper>
         <ColWrapper>
           <WhiteBox>
             <ProductImgGallery images={product.images} />
@@ -62,8 +68,9 @@ export default function ProductPage({ product }) {
             </PriceRow>
           </div>
         </ColWrapper>
+        </PageWrapper>
       </Center>
-      
+      </Layout>
     </>
   );
 }

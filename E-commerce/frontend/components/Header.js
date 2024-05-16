@@ -10,6 +10,7 @@ const StyleHeader = styled.header`
   position: sticky;
   top: 0;
   width: 100%;
+  z-index: 100;
 `;
 
 const Logo = styled(Link)`

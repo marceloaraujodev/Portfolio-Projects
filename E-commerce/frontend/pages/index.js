@@ -6,13 +6,17 @@ import NewProducts from '@/components/NewProducts';
 import Footer from '@/components/Footer';
 import styled from 'styled-components';
 import Layout from '@/components/Layout';
+import Promos from '@/components/Promos';
+import Featured2 from '@/components/Featured2';
 
 export default function HomePage({ featuredProduct, newProducts }) {
   // console.log('this is new p', newProducts)
   return (
     <>
       <Layout>
-        <Featured product={featuredProduct} />
+        <Featured2 />
+        {/* <Featured product={featuredProduct} /> */}
+        <Promos />
         <NewProducts products={newProducts} />
       </Layout>
     </>
