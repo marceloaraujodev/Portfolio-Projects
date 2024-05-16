@@ -15,7 +15,7 @@ export default function HomePage({ featuredProduct, newProducts }) {
     <>
       <Layout>
         <Featured2 />
-        {/* <Featured product={featuredProduct} /> */}
+        <Featured product={featuredProduct} />
         <Promos />
         <NewProducts products={newProducts} />
       </Layout>

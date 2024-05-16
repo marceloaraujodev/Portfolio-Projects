@@ -10,7 +10,9 @@ import { CartContext } from './CartContext';
 
 
 const Bg = styled.div`
-  background-color: #222;
+  /* background-color: #222; */
+  /* background-color: #eee; */
+  background-color: #fff;
   color: white;
   padding: 50px 0;
 `;
@@ -70,7 +72,7 @@ const ButtonsWrapper = styled.div`
 const Banner = styled.div`
   max-width: 90%;
   /* height: 400px; */
-  background-color: black;
+  background-color: #eee;
   border-radius: 10px;
   display: flex;
   flex-wrap: wrap;
@@ -117,17 +119,19 @@ const BoxLeftTitle = styled.p`
   line-height: 2.4rem;
   font-weight: 600;
   margin-bottom: 0;
+  color: black;
 `;
 
 const BoxLeftP = styled.p`
   margin-bottom: 0;
+  color: black;
 `;
 
 const BoxLeftDiv = styled.div`
   /* height: 100px; */
   display: flex;
   align-items: center;
-
+  color: black;
 `;
 
 const rotateAnimation = keyframes`
@@ -143,7 +147,7 @@ const BoxLeftPrice = styled.span`
   margin-left: 5px;
   font-weight: 700;
   font-size: 1.5rem;
-  color: yellow;
+  color: #a00;
   transform: rotate(-5deg);
   /* transition: 3s ease; */
   animation: ${rotateAnimation} 1s linear infinite;
@@ -181,11 +185,11 @@ export default function Featured({product}) {
             </BoxLeftTitle>
             <BoxLeftP>AMAZING DISCOUNTS AND DEALS</BoxLeftP>
             <BoxLeftDiv>From <BoxLeftPrice>$199.98</BoxLeftPrice></BoxLeftDiv>
-            <ButtonLink $white href={'/products'}>SHOP NOW</ButtonLink>
+            <ButtonLink $black href={'/products'}>SHOP NOW</ButtonLink>
           </BoxLeft>
 
           <BoxRight>
-            <img src='/slide1-watches.png' alt='' />
+            <img src='/watches.png' alt='' />
           </BoxRight>
         </Banner>
         {/* <ColumnsWrapper>

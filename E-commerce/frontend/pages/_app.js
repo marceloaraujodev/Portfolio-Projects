@@ -2,26 +2,37 @@ import CartContextProvider from '@/components/CartContext';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { createGlobalStyle } from 'styled-components';
 
+//nextauth
+import { SessionProvider } from "next-auth/react";
+
 const GlobalStyles = createGlobalStyle`
 
   *{
     box-sizing: border-box;
   }
 
-  body{
-    display: flex;
-    flex-direction: column;
+  body, html{
     padding: 0;
     margin: 0;
     font-weight: 400;
     font-family: "Poppins" , sans-serif;
     background-color: #eee;
+    height: 100%;
+  }
+
+  #__next {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
   }
 `;
 
-export default function App({ Component, pageProps }) {
+
+
+export default function App({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <>
+    <SessionProvider session={session}>
       <HelmetProvider>
         <Helmet>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -43,6 +54,7 @@ export default function App({ Component, pageProps }) {
       <CartContextProvider>
         <Component {...pageProps} />
       </CartContextProvider>
+      </SessionProvider>
     </>
   );
 }

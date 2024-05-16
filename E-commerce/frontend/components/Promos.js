@@ -10,11 +10,13 @@ const StyledProductsGrid = styled.div`
   grid-auto-rows: auto; 
   margin-bottom: 40px;
   grid-template-rows: auto auto;
-
+  
   @media screen and (min-width: 768px) {
+    /* min-height: 500px; */
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto;
     margin-bottom: 80px;
+    margin-top: 80px;
   }
 `;
 
@@ -53,34 +55,28 @@ const Gridbox2TitleP = styled.p`
 `;
 const Gridbox3 = styled.div`
   background-color: white;
-  padding: 30px;
-  /* grid-column: 1 / span 2; */
   border-radius: 10px;
-  overflow: hidden;
-  position: relative;
-  height: 230px;
-  /* display: flex; */
-  /* flex-direction: column; */
+  gap: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   img {
-    width: auto;
-      height: auto;
-      max-width: 100%; /* Ensure the image stays within its container */
-      max-height: 100%;
-      object-fit: contain; /* Adjust object-fit as needed */
-      right: 0; /* Remove the absolute positioning */
-      margin-left: auto
+    object-fit: cover; 
+    max-width: 100%;
   }
   @media screen and (min-width: 768px){
+    justify-content: space-between;
     grid-column: 1 / span 2;
+    justify-content: space-between;
+    flex-direction: row;
     
     img {
-     position: absolute;
+     /* position: absolute; */
      top: 0;
      right: -130px;
-     width: 600px;
-     height: 400px;
+     max-width: 600px;
+     /* height: 400px; */
      object-fit: cover;
-     
   } 
   }
 `;
@@ -89,6 +85,9 @@ const Gridbox3Left = styled.div`
   width: 300px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  /* padding-left: 20px; */
+  margin: 20px;
 `;
 const Gridbox3LeftTitle = styled.span`
   font-size: 1.5rem;
@@ -105,11 +104,16 @@ const Gridbox3LeftSpan = styled.span`
   text-align: center;
 `;
 
+const Gridbox3Right = styled.div`
+  overflow: hidden;
+  height: 100%;
+`;
+
 export default function Promos() {
   return (
     <>
       <Center>
-        <Title title="Promo" />
+        {/* <Title title="Promo" /> */}
         <StyledProductsGrid>
           <GridBox1>
             <img src="/phone.webp" alt="" />
@@ -125,14 +129,16 @@ export default function Promos() {
             </Gridbox2TitleP>
           </GridBox2>
           <Gridbox3>
+
             <Gridbox3Left>
               <Gridbox3LeftTitle>Ultra-thin bezel design</Gridbox3LeftTitle>
               <Gridbox3LeftTitleSub>Stunning visuals</Gridbox3LeftTitleSub>
               <Gridbox3LeftSpan>Perfectly evolved. Using the most advanced FIAA screen wiring technology to integrate the panel via fanout routing within the display area allows the screen frame to be as narrow as 1.61mm for an unimpeded viewing experience.</Gridbox3LeftSpan>
             </Gridbox3Left>
-            <div>
+
+            <Gridbox3Right>
               <img src="/cell.webp" alt="" />
-            </div>
+            </Gridbox3Right>
           </Gridbox3>
         </StyledProductsGrid>
       </Center>

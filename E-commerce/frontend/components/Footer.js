@@ -9,8 +9,10 @@ import axios from 'axios';
 const Bg = styled.div`
   background-color: #222;
   color: white;
-  margin-top: auto;
-  margin-bottom: 0;
+  /* margin-top: auto; */
+  /* margin-bottom: 0; */
+
+  /* margin: auto 0; */
 `;
 
 const FooterLink = styled.a`

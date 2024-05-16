@@ -1,7 +1,5 @@
 import Center from '@/components/Center';
 import Layout from '@/components/Layout';
-import Footer from '@/components/Footer';
-import Header from '@/components/Header';
 import ProductsGrid from '@/components/ProductsGrid';
 import Title from '@/components/Title';
 import { mongooseConnect } from '@/lib/mongoose';

@@ -13,14 +13,17 @@ import { CartContext } from '@/components/CartContext';
 import Layout from '@/components/Layout';
 
 const PageWrapper = styled.div`
-  /* min-height: 500px; */
+  width: 100%;
+
 `;
 
 const ColWrapper = styled.div`
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr;
   gap: 40px;
   margin: 80px 0;
+
 
   @media screen and (min-width: 768px){
     grid-template-columns: 0.8fr 1.2fr;
@@ -54,9 +57,7 @@ export default function ProductPage({ product }) {
           <div>
             <Title title={product.title} />
             <p>
-              Apple's premium laptop comes in 13- and 16-inch screen sizes. Each
-              model includes 2-4 USB-C ports for charging, accessories, and data
-              transfer. Higher-end models also include the Touch Bar.
+              {product.description}
             </p>
 
             <PriceRow>
@@ -77,7 +78,6 @@ export default function ProductPage({ product }) {
 
 export async function getServerSideProps(context) {
   await mongooseConnect();
-  //  console.log('this is context', context);
   const id = context.params.id;
 
   const product = await Product.findById({ _id: id });
