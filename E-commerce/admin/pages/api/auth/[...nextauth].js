@@ -21,7 +21,7 @@ export const authOptions = {
         // console.log('admin user')
         return session;
       }
-      return false;
+      return session;
     },
   }
 }
@@ -30,10 +30,11 @@ export default NextAuth(authOptions);
 
 export async function isAdminRequest(req, res){
   const session = await getServerSession(req, res, authOptions);
+  // console.log('Admin session:', session);
 
   if(!adminEmails.includes(session?.user?.email)){
     // if try to go to routes without being admin /categories or /products get error
     res.status(401).json('Not a Admin').end()
     // console.log('signing out')
   }
-}
+} 

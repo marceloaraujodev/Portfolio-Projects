@@ -6,7 +6,7 @@ import Button from '@/components/Button';
 import CenterVertically from '@/components/CenterVertically';
 
 import { useSession, signIn, signOut } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 const adminEmails = ['ppzmarcelo@gmail.com'];
 
 const Container = styled.div`
@@ -19,6 +19,13 @@ const Container = styled.div`
 `;
 
 const LeftCol = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  span{
+    font-weight: 500;
+  }
   ul {
     text-decoration: none;
     list-style: none;
@@ -71,16 +78,23 @@ const ProductInfoBox = styled.div`
 `;
 
 export default function account() {
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
   const { data: session } = useSession();
-  // const session = false
+  // console.log('Frontend session:', session);
+  
+  // useEffect(() => {
+  //   // if (status === 'authenticated') { // Check for successful authentication
+  //     console.log('Frontend session:', session); // Log the session object
+  //     setIsLoggedIn(session?.user); // Extract and store user information
+  //   // }
+  // }, [session]);
 
-  console.log(session)
   return (
     <>
       {!session && (
         <Layout>
         <CenterVertically>
-          <Button $black $outline onClick={signIn}>
+          <Button $black $outline onClick={() => signIn('google')}>
             Login with Google
           </Button>
         </CenterVertically>
@@ -93,12 +107,15 @@ export default function account() {
             <Container>
               <Center>
                 
-                Signed in as Marcelo session.user.email <br />
-                <Button $black onClick={() => signOut()}>Sign out</Button>
                 <LeftCol>
-                  <ul>
+                <div>
+                Signed in as: 
+                {/* <span>{session.user.email}</span> */}
+                </div>
+                <Button $black size='s' onClick={() => signOut()}>Sign out</Button>
+                  {/* <ul>
                     <li>Your Orders</li>
-                  </ul>
+                  </ul> */}
                 </LeftCol>
               </Center>
             </Container>
@@ -126,3 +143,4 @@ export default function account() {
     </>
   );
 }
+

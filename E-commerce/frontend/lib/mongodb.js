@@ -10,6 +10,8 @@ if (!process.env.MONGODB_URI) {
 const uri = process.env.MONGODB_URI
 const options = {}
 
+// console.log('this is MONGODB_URI', MONGODB_URI)
+
 let client;
 let clientPromise;
 

@@ -17,15 +17,3 @@ const Newsletter = mongoose.models?.Newsletter || mongoose.model('Newsletter', N
 
 export default Newsletter;
 
-// const NewsletterSchema = new mongoose.Schema({
-//   email: {
-//     type: String,
-//     unique: true
-//   },
-//   active: {
-//     type: Boolean,
-//     default: true
-//   }
-
-// }, { timestamps: true, unique: true }
-// );
