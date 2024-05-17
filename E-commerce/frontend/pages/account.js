@@ -7,7 +7,6 @@ import CenterVertically from '@/components/CenterVertically';
 
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-const adminEmails = ['ppzmarcelo@gmail.com'];
 
 const Container = styled.div`
   background-color: #ccc;
@@ -80,14 +79,9 @@ const ProductInfoBox = styled.div`
 export default function account() {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const { data: session } = useSession();
-  // console.log('Frontend session:', session);
-  
-  // useEffect(() => {
-  //   // if (status === 'authenticated') { // Check for successful authentication
-  //     console.log('Frontend session:', session); // Log the session object
-  //     setIsLoggedIn(session?.user); // Extract and store user information
-  //   // }
-  // }, [session]);
+
+  console.log(session)
+
 
   return (
     <>
