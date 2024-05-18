@@ -1,6 +1,5 @@
 import Center from '@/components/Center';
 import Layout from '@/components/Layout';
-import ProductImgGallery from '@/components/ProductImgGallery';
 import styled from 'styled-components';
 import Button from '@/components/Button';
 import CenterVertically from '@/components/CenterVertically';

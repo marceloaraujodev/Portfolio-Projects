@@ -2,7 +2,7 @@ import Center from '@/components/Center';
 import Layout from '@/components/Layout';
 import ProductsGrid from '@/components/ProductsGrid';
 import Title from '@/components/Title';
-import { mongooseConnect } from '@/lib/mongoose';
+import { mongooseConnectShared } from './../shared/mongooseShared';
 import Product from '@/models/Product';
 
 export default function products({ products }) {
@@ -18,10 +18,12 @@ export default function products({ products }) {
   );
 }
 
+// gets products from admin db
 export async function getServerSideProps() {
-  await mongooseConnect();
+  await mongooseConnectShared();
+  console.log('printed')
   const products = await Product.find({}, null, { sort: { _id: -1 } });
-  // console.log(products)
+  console.log(products)
 
   return {
     props: {

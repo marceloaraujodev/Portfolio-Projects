@@ -1,10 +1,8 @@
 import Featured from '@/components/Featured';
 import Header from '@/components/Header';
 import Product from '@/models/Product';
-import { mongooseConnect } from '@/lib/mongoose';
+import { mongooseConnectShared } from './../shared/mongooseShared';
 import NewProducts from '@/components/NewProducts';
-import Footer from '@/components/Footer';
-import styled from 'styled-components';
 import Layout from '@/components/Layout';
 import Promos from '@/components/Promos';
 import Featured2 from '@/components/Featured2';
@@ -25,7 +23,7 @@ export default function HomePage({ featuredProduct, newProducts }) {
 
 export async function getServerSideProps() {
   const featuredProductId = '663bbdf58cf7d3a4cd34950a';
-  await mongooseConnect();
+  await mongooseConnectShared();
   const featuredProduct = await Product.findById(featuredProductId);
   const newProducts = await Product.find({}, null, {
     sort: { _id: -1 },
