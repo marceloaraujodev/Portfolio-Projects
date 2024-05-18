@@ -6,7 +6,6 @@ export async function mongooseConnectShared(){
     }else{
         const uri = process.env.MONGODB_URI_ADMIN;
         const db = await mongoose.connect(uri)
-        console.log(db, 'connected')
         return db
     }
 }

@@ -21,9 +21,8 @@ export default function products({ products }) {
 // gets products from admin db
 export async function getServerSideProps() {
   await mongooseConnectShared();
-  console.log('printed')
   const products = await Product.find({}, null, { sort: { _id: -1 } });
-  console.log(products)
+  // console.log(products)
 
   return {
     props: {
