@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
+import Layout from '@/components/Layout';
 
 const ColumnsWrapper = styled.div`
   display: grid;
@@ -28,7 +29,7 @@ const ColumnsWrapperSuccess = styled.div`
 const Box = styled.div`
   background-color: white;
   border-radius: 10px;
-  padding: 10px;
+  padding: 30px;
 `;
 
 const ProductInfoCell = styled.td`
@@ -61,7 +62,11 @@ const CityHolder = styled.div`
   gap: 5px;
 `;
 
-export default function cartPage() {
+const SuccessTitle = styled.h1`
+  font-size: 2.5;
+`;
+
+export default function CartPage() {
   const { cartProducts, addProduct, removeProduct, clearCart} =
     useContext(CartContext);
   const [products, setProducts] = useState([]);
@@ -132,16 +137,17 @@ export default function cartPage() {
 
     return (
       <>
-        <Header/>
+        <Layout>
         <Center>
         <ColumnsWrapperSuccess>
           <Box>
-            <h1>Thanks for shopping with us.</h1>
+            <SuccessTitle>Thanks for shopping with us.</SuccessTitle>
             <p>We will email you as soon as your order is shipped!</p>
           </Box>
           
         </ColumnsWrapperSuccess>
         </Center>
+        </Layout>
       </>
     )
   }
@@ -150,7 +156,7 @@ export default function cartPage() {
 
   return (
     <>
-      <Header />
+    <Layout>
       <Center>
         <ColumnsWrapper>
           <Box>
@@ -260,6 +266,7 @@ export default function cartPage() {
           )}
         </ColumnsWrapper>
       </Center>
+      </Layout>
     </>
   );
 }

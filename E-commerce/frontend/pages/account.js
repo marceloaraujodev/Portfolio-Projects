@@ -1,3 +1,4 @@
+import React from 'react';
 import Center from '@/components/Center';
 import Layout from '@/components/Layout';
 import styled from 'styled-components';
@@ -5,7 +6,7 @@ import Button from '@/components/Button';
 import CenterVertically from '@/components/CenterVertically';
 
 import { useSession, signIn, signOut } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+
 
 const Container = styled.div`
   background-color: #ccc;
@@ -75,8 +76,9 @@ const ProductInfoBox = styled.div`
   }
 `;
 
-export default function account() {
-  const [isLoggedIn, setIsLoggedIn] = useState(null);
+// pull actuall data from orders! data is not synced yet
+
+export default function Account() {
   const { data: session } = useSession();
 
   console.log(session)
@@ -103,7 +105,7 @@ export default function account() {
                 <LeftCol>
                 <div>
                 Signed in as: 
-                {/* <span>{session.user.email}</span> */}
+                <span> {session.user.email}</span>
                 </div>
                 <Button $black size='s' onClick={() => signOut()}>Sign out</Button>
                   {/* <ul>

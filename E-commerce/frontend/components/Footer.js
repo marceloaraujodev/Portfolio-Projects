@@ -40,28 +40,24 @@ export default function Footer() {
               <footer className="pt-5 pb-4">
                 <div className="row pb-4">
                   <div className="col-6 col-md-2 mb-3">
-                    <h5>Section</h5>
+                    <h5>Site Map</h5>
                     <ul className="nav flex-column">
                       <li className="nav-item mb-2">
-                        <FooterLink href="#" className="nav-link p-0 text-white">
+                        <FooterLink href="/" className="nav-link p-0 text-white">
                           Home
                         </FooterLink>
                       </li>
                       <li className="nav-item mb-2">
-                        <FooterLink href="#" className="nav-link p-0 text-white">
+                        <FooterLink href="/products" className="nav-link p-0 text-white">
                           Products
                         </FooterLink>
                       </li>
                       <li className="nav-item mb-2">
-                        <FooterLink href="#" className="nav-link p-0 text-white">
+                        <FooterLink href="/categories" className="nav-link p-0 text-white">
                           Categories
                         </FooterLink>
                       </li>
-                      <li className="nav-item mb-2">
-                        <FooterLink href="#" className="nav-link p-0 text-white">
-                          Account
-                        </FooterLink>
-                      </li>
+
                       <li className="nav-item mb-2">
                         <FooterLink href="#" className="nav-link p-0 text-white">
                           About
@@ -71,7 +67,25 @@ export default function Footer() {
                   </div>
 
                   <div className="col-6 col-md-2 mb-3">
-                    {/* <h5>Section</h5> */}
+                  <h5>Account</h5>
+                    <ul className="nav flex-column">
+                      <li className="nav-item mb-2">
+                        <FooterLink href="/account" className="nav-link p-0 text-white">
+                          Account
+                        </FooterLink>
+                      </li>
+                      <li className="nav-item mb-2">
+                        <FooterLink href="/admin" className="nav-link p-0 text-white">
+                          Admin
+                        </FooterLink>
+                      </li>
+                      <li className="nav-item mb-2">
+                        <FooterLink href="/cart" className="nav-link p-0 text-white">
+                          Cart
+                        </FooterLink>
+                      </li>
+
+                    </ul>
                   </div>
 
                   <div className="col-6 col-md-2 mb-3">
