@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Post from '../components/Post';
+import axios from 'axios';
 
 
 export default function IndexPage() {
@@ -10,12 +11,15 @@ export default function IndexPage() {
   useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await fetch(
-            // 'http://localhost:4000/post' // prod
-            'https://blog-rzyw.onrender.com/post'
-            );
-          const data = await response.json();
-          setPost(data);
+          const res = await axios.get('https://blog-rzyw.onrender.com/post')
+          // const response = await fetch(
+          //   // 'http://localhost:4000/post' // prod
+          //   'https://blog-rzyw.onrender.com/post'
+          //   );
+          // const data = await response.json();
+          // setPost(data);
+          console.log(res)
+          setPost(res.data);
           // setLoading(true)
         } catch (error) {
           console.log(error)
